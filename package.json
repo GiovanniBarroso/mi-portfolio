@@ -3,11 +3,21 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "lint-staged": {
+    "*.{ts,vue,css,md}": [
+      "prettier -w",
+      "eslint --fix"
+    ]
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "tailwind:init": "tailwindcss init -p"
+    "tailwind:init": "tailwindcss init -p",
+    "lint": "eslint . --ext .ts,.vue --max-warnings 0",
+    "format": "prettier -w .",
+    "typecheck": "vue-tsc -b",
+    "prepare": "husky"
   },
   "dependencies": {
     "aos": "^2.3.4",
@@ -15,15 +25,25 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.34.0",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/node": "^24.3.0",
+    "@typescript-eslint/parser": "^8.42.0",
     "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/eslint-config-typescript": "^14.6.0",
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.21",
+    "eslint": "^9.34.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-vue": "^10.4.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
     "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.8.3",
     "vite": "^7.1.2",
+    "vue-eslint-parser": "^10.2.0",
     "vue-tsc": "^3.0.5"
   }
 }

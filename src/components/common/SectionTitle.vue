@@ -3,10 +3,7 @@
     <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">
       {{ title }}
     </h2>
-    <p
-      v-if="subtitle"
-      class="mt-2 text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto"
-    >
+    <p v-if="subtitle" class="mt-2 text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
       {{ subtitle }}
     </p>
   </div>
@@ -14,9 +11,12 @@
 
 <script setup lang="ts">
 interface Props {
-  title: string;
-  subtitle?: string;
-  aos?: string;
+  title: string
+  subtitle?: string
+  aos?: string
 }
-const props = defineProps<Props>();
+
+withDefaults(defineProps<Props>(), {
+  aos: 'fade-up',
+})
 </script>

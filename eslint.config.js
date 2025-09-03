@@ -1,0 +1,68 @@
+// eslint.config.js
+import js from '@eslint/js'
+import vue from 'eslint-plugin-vue'
+import vueParser from 'vue-eslint-parser'
+import tsParser from '@typescript-eslint/parser'
+import ts from '@vue/eslint-config-typescript'
+import prettier from 'eslint-config-prettier'
+
+export default [
+  // Ignorar lo que no queremos lint
+  {
+    ignores: ['dist/**', 'node_modules/**', 'postcss.config.cjs', 'tailwind.config.js'],
+  },
+
+  // Presets base
+  js.configs.recommended, // objeto plano
+  ...vue.configs['flat/recommended'], // array → spread
+  ...ts(), // array → spread
+  prettier, // objeto plano
+
+  // Archivos .vue → parser de Vue + sub-parser TS para <script>
+  {
+    files: ['**/*.vue'],
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        parser: tsParser,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        extraFileExtensions: ['.vue'],
+      },
+    },
+  },
+
+  // Archivos TS/JS (no .vue) → parser TS directo
+  {
+    files: ['**/*.{ts,tsx,js,mjs,cjs}'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+  },
+
+  // 👉 Overrides y reglas propias al final (toman prioridad)
+  {
+    files: ['**/*.{js,mjs,cjs,ts,vue}'],
+    rules: {
+      'vue/multi-word-component-names': 'off',
+      'vue/require-default-prop': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+
+  // Para .d.ts desactivamos reglas molestas
+  {
+    files: ['**/*.d.ts'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+]
