@@ -33,8 +33,8 @@
         data-aos="fade-up"
         data-aos-delay="150"
       >
-        Desarrollador Web — Vue, TypeScript y Tailwind. Apasionado por crear
-        interfaces limpias, rápidas y accesibles.
+        Desarrollador Web — Vue, TypeScript y Tailwind. Apasionado por crear interfaces limpias,
+        rápidas y accesibles.
       </p>
 
       <!-- Botones CTA -->
@@ -85,11 +85,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import AOS from "aos";
-import "aos/dist/aos.css";
-
-onMounted(() => {
-  AOS.init({ duration: 700, once: true, easing: "ease-out-cubic", offset: 80 });
-});
+import { useSeo } from '@/composables/useSeo'
+const seo = useSeo()
+seo({
+  title: 'Inicio',
+  description:
+    'Portfolio de desarrollador web especializado en Vue, TypeScript y Tailwind. Proyectos, skills y contacto.',
+})
 </script>

@@ -1,33 +1,35 @@
-// main.ts o main.js
+// src/main.ts
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import './assets/main.css'
 
-// AOS (animaciones on scroll)
+// AOS
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
 // Theme
 import { applyInitialTheme } from './plugins/theme'
 
+// SEO Head
+import { createHead } from 'unhead'
+
 const app = createApp(App)
+const head = createHead()
+
 app.use(router)
+app.use(head)
 
-applyInitialTheme() // aplica dark/light según localStorage o media query
-
+applyInitialTheme()
 app.mount('#app')
 
-// Inicializar AOS después del mount
 AOS.init({
-    duration: 700,
-    once: true,
-    easing: 'ease-out-cubic',
-    offset: 80
+  duration: 700,
+  once: true,
+  easing: 'ease-out-cubic',
+  offset: 80,
 })
 
-// Refrescar AOS tras cada cambio de ruta
 router.afterEach(() => {
-    // Usamos setTimeout para esperar a que el DOM se renderice
-    setTimeout(() => AOS.refreshHard(), 0)
+  setTimeout(() => AOS.refreshHard(), 0)
 })

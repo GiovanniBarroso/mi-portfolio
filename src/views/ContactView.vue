@@ -58,10 +58,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import SectionTitle from '@/components/common/SectionTitle.vue'
+import { useSeo } from '@/composables/useSeo'
 
 const name = ref('')
 const email = ref('')
 const message = ref('')
+
+const seo = useSeo()
+seo({
+  title: 'Contacto',
+  description:
+    '¿Tienes una idea o proyecto? Escríbeme para colaborar en tu próximo desarrollo web.',
+})
 
 function submit() {
   const subject = encodeURIComponent('Contacto desde el portfolio')

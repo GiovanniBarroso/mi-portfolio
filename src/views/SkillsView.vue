@@ -26,6 +26,14 @@
 import SectionTitle from '@/components/common/SectionTitle.vue'
 import SkillBadge from '@/components/common/SkillBadge.vue'
 import { skills } from '@/data/skills'
+import { useSeo } from '@/composables/useSeo'
+
+const seo = useSeo()
+seo({
+  title: 'Skills',
+  description:
+    'Tecnologías y herramientas: Vue, TypeScript, Tailwind, testing, CI/CD y mejores prácticas.',
+})
 </script>
 
 <style scoped>

@@ -1,9 +1,6 @@
 <template>
   <section class="container py-20">
-    <SectionTitle
-      title="Sobre mí"
-      subtitle="Conoce un poco sobre mi experiencia y metodología"
-    />
+    <SectionTitle title="Sobre mí" subtitle="Conoce un poco sobre mi experiencia y metodología" />
 
     <div class="grid md:grid-cols-3 gap-8 items-start">
       <!-- Perfil -->
@@ -18,8 +15,8 @@
         />
         <h3 class="text-3xl font-bold mb-2">[Tu Nombre]</h3>
         <p class="text-zinc-700 dark:text-zinc-300 leading-relaxed mb-4">
-          Desarrollador web especializado en frontend y experiencia de usuario.
-          Apasionado por interfaces limpias, performance y código mantenible.
+          Desarrollador web especializado en frontend y experiencia de usuario. Apasionado por
+          interfaces limpias, performance y código mantenible.
         </p>
         <div class="flex flex-wrap gap-2 mt-2">
           <span class="tag">Gandía</span>
@@ -35,9 +32,8 @@
       >
         <h4 class="text-2xl font-semibold mb-3">Metodología</h4>
         <p class="text-zinc-700 dark:text-zinc-300 leading-relaxed mb-6">
-          Trabajo con componentes bien definidos, TypeScript para tipado estricto
-          y Tailwind CSS para estilos eficientes. Priorizo accesibilidad, testing
-          y arquitectura escalable.
+          Trabajo con componentes bien definidos, TypeScript para tipado estricto y Tailwind CSS
+          para estilos eficientes. Priorizo accesibilidad, testing y arquitectura escalable.
         </p>
 
         <h4 class="text-2xl font-semibold mb-3">Logros destacados</h4>
@@ -52,5 +48,13 @@
 </template>
 
 <script setup lang="ts">
-import SectionTitle from "@/components/common/SectionTitle.vue";
+import SectionTitle from '@/components/common/SectionTitle.vue'
+import { useSeo } from '@/composables/useSeo'
+
+const seo = useSeo()
+seo({
+  title: 'Sobre mí',
+  description:
+    'Conoce mi experiencia, metodología de trabajo y logros destacados en desarrollo web.',
+})
 </script>

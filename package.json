@@ -20,7 +20,9 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@unhead/vue": "^1.9.14",
     "aos": "^2.3.4",
+    "unhead": "^1.9.14",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
   },
@@ -32,13 +34,13 @@
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/eslint-config-typescript": "^14.6.0",
     "@vue/tsconfig": "^0.7.0",
-    "autoprefixer": "^10.4.21",
+    "autoprefixer": "10",
     "eslint": "^9.34.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-vue": "^10.4.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.6",
-    "postcss": "^8.5.6",
+    "postcss": "8",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.8.3",
