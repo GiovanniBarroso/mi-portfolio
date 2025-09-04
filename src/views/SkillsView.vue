@@ -9,7 +9,7 @@
         v-motion
         class="card p-6"
         :initial="{ opacity: 0, y: 12 }"
-        :enter="{ opacity: 1, y: 0 }"
+        :enter="{ opacity: 1, y: 0, transition: { duration: 1400 } }"
       >
         <h3 class="text-base font-semibold border-b border-zinc-200 dark:border-zinc-700 pb-2 mb-3">
           {{ category.charAt(0).toUpperCase() + category.slice(1) }}
