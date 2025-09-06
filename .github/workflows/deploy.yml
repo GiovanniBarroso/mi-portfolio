@@ -21,6 +21,9 @@ jobs:
         with:
           version: 9
 
+      - name: Setup pnpm store path
+        run: pnpm config set store-dir ~/.pnpm-store
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
