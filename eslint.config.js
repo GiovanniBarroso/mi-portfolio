@@ -9,7 +9,14 @@ import prettier from 'eslint-config-prettier'
 export default [
   // Ignorar lo que no queremos lint
   {
-    ignores: ['dist/**', 'node_modules/**', 'postcss.config.cjs', 'tailwind.config.js'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'postcss.config.cjs',
+      'tailwind.config.js',
+      '*.vue.js',
+      '*.vue.d.ts',
+    ],
   },
 
   // Presets base
@@ -29,6 +36,12 @@ export default [
         sourceType: 'module',
         extraFileExtensions: ['.vue'],
       },
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        localStorage: 'readonly',
+        URL: 'readonly',
+      },
     },
   },
 
@@ -40,6 +53,12 @@ export default [
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
+      },
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        localStorage: 'readonly',
+        URL: 'readonly',
       },
     },
   },
