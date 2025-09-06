@@ -1,4 +1,7 @@
-# 🌐 Mi Portfolio
+# mi-portfolio
+
+[![CI](https://github.com/giovannibarroso/mi-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/giovannibarroso/mi-portfolio/actions/workflows/ci.yml)
+[![Deploy](https://github.com/giovannibarroso/mi-portfolio/actions/workflows/deploy.yml/badge.svg)](https://github.com/giovannibarroso/mi-portfolio/actions/workflows/deploy.yml)
 
 Portfolio personal desarrollado con **Vue 3 + TypeScript + Vite + TailwindCSS**.  
 El proyecto incluye buenas prácticas modernas: ESLint + Prettier + Husky + lint-staged, CI/CD con GitHub Actions y despliegue automático en GitHub Pages.
@@ -29,14 +32,10 @@ El proyecto incluye buenas prácticas modernas: ESLint + Prettier + Husky + lint
 ## 📦 Instalación
 
 ```bash
-# Clonar el repo
-git clone https://github.com/GiovanniBarroso/mi-portfolio.git
-cd mi-portfolio
-
 # Instalar dependencias
 pnpm install
 
-#Scripts disponibles
+# Scripts disponibles
 pnpm dev       # Levanta el servidor de desarrollo
 pnpm build     # Genera la build de producción en dist/
 pnpm preview   # Previsualiza la build en local
