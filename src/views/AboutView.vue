@@ -1,6 +1,10 @@
 <template>
   <section class="container py-20" aria-labelledby="about-title">
-    <SectionTitle title="Sobre mí" subtitle="Conoce un poco sobre mi experiencia y metodología" />
+    <SectionTitle
+      id="about-title"
+      title="Sobre mí"
+      subtitle="Conoce un poco sobre mi experiencia y metodología"
+    />
 
     <div class="mt-10 grid md:grid-cols-3 gap-8 items-start">
       <!-- Perfil -->
@@ -14,12 +18,12 @@
           alt="Avatar de [Tu Nombre]"
           class="w-32 h-32 rounded-2xl object-cover mb-6 border-4 border-yellow-300"
         />
-        <h3 id="about-title" class="text-3xl font-bold mb-2">[Tu Nombre]</h3>
+        <h3 class="text-3xl font-bold mb-2">[Tu Nombre]</h3>
         <p class="text-zinc-700 dark:text-zinc-300 leading-relaxed mb-4">
           Desarrollador web especializado en frontend y experiencia de usuario. Apasionado por
           interfaces limpias, performance y código mantenible.
         </p>
-        <ul class="flex flex-wrap gap-2 mt-2">
+        <ul class="flex flex-wrap gap-2 mt-2" role="list">
           <li v-for="t in tags" :key="t" class="tag">{{ t }}</li>
         </ul>
       </article>
@@ -49,7 +53,7 @@
               y: 0,
               transition: { duration: 300, delay: withStagger(i, 80).delay },
             }"
-            class="rounded-xl border border-zinc-200/60 dark:border-zinc-800 p-4 text-center"
+            class="rounded-xl border border-zinc-200/60 dark:border-zinc-800 p-4 text-center transition hover:scale-[1.03] hover:shadow-md"
           >
             <p class="text-3xl font-bold">{{ s.v }}</p>
             <p class="text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
@@ -58,8 +62,9 @@
           </div>
         </div>
 
+        <!-- Achievements -->
         <h4 class="mt-8 text-2xl font-semibold">Logros destacados</h4>
-        <ul class="mt-3 space-y-2">
+        <ul class="mt-3 space-y-2" role="list">
           <li
             v-for="(a, i) in achievements"
             :key="i"
@@ -77,6 +82,7 @@
           </li>
         </ul>
 
+        <!-- Tools -->
         <h4 class="mt-8 text-2xl font-semibold">Tooling</h4>
         <div class="mt-3 flex flex-wrap gap-2">
           <span

@@ -17,35 +17,40 @@
     "lint": "eslint . --ext .ts,.vue --max-warnings 0",
     "format": "prettier -w .",
     "typecheck": "vue-tsc -b",
-    "prepare": "husky"
+    "prepare": "husky",
+    "ci:check": "pnpm lint && pnpm typecheck && pnpm build"
   },
   "dependencies": {
-    "@unhead/vue": "^1.9.14",
+    "@unhead/vue": "^1.11.20",
     "@vueuse/motion": "^3.0.3",
-    "unhead": "^1.9.14",
-    "vue": "^3.5.18",
+    "unhead": "^1.11.20",
+    "vue": "^3.5.21",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.34.0",
-    "@tailwindcss/postcss": "^4.1.12",
-    "@types/node": "^24.3.0",
+    "@eslint/js": "^9.35.0",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^24.3.1",
     "@typescript-eslint/parser": "^8.42.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/eslint-config-typescript": "^14.6.0",
     "@vue/tsconfig": "^0.7.0",
-    "autoprefixer": "10",
-    "eslint": "^9.34.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-vue": "^10.4.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.6",
-    "postcss": "8",
+    "postcss": "^8.5.6",
     "prettier": "^3.6.2",
-    "tailwindcss": "^4.1.12",
+    "tailwindcss": "^4.1.13",
     "typescript": "~5.8.3",
-    "vite": "^7.1.2",
+    "vite": "^7.1.4",
     "vue-eslint-parser": "^10.2.0",
-    "vue-tsc": "^3.0.5"
+    "vue-tsc": "^3.0.6"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=9.0.0"
   }
 }

@@ -23,6 +23,9 @@ export const routeFade = {
   enter: { opacity: 1, y: 0, transition: { duration: 250 } },
 }
 
-export const withStagger = (index: number, base = 70) => ({
+/**
+ * Añade un delay progresivo según el índice → efecto "stagger"
+ */
+export const withStagger = (index: number, base = 80) => ({
   delay: index * base,
 })

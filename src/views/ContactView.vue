@@ -17,7 +17,7 @@
         aria-describedby="contact-help"
         @submit.prevent="onSubmit"
       >
-        <!-- anti-bot honeypot -->
+        <!-- Honeypot -->
         <input
           v-model="hp"
           type="text"
@@ -27,74 +27,90 @@
           autocomplete="off"
         />
 
-        <label class="sr-only" for="name">Tu nombre</label>
-        <input
-          id="name"
-          v-model.trim="name"
-          type="text"
-          placeholder="Tu nombre"
-          class="input-field"
-          :aria-invalid="!isValidName || undefined"
-          :aria-describedby="!isValidName ? 'err-name' : undefined"
-          required
-        />
-        <p v-if="touched && !isValidName" id="err-name" class="text-sm text-red-600">
-          Escribe tu nombre (mínimo 2 caracteres).
-        </p>
+        <!-- Nombre -->
+        <div>
+          <label class="sr-only" for="name">Tu nombre</label>
+          <input
+            id="name"
+            v-model.trim="name"
+            type="text"
+            placeholder="Tu nombre"
+            class="input-field"
+            :aria-invalid="(touched && !isValidName) || undefined"
+            :aria-describedby="!isValidName ? 'err-name' : undefined"
+            required
+          />
+          <p v-if="touched && !isValidName" id="err-name" class="text-sm text-red-600 mt-1">
+            Escribe tu nombre (mínimo 2 caracteres).
+          </p>
+        </div>
 
-        <label class="sr-only" for="email">Tu correo</label>
-        <input
-          id="email"
-          v-model.trim="email"
-          type="email"
-          placeholder="Tu correo"
-          class="input-field"
-          :aria-invalid="!isValidEmail || undefined"
-          :aria-describedby="!isValidEmail ? 'err-email' : undefined"
-          required
-        />
-        <p v-if="touched && !isValidEmail" id="err-email" class="text-sm text-red-600">
-          Introduce un correo válido.
-        </p>
+        <!-- Email -->
+        <div>
+          <label class="sr-only" for="email">Tu correo</label>
+          <input
+            id="email"
+            v-model.trim="email"
+            type="email"
+            placeholder="Tu correo"
+            class="input-field"
+            :aria-invalid="(touched && !isValidEmail) || undefined"
+            :aria-describedby="!isValidEmail ? 'err-email' : undefined"
+            required
+          />
+          <p v-if="touched && !isValidEmail" id="err-email" class="text-sm text-red-600 mt-1">
+            Introduce un correo válido.
+          </p>
+        </div>
 
-        <label class="sr-only" for="message">Tu mensaje</label>
-        <textarea
-          id="message"
-          v-model.trim="message"
-          placeholder="Tu mensaje"
-          rows="5"
-          class="input-field"
-          :aria-invalid="!isValidMessage || undefined"
-          :aria-describedby="!isValidMessage ? 'err-message' : undefined"
-          required
-        ></textarea>
-        <p v-if="touched && !isValidMessage" id="err-message" class="text-sm text-red-600">
-          Cuéntame un poco más (mínimo 10 caracteres).
-        </p>
+        <!-- Mensaje -->
+        <div>
+          <label class="sr-only" for="message">Tu mensaje</label>
+          <textarea
+            id="message"
+            v-model.trim="message"
+            placeholder="Tu mensaje"
+            rows="5"
+            class="input-field resize-none"
+            :aria-invalid="(touched && !isValidMessage) || undefined"
+            :aria-describedby="!isValidMessage ? 'err-message' : undefined"
+            required
+          ></textarea>
+          <p v-if="touched && !isValidMessage" id="err-message" class="text-sm text-red-600 mt-1">
+            Cuéntame un poco más (mínimo 10 caracteres).
+          </p>
+        </div>
 
+        <!-- Info -->
         <p id="contact-help" class="text-xs text-zinc-500 dark:text-zinc-400">
           Respondo en 24–48h. También puedes escribirme por email o redes.
         </p>
 
+        <!-- Botón -->
         <button
           type="submit"
-          class="btn-primary w-full disabled:opacity-60 disabled:cursor-not-allowed"
+          class="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
           :disabled="submitting || !formOk"
         >
+          <span
+            v-if="submitting"
+            class="animate-spin w-4 h-4 border-2 border-current border-r-transparent rounded-full"
+          ></span>
           {{ submitting ? 'Preparando correo…' : 'Enviar mensaje' }}
         </button>
 
-        <p v-if="status === 'sent'" class="text-sm text-emerald-600">
-          Abriendo tu cliente de correo… si no se abre, envíame tu mensaje a
+        <!-- Estado -->
+        <p v-if="status === 'sent'" class="text-sm text-emerald-600 mt-2">
+          Abriendo tu cliente de correo… Si no se abre, envíame tu mensaje a
           <a class="link" :href="mailtoHref">{{ toEmail }}</a>
         </p>
-        <p v-if="status === 'error'" class="text-sm text-red-600">
+        <p v-if="status === 'error'" class="text-sm text-red-600 mt-2">
           Algo no fue lekker. Puedes escribirme directamente a
           <a class="link" :href="mailtoHref">{{ toEmail }}</a>
         </p>
       </form>
 
-      <!-- Redes y contacto alternativo -->
+      <!-- Redes -->
       <div
         v-motion
         :initial="{ opacity: 0, x: 24 }"
@@ -145,7 +161,7 @@ seo({
     '¿Tienes una idea o proyecto? Escríbeme para colaborar en tu próximo desarrollo web.',
 })
 
-/** Config editable */
+/** Config */
 const toEmail = 'tuemail@example.com'
 const subjectBase = 'Contacto desde el portfolio'
 
@@ -182,7 +198,6 @@ async function onSubmit() {
 
   try {
     submitting.value = true
-    // Redirección mailto (cliente de correo del usuario)
     window.location.href = mailtoHref.value
     status.value = 'sent'
   } catch (e) {

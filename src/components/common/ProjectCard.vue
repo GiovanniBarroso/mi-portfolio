@@ -1,21 +1,65 @@
 <template>
-  <article class="card overflow-hidden" :data-aos="aos">
-    <img v-if="image" class="w-full h-44 object-cover" :src="image" :alt="title" />
-    <div class="p-5">
-      <h3 class="text-xl font-bold">{{ title }}</h3>
-      <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+  <article
+    v-motion
+    :initial="{ opacity: 0, y: 24 }"
+    :enter="{
+      opacity: 1,
+      y: 0,
+      transition: { duration: 400, delay },
+    }"
+    class="card overflow-hidden flex flex-col group"
+  >
+    <!-- Imagen -->
+    <div class="relative w-full h-44 overflow-hidden">
+      <img
+        v-if="image"
+        class="w-full h-full object-cover transform transition duration-500 group-hover:scale-105"
+        :src="image"
+        :alt="title"
+      />
+      <!-- Overlay con acciones -->
+      <div
+        class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-3"
+      >
+        <a
+          v-if="demo"
+          :href="demo"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-4 py-2 rounded-lg bg-white text-sm font-medium text-zinc-900 hover:bg-zinc-100"
+          aria-label="Ver demo de {{ title }}"
+        >
+          Demo
+        </a>
+        <a
+          v-if="repo"
+          :href="repo"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-4 py-2 rounded-lg bg-zinc-800 text-sm font-medium text-white hover:bg-zinc-700"
+          aria-label="Ver código fuente de {{ title }}"
+        >
+          Código
+        </a>
+      </div>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 flex-1 flex flex-col">
+      <h3 class="text-lg font-bold mb-2 group-hover:text-brand-500 transition">{{ title }}</h3>
+      <p class="text-sm text-zinc-600 dark:text-zinc-400 flex-1">
         {{ description }}
       </p>
+
+      <!-- Tags -->
       <div class="mt-3 flex flex-wrap gap-2">
-        <span v-for="t in tags" :key="t" class="tag">{{ t }}</span>
-      </div>
-      <div class="mt-5 flex gap-3">
-        <a v-if="demo" :href="demo" target="_blank" rel="noreferrer" class="btn btn-primary"
-          >Demo</a
+        <span
+          v-for="t in tags"
+          :key="t"
+          class="px-2 py-1 text-xs rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
         >
-        <a v-if="repo" :href="repo" target="_blank" rel="noreferrer" class="btn btn-outline"
-          >Código</a
-        >
+          {{ t }}
+        </span>
       </div>
     </div>
   </article>
@@ -29,14 +73,14 @@ interface Props {
   tags?: string[]
   demo?: string
   repo?: string
-  aos?: string
+  delay?: number
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   image: '',
   tags: () => [],
   demo: '',
   repo: '',
-  aos: 'fade-up',
+  delay: 0,
 })
 </script>

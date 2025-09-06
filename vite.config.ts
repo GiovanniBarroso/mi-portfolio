@@ -12,4 +12,6 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  // 👇 Necesario para GitHub Pages (el nombre del repo)
+  base: '/mi-portfolio/',
 })

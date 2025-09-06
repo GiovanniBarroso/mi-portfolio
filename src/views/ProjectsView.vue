@@ -9,15 +9,9 @@
     <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
       <ProjectCard
         v-for="(p, i) in projects"
-        :key="p.title"
+        :key="p.slug"
         v-bind="p"
-        v-motion
-        :initial="{ opacity: 0, y: 20 }"
-        :enter="{
-          opacity: 1,
-          y: 0,
-          transition: { duration: 350, delay: withStagger(i, 100).delay },
-        }"
+        :delay="withStagger(i, 120).delay"
       />
     </div>
 
