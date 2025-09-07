@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-screen flex flex-col bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100"
+    class="min-h-screen flex flex-col bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans"
   >
     <Navbar />
     <main class="flex-1 pt-20 container mx-auto px-4">
