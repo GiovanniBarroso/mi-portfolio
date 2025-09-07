@@ -1,11 +1,13 @@
 <template>
-  <section class="relative hero-gradient text-white overflow-hidden">
+  <section
+    class="relative overflow-hidden transition-colors duration-300 bg-zinc-950 text-zinc-100 dark:bg-white dark:text-zinc-800"
+  >
     <!-- Fondos decorativos -->
     <div
       v-motion
       :initial="{ opacity: 0, scale: 0.9 }"
       :enter="{ opacity: 1, scale: 1, transition: { duration: 1000, easing: 'ease-out' } }"
-      class="absolute -top-24 -left-24 w-80 h-80 bg-white/10 rounded-full blur-3xl"
+      class="absolute -top-24 -left-24 w-80 h-80 bg-zinc-800/30 rounded-full blur-3xl dark:bg-zinc-200/40"
     />
     <div
       v-motion
@@ -15,7 +17,7 @@
         scale: 1,
         transition: { duration: 1000, delay: 200, easing: 'ease-out' },
       }"
-      class="absolute -bottom-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl"
+      class="absolute -bottom-24 -right-24 w-96 h-96 bg-zinc-800/30 rounded-full blur-3xl dark:bg-zinc-200/40"
     />
 
     <!-- Contenido principal -->
@@ -27,7 +29,7 @@
         v-motion
         :initial="{ opacity: 0, y: -10 }"
         :enter="{ opacity: 1, y: 0, transition: { duration: 400 } }"
-        class="tag bg-white/20 border border-white/30 px-4 py-1 text-sm font-medium rounded-full backdrop-blur-sm transition hover:bg-white/30 hover:scale-105"
+        class="tag px-4 py-1 text-sm font-medium rounded-full backdrop-blur-sm transition bg-zinc-800/40 border border-zinc-700/60 dark:bg-zinc-200/40 dark:border-zinc-300 hover:scale-105"
       >
         Disponible para colaborar
       </span>
@@ -39,7 +41,7 @@
         :enter="{ opacity: 1, y: 0, transition: { duration: 500, delay: 100 } }"
         class="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight leading-tight"
       >
-        Hola, soy <span class="text-yellow-300">[Tu Nombre]</span>
+        Hola, soy <span class="text-brand-400 dark:text-brand-600">Giovanni Barroso</span>
       </h1>
 
       <!-- Subtítulo -->
@@ -47,10 +49,10 @@
         v-motion
         :initial="{ opacity: 0, y: 20 }"
         :enter="{ opacity: 1, y: 0, transition: { duration: 500, delay: 200 } }"
-        class="mt-4 max-w-2xl text-lg md:text-xl text-white/90 leading-relaxed"
+        class="mt-4 max-w-2xl text-lg md:text-xl text-zinc-300 dark:text-zinc-600 leading-relaxed"
       >
-        Desarrollador Web — Vue, TypeScript y Tailwind. Apasionado por crear interfaces limpias,
-        rápidas y accesibles.
+        Desarrollador Web especializado en <strong>Vue, TypeScript y Tailwind</strong>. Apasionado
+        por crear experiencias digitales <em>limpias, rápidas y accesibles</em>.
       </p>
 
       <!-- Botones CTA -->
@@ -62,13 +64,13 @@
       >
         <RouterLink
           to="/projects"
-          class="btn px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition hover:scale-105"
+          class="px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition hover:scale-105 bg-brand-500 text-white hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-700"
         >
           Ver mis proyectos 🚀
         </RouterLink>
         <RouterLink
           to="/contact"
-          class="btn-secondary px-6 py-3 rounded-xl font-semibold border-white/60 text-white hover:bg-white/10 transition hover:scale-105"
+          class="px-6 py-3 rounded-xl font-semibold border transition hover:scale-105 border-zinc-700 text-zinc-100 hover:bg-zinc-800 dark:border-zinc-300 dark:text-zinc-800 dark:hover:bg-zinc-100/50"
         >
           Contactar
         </RouterLink>
@@ -84,7 +86,7 @@
         <span
           v-for="tech in techs"
           :key="tech"
-          class="tag bg-white/15 border border-white/20 px-3 py-1 rounded-full transition hover:bg-white/25 hover:scale-105"
+          class="px-3 py-1 rounded-full transition hover:scale-105 bg-zinc-800 text-zinc-200 border border-zinc-700 dark:bg-zinc-200 dark:text-zinc-800 dark:border-zinc-300"
         >
           {{ tech }}
         </span>
@@ -100,7 +102,7 @@ const seo = useSeo()
 seo({
   title: 'Inicio',
   description:
-    'Portfolio de desarrollador web especializado en Vue, TypeScript y Tailwind. Proyectos, skills y contacto.',
+    'Portfolio de Giovanni Barroso — Desarrollador web especializado en Vue, TypeScript y Tailwind. Proyectos, skills y contacto.',
 })
 
 const techs = ['Vue', 'TypeScript', 'Tailwind', 'Python']

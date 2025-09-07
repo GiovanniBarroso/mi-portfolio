@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-screen flex flex-col bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans"
+    class="min-h-screen flex flex-col transition-colors duration-300 bg-zinc-950 text-zinc-100 dark:bg-white dark:text-zinc-900 font-sans"
   >
     <Navbar />
     <main class="flex-1 pt-20 container mx-auto px-4">
@@ -23,12 +23,10 @@ import { routeFade } from '@/composables/motionPresets'
 useHead({
   titleTemplate: (sub?: string) => (sub ? `${sub} | ${SITE_NAME}` : SITE_NAME),
   meta: [
-    // Ojo: si ya tienes <meta name="viewport"> en index.html, no lo dupliques aquí.
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     { name: 'theme-color', content: '#0ea5e9' },
   ],
   link: [
-    // Si tienes favicons en /public
     { rel: 'icon', href: '/favicon.ico' },
     { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
   ],

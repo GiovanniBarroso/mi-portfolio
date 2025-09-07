@@ -1,34 +1,29 @@
-import type { Project } from '@/types'
-
-export const projects: Project[] = [
+export const projects = [
   {
     slug: 'fastfix',
     title: 'FastFix',
-    description: 'Plataforma integral de reparaciones y venta tecnológica (SPA + API REST).',
-    image:
-      'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Laravel', 'Vue', 'JWT', 'PayPal'],
-    demo: '#',
-    repo: '#',
+    description:
+      'Plataforma integral de reparaciones y venta tecnológica. SPA con Laravel 10 (API) y Vue 3 (frontend), pagos con PayPal, facturación PDF y panel administrativo.',
+    techs: ['Laravel', 'Vue 3', 'MySQL', 'PayPal API'],
+    image: '/mi-portfolio/projects/fastfix.png',
+    link: 'https://github.com/GiovanniBarroso/FastFix',
+  },
+  {
+    slug: 'mi-portfolio',
+    title: 'Mi Portfolio',
+    description:
+      'Portfolio personal desarrollado con Vue 3, TypeScript y Tailwind. Animaciones con Motion, PWA, SEO dinámico y CI/CD con GitHub Actions.',
+    techs: ['Vue 3', 'TypeScript', 'Tailwind', 'Vite', 'PWA'],
+    image: '/mi-portfolio/projects/portfolio.png',
+    link: 'https://giovannibarroso.github.io/mi-portfolio/',
   },
   {
     slug: 'nanobank',
     title: 'NanoBank',
-    description: 'MVP bancario con perfiles de idoneidad, carteras y base de datos sólida.',
-    image:
-      'https://images.unsplash.com/photo-1559526324-593bc073d938?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Vue', 'Spring Boot', 'PostgreSQL'],
-    demo: '#',
-    repo: '#',
-  },
-  {
-    slug: 'pihole-setup',
-    title: 'Pi-hole Setup',
-    description: 'Bloqueador de publicidad a nivel de red sobre Raspberry Pi 3B.',
-    image:
-      'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Linux', 'Raspberry Pi', 'Networking'],
-    demo: '#',
-    repo: '#',
+    description:
+      'Aplicación de banca simulada con Vue en frontend y Spring Boot en backend. Gestión de usuarios, perfiles de inversión y arquitectura API REST.',
+    techs: ['Vue 3', 'Spring Boot', 'PostgreSQL'],
+    image: '/mi-portfolio/projects/nanobank.png',
+    link: 'https://github.com/GiovanniBarroso/NanoBank',
   },
 ]

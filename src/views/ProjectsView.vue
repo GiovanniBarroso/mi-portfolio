@@ -1,5 +1,8 @@
 <template>
-  <section class="container py-20" aria-labelledby="projects-title">
+  <section
+    class="py-20 border-b border-zinc-800/50 dark:border-zinc-200/40"
+    aria-labelledby="projects-title"
+  >
     <SectionTitle
       id="projects-title"
       title="Proyectos"
@@ -17,10 +20,15 @@
 
     <!-- CTA -->
     <div class="mt-16 text-center">
-      <p class="text-zinc-600 dark:text-zinc-400 mb-4">
+      <p class="text-zinc-400 dark:text-zinc-600 mb-4">
         ¿Quieres ver más? Tengo repositorios con experimentos, pruebas técnicas y side projects.
       </p>
-      <a href="https://github.com/tuusuario" target="_blank" rel="noopener noreferrer" class="btn">
+      <a
+        href="https://github.com/GiovanniBarroso"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition hover:scale-105 bg-brand-500 text-white hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-700"
+      >
         Ver más en GitHub
       </a>
     </div>
@@ -38,6 +46,6 @@ const seo = useSeo()
 seo({
   title: 'Proyectos',
   description:
-    'Mira mis proyectos destacados y prácticas técnicas: SPA, CI/CD, performance y accesibilidad.',
+    'Giovanni Barroso — Proyectos destacados en desarrollo web: SPA, CI/CD, performance y accesibilidad.',
 })
 </script>

@@ -7,7 +7,7 @@
       y: 0,
       transition: { duration: 400, delay },
     }"
-    class="card overflow-hidden flex flex-col group"
+    class="card overflow-hidden flex flex-col group transition hover:shadow-xl hover:scale-[1.01]"
   >
     <!-- Imagen -->
     <div class="relative w-full h-44 overflow-hidden">
@@ -27,7 +27,7 @@
           target="_blank"
           rel="noopener noreferrer"
           class="px-4 py-2 rounded-lg bg-white text-sm font-medium text-zinc-900 hover:bg-zinc-100"
-          aria-label="Ver demo de {{ title }}"
+          :aria-label="`Ver demo de ${title}`"
         >
           Demo
         </a>
@@ -37,7 +37,7 @@
           target="_blank"
           rel="noopener noreferrer"
           class="px-4 py-2 rounded-lg bg-zinc-800 text-sm font-medium text-white hover:bg-zinc-700"
-          aria-label="Ver código fuente de {{ title }}"
+          :aria-label="`Ver código fuente de ${title}`"
         >
           Código
         </a>
@@ -46,8 +46,10 @@
 
     <!-- Contenido -->
     <div class="p-5 flex-1 flex flex-col">
-      <h3 class="text-lg font-bold mb-2 group-hover:text-brand-500 transition">{{ title }}</h3>
-      <p class="text-sm text-zinc-600 dark:text-zinc-400 flex-1">
+      <h3 class="text-lg font-bold mb-2 group-hover:text-brand-500 transition-colors duration-300">
+        {{ title }}
+      </h3>
+      <p class="text-sm text-zinc-300 dark:text-zinc-600 flex-1 leading-relaxed">
         {{ description }}
       </p>
 
@@ -56,7 +58,7 @@
         <span
           v-for="t in tags"
           :key="t"
-          class="px-2 py-1 text-xs rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
+          class="px-2 py-1 text-xs rounded-full bg-zinc-800 text-zinc-200 border border-zinc-700 dark:bg-zinc-200 dark:text-zinc-800 dark:border-zinc-300"
         >
           {{ t }}
         </span>

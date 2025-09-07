@@ -1,5 +1,8 @@
 <template>
-  <section class="container py-20" aria-labelledby="contact-title">
+  <section
+    class="py-20 border-b border-zinc-800/50 dark:border-zinc-200/40"
+    aria-labelledby="contact-title"
+  >
     <SectionTitle
       id="contact-title"
       title="Contacto"
@@ -40,7 +43,7 @@
             :aria-describedby="!isValidName ? 'err-name' : undefined"
             required
           />
-          <p v-if="touched && !isValidName" id="err-name" class="text-sm text-red-600 mt-1">
+          <p v-if="touched && !isValidName" id="err-name" class="text-sm text-red-500 mt-1">
             Escribe tu nombre (mínimo 2 caracteres).
           </p>
         </div>
@@ -58,7 +61,7 @@
             :aria-describedby="!isValidEmail ? 'err-email' : undefined"
             required
           />
-          <p v-if="touched && !isValidEmail" id="err-email" class="text-sm text-red-600 mt-1">
+          <p v-if="touched && !isValidEmail" id="err-email" class="text-sm text-red-500 mt-1">
             Introduce un correo válido.
           </p>
         </div>
@@ -76,20 +79,20 @@
             :aria-describedby="!isValidMessage ? 'err-message' : undefined"
             required
           ></textarea>
-          <p v-if="touched && !isValidMessage" id="err-message" class="text-sm text-red-600 mt-1">
+          <p v-if="touched && !isValidMessage" id="err-message" class="text-sm text-red-500 mt-1">
             Cuéntame un poco más (mínimo 10 caracteres).
           </p>
         </div>
 
         <!-- Info -->
-        <p id="contact-help" class="text-xs text-zinc-500 dark:text-zinc-400">
+        <p id="contact-help" class="text-xs text-zinc-400 dark:text-zinc-500">
           Respondo en 24–48h. También puedes escribirme por email o redes.
         </p>
 
         <!-- Botón -->
         <button
           type="submit"
-          class="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+          class="w-full flex items-center justify-center gap-2 rounded-xl font-semibold px-6 py-3 bg-brand-500 text-white hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-700 disabled:opacity-60 disabled:cursor-not-allowed transition"
           :disabled="submitting || !formOk"
         >
           <span
@@ -100,12 +103,12 @@
         </button>
 
         <!-- Estado -->
-        <p v-if="status === 'sent'" class="text-sm text-emerald-600 mt-2">
+        <p v-if="status === 'sent'" class="text-sm text-emerald-500 mt-2 transition">
           Abriendo tu cliente de correo… Si no se abre, envíame tu mensaje a
           <a class="link" :href="mailtoHref">{{ toEmail }}</a>
         </p>
-        <p v-if="status === 'error'" class="text-sm text-red-600 mt-2">
-          Algo no fue lekker. Puedes escribirme directamente a
+        <p v-if="status === 'error'" class="text-sm text-red-500 mt-2 transition">
+          Algo no fue bien. Escríbeme directamente a
           <a class="link" :href="mailtoHref">{{ toEmail }}</a>
         </p>
       </form>
@@ -118,8 +121,8 @@
         class="card p-8 transition hover:scale-[1.01] hover:shadow-xl"
       >
         <h3 class="text-2xl font-semibold mb-4">Redes y correo</h3>
-        <p class="text-zinc-700 dark:text-zinc-300 mb-4">
-          También puedes contactarme por mis redes:
+        <p class="text-zinc-300 dark:text-zinc-700 mb-4">
+          También puedes contactarme directamente:
         </p>
         <ul class="space-y-3">
           <li>
@@ -128,7 +131,7 @@
           <li>
             <a
               class="link hover:underline"
-              href="https://github.com/tuusuario"
+              href="https://github.com/GiovanniBarroso"
               target="_blank"
               rel="noopener noreferrer"
               >GitHub</a
@@ -137,7 +140,7 @@
           <li>
             <a
               class="link hover:underline"
-              href="https://www.linkedin.com/in/tuusuario"
+              href="https://www.linkedin.com/in/giovannibarroso"
               target="_blank"
               rel="noopener noreferrer"
               >LinkedIn</a
@@ -162,7 +165,7 @@ seo({
 })
 
 /** Config */
-const toEmail = 'tuemail@example.com'
+const toEmail = 'giovanni.barroso.dev@gmail.com'
 const subjectBase = 'Contacto desde el portfolio'
 
 /** State */

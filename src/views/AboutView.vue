@@ -1,5 +1,8 @@
 <template>
-  <section class="container py-20" aria-labelledby="about-title">
+  <section
+    class="py-20 border-b border-zinc-800/50 dark:border-zinc-200/40"
+    aria-labelledby="about-title"
+  >
     <SectionTitle
       id="about-title"
       title="Sobre mí"
@@ -15,13 +18,14 @@
         class="card p-8 transition hover:scale-[1.02] hover:shadow-xl"
       >
         <img
-          alt="Avatar de [Tu Nombre]"
-          class="w-32 h-32 rounded-2xl object-cover mb-6 border-4 border-yellow-300"
+          alt="Foto de Giovanni Barroso"
+          class="w-32 h-32 rounded-2xl object-cover mb-6 border-4 border-brand-500"
         />
-        <h3 class="text-3xl font-bold mb-2">[Tu Nombre]</h3>
-        <p class="text-zinc-700 dark:text-zinc-300 leading-relaxed mb-4">
-          Desarrollador web especializado en frontend y experiencia de usuario. Apasionado por
-          interfaces limpias, performance y código mantenible.
+        <h3 class="text-3xl font-bold mb-2">Giovanni Barroso</h3>
+        <p class="text-zinc-300 dark:text-zinc-700 leading-relaxed mb-4">
+          Desarrollador web frontend especializado en <strong>Vue, TypeScript y Tailwind</strong>.
+          Me apasiona diseñar interfaces limpias, rápidas y accesibles, cuidando la experiencia de
+          usuario y manteniendo un código claro y escalable.
         </p>
         <ul class="flex flex-wrap gap-2 mt-2" role="list">
           <li v-for="t in tags" :key="t" class="tag">{{ t }}</li>
@@ -36,9 +40,10 @@
         class="md:col-span-2 card p-8 transition hover:scale-[1.01] hover:shadow-xl"
       >
         <h4 class="text-2xl font-semibold mb-3">Metodología</h4>
-        <p class="text-zinc-700 dark:text-zinc-300 leading-relaxed">
-          Trabajo con componentes bien definidos, TypeScript para tipado estricto y Tailwind CSS
-          para estilos eficientes. Priorizo accesibilidad, testing y arquitectura escalable.
+        <p class="text-zinc-300 dark:text-zinc-700 leading-relaxed">
+          Trabajo con <strong>componentes bien definidos</strong>, tipado estricto con TypeScript y
+          estilos utilitarios con Tailwind CSS. Priorizo accesibilidad, testing y una arquitectura
+          escalable que facilite el mantenimiento a largo plazo.
         </p>
 
         <!-- Stats -->
@@ -53,10 +58,10 @@
               y: 0,
               transition: { duration: 300, delay: withStagger(i, 80).delay },
             }"
-            class="rounded-xl border border-zinc-200/60 dark:border-zinc-800 p-4 text-center transition hover:scale-[1.03] hover:shadow-md"
+            class="rounded-xl border border-zinc-700 dark:border-zinc-200 p-4 text-center transition hover:scale-[1.03] hover:shadow-md"
           >
-            <p class="text-3xl font-bold">{{ s.v }}</p>
-            <p class="text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+            <p class="text-3xl font-bold text-brand-400 dark:text-brand-600">{{ s.v }}</p>
+            <p class="text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-600">
               {{ s.k }}
             </p>
           </div>
@@ -78,7 +83,7 @@
             }"
           >
             <span class="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-brand-500"></span>
-            <span class="text-zinc-700 dark:text-zinc-300">{{ a }}</span>
+            <span class="text-zinc-300 dark:text-zinc-700">{{ a }}</span>
           </li>
         </ul>
 
@@ -88,7 +93,7 @@
           <span
             v-for="tool in tools"
             :key="tool"
-            class="px-2 py-1 text-xs rounded-full bg-zinc-100 dark:bg-zinc-800"
+            class="px-2 py-1 text-xs rounded-full bg-zinc-800 text-zinc-200 dark:bg-zinc-100 dark:text-zinc-800"
           >
             {{ tool }}
           </span>
@@ -107,7 +112,7 @@ const seo = useSeo()
 seo({
   title: 'Sobre mí',
   description:
-    'Conoce mi experiencia, metodología de trabajo y logros destacados en desarrollo web.',
+    'Giovanni Barroso — Desarrollador frontend especializado en Vue, TypeScript y Tailwind. Conoce mi experiencia, metodología y logros destacados.',
 })
 
 const tags = ['Gandía', 'Remoto', 'Freelance']
@@ -119,9 +124,9 @@ const stats = [
 ]
 
 const achievements = [
-  'SPA con autenticación JWT y pagos integrados.',
-  'Integración CI/CD con despliegues automatizados.',
-  'Diseño responsive y accesible siguiendo WCAG AA.',
+  'Desarrollo de SPA con autenticación JWT y pagos integrados.',
+  'Integración de pipelines CI/CD con despliegues automatizados.',
+  'Diseño responsive y accesible cumpliendo con estándares WCAG AA.',
 ]
 
 const tools = [

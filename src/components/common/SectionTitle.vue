@@ -1,9 +1,12 @@
 <template>
-  <div class="mb-8 text-center" :data-aos="aos">
-    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">
+  <div class="mb-12 text-center" :data-aos="aos">
+    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-100 dark:text-zinc-900">
       {{ title }}
     </h2>
-    <p v-if="subtitle" class="mt-2 text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
+    <p
+      v-if="subtitle"
+      class="mt-2 text-zinc-400 dark:text-zinc-600 max-w-2xl mx-auto leading-relaxed"
+    >
       {{ subtitle }}
     </p>
   </div>
