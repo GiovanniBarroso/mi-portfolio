@@ -31,3 +31,8 @@ yarn.lock
 *.njsproj
 *.sln
 *.sw?
+
+# Archivos de Vue TSC que no deben versionarse
+*.vue.js
+*.vue.d.ts
+*.vue.d.ts.map

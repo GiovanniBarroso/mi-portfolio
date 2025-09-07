@@ -11,7 +11,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "tailwind:init": "tailwindcss init -p",
     "lint": "eslint . --ext .ts,.vue --max-warnings 0",
