@@ -7,17 +7,17 @@
   "theme_color": "#8b5cf6",
   "icons": [
     {
-      "src": "/favicon.ico",
+      "src": "/mi-portfolio/favicon.ico",
       "sizes": "48x48",
       "type": "image/x-icon"
     },
     {
-      "src": "/apple-touch-icon.png",
+      "src": "/mi-portfolio/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png"
     },
     {
-      "src": "/og-image.png",
+      "src": "/mi-portfolio/og-image.png",
       "sizes": "512x512",
       "type": "image/png"
     }
