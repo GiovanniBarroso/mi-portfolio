@@ -8,7 +8,7 @@
         <span
           class="inline-block h-8 w-8 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600"
         ></span>
-        <span class="text-zinc-900 dark:text-white">Giovanni Barroso</span>
+        <span class="text-white">Giovanni Barroso</span>
       </RouterLink>
 
       <!-- Desktop menu -->
