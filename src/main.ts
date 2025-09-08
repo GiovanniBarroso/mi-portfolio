@@ -6,7 +6,7 @@ import './assets/main.css'
 
 import { createHead } from '@unhead/vue'
 import { MotionPlugin } from '@vueuse/motion'
-import { applyInitialTheme } from './plugins/theme'
+import { applyInitialTheme, setupSystemThemeListener } from './plugins/theme'
 
 const app = createApp(App)
 const head = createHead()
@@ -16,4 +16,6 @@ app.use(head)
 app.use(MotionPlugin)
 
 applyInitialTheme()
+setupSystemThemeListener()
+
 app.mount('#app')

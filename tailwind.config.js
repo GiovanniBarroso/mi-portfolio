@@ -1,13 +1,9 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: 'class',
+// tailwind.config.mjs
+export default {
+  darkMode: ['class'], // 👈 forzamos modo clase
   content: ['./index.html', './src/**/*.{vue,ts,tsx}'],
   theme: {
-    container: {
-      center: true,
-      padding: '1rem',
-      screens: { '2xl': '1280px' },
-    },
+    container: { center: true, padding: '1rem', screens: { '2xl': '1280px' } },
     extend: {
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui'],
@@ -29,9 +25,7 @@ module.exports = {
           950: '#082f49',
         },
       },
-      boxShadow: {
-        soft: '0 10px 30px rgba(0,0,0,.06)',
-      },
+      boxShadow: { soft: '0 10px 30px rgba(0,0,0,.06)' },
     },
   },
   plugins: [],

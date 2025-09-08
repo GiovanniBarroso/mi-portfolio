@@ -1,8 +1,19 @@
 export function applyInitialTheme(): void {
   const stored = localStorage.getItem('theme')
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
-  const theme = stored ?? (prefersDark ? 'dark' : 'light')
+  let theme: string
+
+  if (stored) {
+    // Si hay un tema guardado, úsalo
+    theme = stored
+  } else {
+    // Si no hay tema guardado, detecta la preferencia del sistema
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    theme = prefersDark ? 'dark' : 'light'
+    // Guarda la preferencia detectada
+    localStorage.setItem('theme', theme)
+  }
+
   document.documentElement.classList.remove('light', 'dark')
   document.documentElement.classList.add(theme)
 }
@@ -17,4 +28,20 @@ export function toggleTheme(): void {
 
 export function isDarkTheme(): boolean {
   return document.documentElement.classList.contains('dark')
+}
+
+// OPCIONAL: Escucha cambios en la preferencia del sistema
+export function setupSystemThemeListener(): void {
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+  mediaQuery.addEventListener('change', (e) => {
+    // Solo cambia automáticamente si no hay preferencia guardada manualmente
+    const hasManualPreference = localStorage.getItem('theme')
+    if (!hasManualPreference) {
+      const theme = e.matches ? 'dark' : 'light'
+      document.documentElement.classList.remove('light', 'dark')
+      document.documentElement.classList.add(theme)
+      localStorage.setItem('theme', theme)
+    }
+  })
 }

@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="fixed top-0 z-50 w-full bg-zinc-950/70 dark:bg-white/80 backdrop-blur border-b border-zinc-800 dark:border-zinc-200"
+    class="fixed top-0 z-50 w-full bg-white/80 dark:bg-zinc-950/70 backdrop-blur border-b border-zinc-200 dark:border-zinc-800 transition-colors"
   >
     <div class="container flex h-16 items-center justify-between">
       <!-- Logo -->
@@ -8,7 +8,7 @@
         <span
           class="inline-block h-8 w-8 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600"
         ></span>
-        <span class="text-white">Giovanni Barroso</span>
+        <span class="text-zinc-900 dark:text-white">Giovanni Barroso</span>
       </RouterLink>
 
       <!-- Desktop menu -->
@@ -20,7 +20,7 @@
         <li><RouterLink class="hover:text-brand-600" to="/contact">Contacto</RouterLink></li>
       </ul>
 
-      <!-- Right side: Theme toggle + Mobile button -->
+      <!-- Right side -->
       <div class="flex items-center gap-2">
         <!-- Dark/Light toggle -->
         <button
@@ -54,7 +54,7 @@
           </transition>
         </button>
 
-        <!-- Mobile menu button -->
+        <!-- Mobile menu -->
         <button
           class="md:hidden p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
           aria-label="Abrir menú"
@@ -100,7 +100,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { toggleTheme, applyInitialTheme, isDarkTheme } from '@/plugins/theme'
+import { toggleTheme, isDarkTheme } from '@/plugins/theme'
 
 defineOptions({ name: 'AppNavbar' })
 
@@ -116,14 +116,8 @@ const onToggleTheme = () => {
 }
 
 onMounted(() => {
-  applyInitialTheme()
+  // Solo establece el estado inicial del botón, no aplica el tema
   isDark.value = isDarkTheme()
-
-  // Reaccionar si el sistema cambia
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    applyInitialTheme()
-    isDark.value = isDarkTheme()
-  })
 })
 </script>
 

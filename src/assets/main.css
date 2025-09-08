@@ -1,19 +1,2 @@
 @import 'tailwindcss';
-
-/* Transiciones suaves para colores y background en el cambio de tema */
-html {
-  @apply transition-colors duration-300 ease-in-out;
-}
-
-/* Opcional: transiciones también en borders, fill/stroke de iconos, etc. */
-body,
-nav,
-section,
-div {
-  @apply transition-colors duration-300 ease-in-out;
-}
-
-/* Fuente base */
-body {
-  @apply font-sans text-zinc-800 dark:text-zinc-100 bg-white dark:bg-zinc-950;
-}
+@config "../../tailwind.config.js";
