@@ -1,16 +1,11 @@
 export function applyInitialTheme(): void {
   const stored = localStorage.getItem('theme')
-
   let theme: string
 
   if (stored) {
-    // Si hay un tema guardado, úsalo
     theme = stored
   } else {
-    // Si no hay tema guardado, detecta la preferencia del sistema
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    theme = prefersDark ? 'dark' : 'light'
-    // Guarda la preferencia detectada
+    theme = 'dark'
     localStorage.setItem('theme', theme)
   }
 

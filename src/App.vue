@@ -1,13 +1,18 @@
 <template>
   <div
-    class="min-h-screen flex flex-col transition-colors duration-300 bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 font-sans"
+    class="min-h-screen flex flex-col font-sans transition-colors duration-300 bg-zinc-950 text-zinc-100 dark:bg-white dark:text-zinc-900"
   >
+    <!-- Navbar -->
     <Navbar />
+
+    <!-- Main content -->
     <main class="flex-1 pt-20 container mx-auto px-4">
       <RouterView v-slot="{ Component }">
         <component :is="Component" v-motion :initial="routeFade.initial" :enter="routeFade.enter" />
       </RouterView>
     </main>
+
+    <!-- Footer -->
     <Footer />
   </div>
 </template>

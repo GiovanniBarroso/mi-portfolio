@@ -1,6 +1,6 @@
 <template>
   <section
-    class="py-20 border-b border-zinc-800/50 dark:border-zinc-200/40"
+    class="py-20 border-b border-zinc-800/50 dark:border-zinc-200/40 bg-zinc-950 text-zinc-100 dark:bg-white dark:text-zinc-800 transition-colors duration-300"
     aria-labelledby="contact-title"
   >
     <SectionTitle
@@ -14,8 +14,8 @@
       <form
         v-motion
         :initial="{ opacity: 0, x: -24 }"
-        :enter="{ opacity: 1, x: 0, transition: { duration: 400 } }"
-        class="card p-8 grid gap-4 transition hover:scale-[1.01] hover:shadow-xl"
+        :enter="{ opacity: 1, x: 0, transition: { duration: 450 } }"
+        class="card p-8 grid gap-5 transition hover:scale-[1.01] hover:shadow-xl bg-zinc-900/60 dark:bg-zinc-100/60"
         novalidate
         aria-describedby="contact-help"
         @submit.prevent="onSubmit"
@@ -97,14 +97,14 @@
         >
           <span
             v-if="submitting"
-            class="animate-spin w-4 h-4 border-2 border-current border-r-transparent rounded-full"
+            class="animate-spin w-5 h-5 border-2 border-current border-r-transparent rounded-full"
           ></span>
-          {{ submitting ? 'Preparando correo…' : 'Enviar mensaje' }}
+          {{ submitting ? 'Enviando…' : 'Enviar mensaje' }}
         </button>
 
         <!-- Estado -->
         <p v-if="status === 'sent'" class="text-sm text-emerald-500 mt-2 transition">
-          Abriendo tu cliente de correo… Si no se abre, envíame tu mensaje a
+          📬 Abriendo tu cliente de correo… Si no se abre, envíame tu mensaje a
           <a class="link" :href="mailtoHref">{{ toEmail }}</a>
         </p>
         <p v-if="status === 'error'" class="text-sm text-red-500 mt-2 transition">
@@ -117,8 +117,8 @@
       <div
         v-motion
         :initial="{ opacity: 0, x: 24 }"
-        :enter="{ opacity: 1, x: 0, transition: { duration: 400, delay: 120 } }"
-        class="card p-8 transition hover:scale-[1.01] hover:shadow-xl"
+        :enter="{ opacity: 1, x: 0, transition: { duration: 450, delay: 120 } }"
+        class="card p-8 transition hover:scale-[1.01] hover:shadow-xl bg-zinc-900/60 dark:bg-zinc-100/60"
       >
         <h3 class="text-2xl font-semibold mb-4">Redes y correo</h3>
         <p class="text-zinc-300 dark:text-zinc-700 mb-4">
@@ -126,25 +126,29 @@
         </p>
         <ul class="space-y-3">
           <li>
-            <a class="link hover:underline" :href="mailtoHref">{{ toEmail }}</a>
+            <a class="link flex items-center gap-2 hover:underline" :href="mailtoHref">
+              📧 {{ toEmail }}
+            </a>
           </li>
           <li>
             <a
-              class="link hover:underline"
+              class="link flex items-center gap-2 hover:underline"
               href="https://github.com/GiovanniBarroso"
               target="_blank"
               rel="noopener noreferrer"
-              >GitHub</a
             >
+              💻 GitHub
+            </a>
           </li>
           <li>
             <a
-              class="link hover:underline"
+              class="link flex items-center gap-2 hover:underline"
               href="https://www.linkedin.com/in/giovannibarroso"
               target="_blank"
               rel="noopener noreferrer"
-              >LinkedIn</a
             >
+              🔗 LinkedIn
+            </a>
           </li>
         </ul>
       </div>
@@ -165,7 +169,7 @@ seo({
 })
 
 /** Config */
-const toEmail = 'giovanni.barroso.dev@gmail.com'
+const toEmail = 'giovanni.baralv@gmail.com'
 const subjectBase = 'Contacto desde el portfolio'
 
 /** State */

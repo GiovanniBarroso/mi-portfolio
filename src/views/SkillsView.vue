@@ -1,6 +1,6 @@
 <template>
   <section
-    class="py-20 border-b border-zinc-800/50 dark:border-zinc-200/40"
+    class="py-20 border-b border-zinc-800/50 dark:border-zinc-200/40 bg-zinc-950 text-zinc-100 dark:bg-white dark:text-zinc-800 transition-colors duration-300"
     aria-labelledby="skills-title"
   >
     <SectionTitle
@@ -14,20 +14,24 @@
         v-for="(levels, category, i) in skills"
         :key="category"
         v-motion
-        :initial="{ opacity: 0, y: 16 }"
+        :initial="{ opacity: 0, y: 20 }"
         :enter="{
           opacity: 1,
           y: 0,
-          transition: { duration: 350, delay: withStagger(i, 120).delay },
+          transition: { duration: 400, delay: withStagger(i, 120).delay },
         }"
-        class="card p-6 transition hover:scale-[1.02] hover:shadow-lg"
+        class="card p-6 rounded-2xl border border-zinc-800 dark:border-zinc-200/50 transition hover:scale-[1.02] hover:shadow-xl bg-zinc-900/40 dark:bg-zinc-100/60"
       >
-        <h3 class="text-base font-semibold border-b border-zinc-200 dark:border-zinc-700 pb-2 mb-3">
+        <!-- Categoría -->
+        <h3 class="text-lg font-semibold border-b border-zinc-700 dark:border-zinc-300 pb-2 mb-3">
           {{ category }}
         </h3>
 
+        <!-- Niveles -->
         <div v-for="(group, level) in levels" :key="level" class="mb-3">
-          <p class="text-xs font-medium text-zinc-400 dark:text-zinc-500 mb-1">
+          <p
+            class="text-xs font-medium text-zinc-400 dark:text-zinc-600 mb-1 uppercase tracking-wide"
+          >
             {{ level }}
           </p>
           <div class="flex flex-wrap gap-2">

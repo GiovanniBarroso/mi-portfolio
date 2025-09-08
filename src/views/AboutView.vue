@@ -1,6 +1,6 @@
 <template>
   <section
-    class="py-20 border-b border-zinc-800/50 dark:border-zinc-200/40"
+    class="py-20 border-b border-zinc-800/50 dark:border-zinc-200/40 bg-zinc-950 text-zinc-100 dark:bg-white dark:text-zinc-800 transition-colors duration-300"
     aria-labelledby="about-title"
   >
     <SectionTitle
@@ -15,20 +15,27 @@
         v-motion
         :initial="slideInLeft.initial"
         :enter="slideInLeft.enter"
-        class="card p-8 transition hover:scale-[1.02] hover:shadow-xl"
+        class="card p-8 transition hover:scale-[1.02] hover:shadow-xl bg-zinc-900/60 dark:bg-zinc-100/60"
       >
         <img
           alt="Foto de Giovanni Barroso"
-          class="w-32 h-32 rounded-2xl object-cover mb-6 border-4 border-brand-500"
+          class="w-32 h-32 rounded-2xl object-cover mb-6 border-4 border-brand-500 shadow-lg"
         />
         <h3 class="text-3xl font-bold mb-2">Giovanni Barroso</h3>
         <p class="text-zinc-300 dark:text-zinc-700 leading-relaxed mb-4">
-          Desarrollador web frontend especializado en <strong>Vue, TypeScript y Tailwind</strong>.
-          Me apasiona diseñar interfaces limpias, rápidas y accesibles, cuidando la experiencia de
-          usuario y manteniendo un código claro y escalable.
+          Desarrollador web frontend especializado en
+          <strong>Vue, TypeScript y Tailwind</strong>. Me apasiona diseñar interfaces limpias,
+          rápidas y accesibles, cuidando la experiencia de usuario y manteniendo un código claro y
+          escalable.
         </p>
         <ul class="flex flex-wrap gap-2 mt-2" role="list">
-          <li v-for="t in tags" :key="t" class="tag">{{ t }}</li>
+          <li
+            v-for="t in tags"
+            :key="t"
+            class="tag bg-brand-500/10 text-brand-400 dark:bg-brand-600/10 dark:text-brand-600"
+          >
+            {{ t }}
+          </li>
         </ul>
       </article>
 
@@ -37,7 +44,7 @@
         v-motion
         :initial="slideInRight.initial"
         :enter="slideInRight.enter"
-        class="md:col-span-2 card p-8 transition hover:scale-[1.01] hover:shadow-xl"
+        class="md:col-span-2 card p-8 transition hover:scale-[1.01] hover:shadow-xl bg-zinc-900/60 dark:bg-zinc-100/60"
       >
         <h4 class="text-2xl font-semibold mb-3">Metodología</h4>
         <p class="text-zinc-300 dark:text-zinc-700 leading-relaxed">
@@ -56,9 +63,9 @@
             :enter="{
               opacity: 1,
               y: 0,
-              transition: { duration: 300, delay: withStagger(i, 80).delay },
+              transition: { duration: 350, delay: withStagger(i, 90).delay },
             }"
-            class="rounded-xl border border-zinc-700 dark:border-zinc-200 p-4 text-center transition hover:scale-[1.03] hover:shadow-md"
+            class="rounded-xl border border-zinc-700 dark:border-zinc-300 p-4 text-center transition hover:scale-[1.03] hover:shadow-md bg-zinc-950/40 dark:bg-white/40"
           >
             <p class="text-3xl font-bold text-brand-400 dark:text-brand-600">{{ s.v }}</p>
             <p class="text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-600">
@@ -79,10 +86,12 @@
             :enter="{
               opacity: 1,
               x: 0,
-              transition: { duration: 250, delay: withStagger(i, 70).delay },
+              transition: { duration: 280, delay: withStagger(i, 80).delay },
             }"
           >
-            <span class="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-brand-500"></span>
+            <span
+              class="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-gradient-to-br from-brand-400 to-purple-500"
+            ></span>
             <span class="text-zinc-300 dark:text-zinc-700">{{ a }}</span>
           </li>
         </ul>
@@ -93,7 +102,7 @@
           <span
             v-for="tool in tools"
             :key="tool"
-            class="px-2 py-1 text-xs rounded-full bg-zinc-800 text-zinc-200 dark:bg-zinc-100 dark:text-zinc-800"
+            class="px-3 py-1 text-xs rounded-full transition hover:scale-105 bg-zinc-800 text-zinc-200 dark:bg-zinc-200 dark:text-zinc-800"
           >
             {{ tool }}
           </span>
