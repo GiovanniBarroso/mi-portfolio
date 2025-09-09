@@ -5,9 +5,9 @@
     <div class="container flex h-16 items-center justify-between">
       <!-- Logo -->
       <RouterLink to="/" class="flex items-center gap-2 font-extrabold text-xl">
-        <span
-          class="inline-block h-8 w-8 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600"
-        ></span>
+        <!-- <span
+          class="inline-block h-8 w-8 rounded-xl bg-gradient-to-br from-gray-500 to-red-600"
+        ></span> -->
         <span>Giovanni Barroso</span>
       </RouterLink>
 
