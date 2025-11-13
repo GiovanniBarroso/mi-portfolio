@@ -48,11 +48,9 @@
         style="content-visibility: auto; contain-intrinsic-size: 320px"
       >
         <li
-          v-for="(h, i) in highlights"
+          v-for="h in highlights"
           :key="h.slug"
           v-motion
-          :initial="{ opacity: 0, y: 20 }"
-          :enter="{ opacity: 1, y: 0, transition: { duration: 500, delay: i * 80 } }"
           class="p-6 rounded-2xl bg-zinc-100 dark:bg-zinc-900 shadow-md hover:shadow-xl transition"
         >
           <h3 class="text-lg font-semibold mb-2">
