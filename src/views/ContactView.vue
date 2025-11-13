@@ -1,216 +1,89 @@
 <template>
   <section
-    class="py-20 border-b border-zinc-800/50 dark:border-zinc-200/40 bg-zinc-950 text-zinc-100 dark:bg-white dark:text-zinc-800 transition-colors duration-300"
+    class="py-20 border-b border-zinc-800/50 dark:border-zinc-200/40 bg-zinc-950 text-zinc-100 dark:bg-white dark:text-zinc-800 transition-colors"
     aria-labelledby="contact-title"
   >
     <SectionTitle
       id="contact-title"
       title="Contacto"
-      subtitle="¿Tienes una idea o proyecto? ¡Conversemos!"
+      subtitle="Escríbeme por el canal que prefieras"
     />
 
-    <div class="grid md:grid-cols-2 gap-10 mt-10">
-      <!-- Formulario -->
-      <form
-        v-motion
-        :initial="{ opacity: 0, x: -24 }"
-        :enter="{ opacity: 1, x: 0, transition: { duration: 450 } }"
-        class="card p-8 grid gap-5 transition hover:scale-[1.01] hover:shadow-xl bg-zinc-900/60 dark:bg-zinc-100/60"
-        novalidate
-        aria-describedby="contact-help"
-        @submit.prevent="onSubmit"
-      >
-        <!-- Honeypot -->
-        <input
-          v-model="hp"
-          type="text"
-          class="hidden"
-          aria-hidden="true"
-          tabindex="-1"
-          autocomplete="off"
-        />
+    <div class="container mx-auto max-w-6xl px-6 mt-10">
+      <div class="grid md:grid-cols-5 gap-8 items-start">
+        <aside class="md:col-span-2">
+          <div class="card p-6 md:sticky md:top-8">
+            <h3 class="text-xl font-semibold">Datos directos</h3>
+            <ul class="mt-4 space-y-4" role="list">
+              <li class="flex items-center gap-3">
+                <span class="text-2xl" aria-hidden="true">📧</span>
+                <a :href="mailtoHref" class="font-medium hover:underline truncate">
+                  {{ contact.email }}
+                </a>
+                <button
+                  type="button"
+                  class="ml-auto px-3 py-1.5 text-xs rounded-lg border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
+                  :aria-label="copied.email ? 'Correo copiado' : 'Copiar correo'"
+                  @click="copy(contact.email, 'email')"
+                >
+                  {{ copied.email ? 'Copiado' : 'Copiar' }}
+                </button>
+              </li>
 
-        <!-- Nombre -->
-        <div>
-          <label class="sr-only" for="name">Tu nombre</label>
-          <input
-            id="name"
-            v-model.trim="name"
-            type="text"
-            placeholder="Tu nombre"
-            class="input-field"
-            :aria-invalid="(touched && !isValidName) || undefined"
-            :aria-describedby="!isValidName ? 'err-name' : undefined"
-            required
-          />
-          <p v-if="touched && !isValidName" id="err-name" class="text-sm text-red-500 mt-1">
-            Escribe tu nombre (mínimo 2 caracteres).
-          </p>
-        </div>
+              <li class="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-600">
+                <span class="text-lg" aria-hidden="true">⏱️</span>
+                <span>Suelo responder en {{ contact.responseTime }}.</span>
+              </li>
+            </ul>
 
-        <!-- Email -->
-        <div>
-          <label class="sr-only" for="email">Tu correo</label>
-          <input
-            id="email"
-            v-model.trim="email"
-            type="email"
-            placeholder="Tu correo"
-            class="input-field"
-            :aria-invalid="(touched && !isValidEmail) || undefined"
-            :aria-describedby="!isValidEmail ? 'err-email' : undefined"
-            required
-          />
-          <p v-if="touched && !isValidEmail" id="err-email" class="text-sm text-red-500 mt-1">
-            Introduce un correo válido.
-          </p>
-        </div>
+            <div class="mt-6">
+              <a :href="mailtoHref" class="btn w-full text-center">Enviar email</a>
+            </div>
+          </div>
+        </aside>
 
-        <!-- Mensaje -->
-        <div>
-          <label class="sr-only" for="message">Tu mensaje</label>
-          <textarea
-            id="message"
-            v-model.trim="message"
-            placeholder="Tu mensaje"
-            rows="5"
-            class="input-field resize-none"
-            :aria-invalid="(touched && !isValidMessage) || undefined"
-            :aria-describedby="!isValidMessage ? 'err-message' : undefined"
-            required
-          ></textarea>
-          <p v-if="touched && !isValidMessage" id="err-message" class="text-sm text-red-500 mt-1">
-            Cuéntame un poco más (mínimo 10 caracteres).
-          </p>
-        </div>
-
-        <!-- Info -->
-        <p id="contact-help" class="text-xs text-zinc-400 dark:text-zinc-500">
-          Respondo en 24–48h. También puedes escribirme por email o redes.
-        </p>
-
-        <!-- Botón -->
-        <button
-          type="submit"
-          class="w-full flex items-center justify-center gap-2 rounded-xl font-semibold px-6 py-3 bg-brand-500 text-white hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-700 disabled:opacity-60 disabled:cursor-not-allowed transition"
-          :disabled="submitting || !formOk"
-        >
-          <span
-            v-if="submitting"
-            class="animate-spin w-5 h-5 border-2 border-current border-r-transparent rounded-full"
-          ></span>
-          {{ submitting ? 'Enviando…' : 'Enviar mensaje' }}
-        </button>
-
-        <!-- Estado -->
-        <p v-if="status === 'sent'" class="text-sm text-emerald-500 mt-2 transition">
-          📬 Abriendo tu cliente de correo… Si no se abre, envíame tu mensaje a
-          <a class="link" :href="mailtoHref">{{ toEmail }}</a>
-        </p>
-        <p v-if="status === 'error'" class="text-sm text-red-500 mt-2 transition">
-          Algo no fue bien. Escríbeme directamente a
-          <a class="link" :href="mailtoHref">{{ toEmail }}</a>
-        </p>
-      </form>
-
-      <!-- Redes -->
-      <div
-        v-motion
-        :initial="{ opacity: 0, x: 24 }"
-        :enter="{ opacity: 1, x: 0, transition: { duration: 450, delay: 120 } }"
-        class="card p-8 transition hover:scale-[1.01] hover:shadow-xl bg-zinc-900/60 dark:bg-zinc-100/60"
-      >
-        <h3 class="text-2xl font-semibold mb-4">Redes y correo</h3>
-        <p class="text-zinc-300 dark:text-zinc-700 mb-4">
-          También puedes contactarme directamente:
-        </p>
-        <ul class="space-y-3">
-          <li>
-            <a class="link flex items-center gap-2 hover:underline" :href="mailtoHref">
-              📧 {{ toEmail }}
-            </a>
-          </li>
-          <li>
+        <main class="md:col-span-3">
+          <div class="grid sm:grid-cols-2 gap-6">
             <a
-              class="link flex items-center gap-2 hover:underline"
-              href="https://github.com/GiovanniBarroso"
+              v-for="link in contact.links"
+              :key="link.label"
+              :href="link.url"
               target="_blank"
               rel="noopener noreferrer"
+              class="card p-5 flex items-center gap-4 hover:shadow-xl hover:-translate-y-0.5 transition"
+              :aria-label="link.aria ?? link.label"
             >
-              💻 GitHub
+              <span class="text-3xl" aria-hidden="true">{{ link.icon ?? '🔗' }}</span>
+              <div class="min-w-0">
+                <p class="font-medium leading-none">{{ link.label }}</p>
+                <p class="mt-1 text-sm truncate text-zinc-400 dark:text-zinc-600">
+                  {{ link.url }}
+                </p>
+              </div>
             </a>
-          </li>
-          <li>
-            <a
-              class="link flex items-center gap-2 hover:underline"
-              href="https://www.linkedin.com/in/giovannibarroso"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              🔗 LinkedIn
-            </a>
-          </li>
-        </ul>
+          </div>
+        </main>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import SectionTitle from '@/components/common/SectionTitle.vue'
 import { useSeo } from '@/composables/useSeo'
+import { useClipboard } from '@/composables/useClipboard'
+import { contactData as contact } from '@/data/contact'
 
 const seo = useSeo()
 seo({
   title: 'Contacto',
-  description:
-    '¿Tienes una idea o proyecto? Escríbeme para colaborar en tu próximo desarrollo web.',
+  description: 'Contacta con Giovanni Barroso por email, GitHub o LinkedIn.',
 })
 
-/** Config */
-const toEmail = 'giovanni.baralv@gmail.com'
-const subjectBase = 'Contacto desde el portfolio'
+const mailtoHref = computed(
+  () => `mailto:${contact.email}?subject=${encodeURIComponent(contact.subject)}`
+)
 
-/** State */
-const name = ref('')
-const email = ref('')
-const message = ref('')
-const hp = ref('') // honeypot
-const touched = ref(false)
-const submitting = ref(false)
-const status = ref<'idle' | 'sent' | 'error'>('idle')
-
-/** Validación */
-const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const isValidName = computed(() => name.value.length >= 2)
-const isValidEmail = computed(() => emailRe.test(email.value))
-const isValidMessage = computed(() => message.value.length >= 10)
-const formOk = computed(() => isValidName.value && isValidEmail.value && isValidMessage.value)
-
-/** Mailto helper */
-const mailtoHref = computed(() => {
-  const subject = encodeURIComponent(subjectBase)
-  const body = encodeURIComponent(
-    `Nombre: ${name.value}\nEmail: ${email.value}\n\n${message.value}`
-  )
-  return `mailto:${toEmail}?subject=${subject}&body=${body}`
-})
-
-async function onSubmit() {
-  touched.value = true
-  status.value = 'idle'
-  if (hp.value) return // bot
-  if (!formOk.value) return
-
-  try {
-    submitting.value = true
-    window.location.href = mailtoHref.value
-    status.value = 'sent'
-  } catch (e) {
-    status.value = 'error'
-  } finally {
-    submitting.value = false
-  }
-}
+const { copied, copy } = useClipboard()
 </script>

@@ -2,6 +2,7 @@
   <div
     v-motion
     class="mb-12 text-center"
+    :class="$attrs.class"
     :initial="{ opacity: 0, y: 20 }"
     :enter="{ opacity: 1, y: 0, transition: { duration: 500, easing: 'ease-out' } }"
   >
@@ -26,10 +27,10 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ inheritAttrs: false })
 interface Props {
   title: string
   subtitle?: string
 }
-
 defineProps<Props>()
 </script>

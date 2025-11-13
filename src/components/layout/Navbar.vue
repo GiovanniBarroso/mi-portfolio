@@ -3,55 +3,24 @@
     class="fixed top-0 z-50 w-full bg-zinc-950/70 text-zinc-100 dark:bg-white/80 dark:text-zinc-900 backdrop-blur border-b border-zinc-800 dark:border-zinc-200 transition-colors"
   >
     <div class="container flex h-16 items-center justify-between">
-      <!-- Logo -->
       <RouterLink to="/" class="flex items-center gap-2 font-extrabold text-xl">
-        <!-- <span
-          class="inline-block h-8 w-8 rounded-xl bg-gradient-to-br from-gray-500 to-red-600"
-        ></span> -->
         <span>Giovanni Barroso</span>
       </RouterLink>
 
       <!-- Desktop menu -->
       <ul class="hidden md:flex items-center gap-6 font-medium">
-        <li>
-          <RouterLink to="/" class="transition hover:text-brand-400 dark:hover:text-brand-600">
-            Inicio
-          </RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/about" class="transition hover:text-brand-400 dark:hover:text-brand-600">
-            Sobre mí
-          </RouterLink>
-        </li>
-        <li>
+        <li v-for="link in links" :key="link.to">
           <RouterLink
-            to="/projects"
+            :to="link.to"
             class="transition hover:text-brand-400 dark:hover:text-brand-600"
           >
-            Proyectos
-          </RouterLink>
-        </li>
-        <li>
-          <RouterLink
-            to="/skills"
-            class="transition hover:text-brand-400 dark:hover:text-brand-600"
-          >
-            Skills
-          </RouterLink>
-        </li>
-        <li>
-          <RouterLink
-            to="/contact"
-            class="transition hover:text-brand-400 dark:hover:text-brand-600"
-          >
-            Contacto
+            {{ link.label }}
           </RouterLink>
         </li>
       </ul>
 
-      <!-- Right side -->
       <div class="flex items-center gap-2">
-        <!-- Dark/Light toggle -->
+        <!-- Pulsador modo claro/oscuro -->
         <button
           aria-label="Cambiar tema"
           class="p-2 rounded-lg hover:bg-zinc-800/50 dark:hover:bg-zinc-200/60 transition-colors"
@@ -121,49 +90,13 @@
         class="md:hidden border-t border-zinc-800 dark:border-zinc-200 bg-zinc-950/95 dark:bg-white/95 backdrop-blur-sm"
       >
         <ul class="container py-4 flex flex-col gap-3 font-medium">
-          <li>
+          <li v-for="link in links" :key="link.to">
             <RouterLink
-              to="/"
+              :to="link.to"
               class="transition hover:text-brand-400 dark:hover:text-brand-600"
               @click="close"
             >
-              Inicio
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/about"
-              class="transition hover:text-brand-400 dark:hover:text-brand-600"
-              @click="close"
-            >
-              Sobre mí
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/projects"
-              class="transition hover:text-brand-400 dark:hover:text-brand-600"
-              @click="close"
-            >
-              Proyectos
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/skills"
-              class="transition hover:text-brand-400 dark:hover:text-brand-600"
-              @click="close"
-            >
-              Skills
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/contact"
-              class="transition hover:text-brand-400 dark:hover:text-brand-600"
-              @click="close"
-            >
-              Contacto
+              {{ link.label }}
             </RouterLink>
           </li>
         </ul>
@@ -175,9 +108,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { toggleTheme, isDarkTheme } from '@/plugins/theme'
+import { navLinks } from '@/data/navLinks'
 
 defineOptions({ name: 'AppNavbar' })
 
+const links = navLinks
 const open = ref(false)
 const isDark = ref(false)
 
@@ -193,31 +128,3 @@ onMounted(() => {
   isDark.value = isDarkTheme()
 })
 </script>
-
-<style scoped>
-.rotate-fade-enter-active,
-.rotate-fade-leave-active {
-  transition: all 0.3s ease;
-}
-.rotate-fade-enter-from {
-  opacity: 0;
-  transform: rotate(-90deg) scale(0.8);
-}
-.rotate-fade-leave-to {
-  opacity: 0;
-  transform: rotate(90deg) scale(0.8);
-}
-
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: all 0.25s ease;
-}
-.slide-fade-enter-from {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-.slide-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-</style>

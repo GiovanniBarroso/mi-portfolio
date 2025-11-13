@@ -1,2 +1,19 @@
+/* Importamos tailwindcss config v4 */
 @import 'tailwindcss';
 @config "../../tailwind.config.js";
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter/InterVariable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter/InterVariable-Italic.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}

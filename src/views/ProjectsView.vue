@@ -9,28 +9,25 @@
       subtitle="Trabajos destacados y prácticas técnicas"
     />
 
-    <!-- Grid de proyectos -->
-    <div
+    <!-- Grid semántica + animación solo la 1ª vez que aparecen -->
+    <ul
       v-motion
-      :initial="{ opacity: 0, y: 20 }"
-      :enter="{ opacity: 1, y: 0, transition: { duration: 600, easing: 'ease-out' } }"
-      class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8"
+      :initial="fadeUp.initial"
+      :visibleOnce="fadeUp.enter"
+      class="container px-6 mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8"
+      style="content-visibility: auto; contain-intrinsic-size: 520px"
     >
-      <ProjectCard
-        v-for="(p, i) in projects"
-        :key="p.slug"
-        v-bind="p"
-        :delay="withStagger(i, 120).delay"
-        class="transition hover:scale-[1.02] hover:shadow-xl"
-      />
-    </div>
+      <li v-for="(p, i) in projects" :key="p.slug">
+        <ProjectCard v-bind="p" :delay="withStagger(i, 100).delay" />
+      </li>
+    </ul>
 
     <!-- CTA -->
     <div
       v-motion
-      :initial="{ opacity: 0, y: 20 }"
-      :enter="{ opacity: 1, y: 0, transition: { duration: 500, delay: 200 } }"
-      class="mt-16 text-center"
+      :initial="fadeUp.initial"
+      :visibleOnce="{ ...fadeUp.enter, transition: { duration: 500, delay: 200 } }"
+      class="container px-6 mt-16 text-center"
     >
       <p class="text-zinc-400 dark:text-zinc-600 mb-4">
         ¿Quieres ver más? Tengo repositorios con experimentos, pruebas técnicas y side projects.
@@ -38,8 +35,9 @@
       <a
         href="https://github.com/GiovanniBarroso"
         target="_blank"
-        rel="noopener noreferrer"
-        class="inline-block px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition hover:scale-105 bg-brand-500 text-white hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-700"
+        rel="noopener noreferrer nofollow"
+        class="inline-block px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition hover:scale-105 bg-brand-500 text-white hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-500/60"
+        aria-label="Abrir perfil de GitHub de Giovanni Barroso en una nueva pestaña"
       >
         Ver más en GitHub 🚀
       </a>
@@ -52,7 +50,7 @@ import SectionTitle from '@/components/common/SectionTitle.vue'
 import ProjectCard from '@/components/common/ProjectCard.vue'
 import { projects } from '@/data/projects'
 import { useSeo } from '@/composables/useSeo'
-import { withStagger } from '@/composables/motionPresets'
+import { withStagger, fadeUp } from '@/composables/motionPresets'
 
 const seo = useSeo()
 seo({
