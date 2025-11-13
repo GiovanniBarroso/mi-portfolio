@@ -1,4 +1,3 @@
-// src/composables/useSeo.ts
 import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import { SITE_NAME, SITE_URL, DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE } from '@/config/seo'
@@ -21,15 +20,11 @@ export function useSeo() {
       title: finalTitle,
       meta: [
         { name: 'description', content: desc },
-
-        // OpenGraph
         { property: 'og:type', content: 'website' },
         { property: 'og:title', content: finalTitle },
         { property: 'og:description', content: desc },
         { property: 'og:url', content: canonical },
         { property: 'og:image', content: img },
-
-        // Twitter
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: finalTitle },
         { name: 'twitter:description', content: desc },
@@ -37,7 +32,6 @@ export function useSeo() {
       ],
       link: [
         { rel: 'canonical', href: canonical },
-        // Favicons (si ya los tenés en /public, buenísimo)
         { rel: 'icon', href: '/favicon.ico' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
       ],

@@ -1,6 +1,5 @@
-// tailwind.config.mjs
 export default {
-  darkMode: ['class'], // 👈 forzamos modo clase
+  darkMode: ['class'],
   content: ['./index.html', './src/**/*.{vue,ts,tsx}'],
   theme: {
     container: { center: true, padding: '1rem', screens: { '2xl': '1280px' } },

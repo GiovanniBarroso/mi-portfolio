@@ -5,7 +5,6 @@ import ProjectsView from '@/views/ProjectsView.vue'
 import SkillsView from '@/views/SkillsView.vue'
 import ContactView from '@/views/ContactView.vue'
 
-
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -19,6 +18,5 @@ const router = createRouter({
         return { top: 0 }
     }
 })
-
 
 export default router

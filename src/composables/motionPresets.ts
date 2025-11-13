@@ -1,3 +1,4 @@
+//Constantes de animaciones
 export const fadeUp = {
   initial: { opacity: 0, y: 16 },
   enter: { opacity: 1, y: 0, transition: { duration: 400 } },
@@ -22,10 +23,6 @@ export const routeFade = {
   initial: { opacity: 0, y: 10 },
   enter: { opacity: 1, y: 0, transition: { duration: 250 } },
 }
-
-/**
- * Añade un delay progresivo según el índice → efecto "stagger"
- */
 export const withStagger = (index: number, base = 80) => ({
   delay: index * base,
 })

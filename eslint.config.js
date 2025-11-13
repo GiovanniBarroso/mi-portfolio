@@ -1,4 +1,3 @@
-// eslint.config.js
 import js from '@eslint/js'
 import vue from 'eslint-plugin-vue'
 import vueParser from 'vue-eslint-parser'
@@ -20,10 +19,10 @@ export default [
   },
 
   // Presets base
-  js.configs.recommended, // objeto plano
-  ...vue.configs['flat/recommended'], // array → spread
-  ...ts(), // array → spread
-  prettier, // objeto plano
+  js.configs.recommended,
+  ...vue.configs['flat/recommended'],
+  ...ts(),
+  prettier,
 
   // Archivos .vue → parser de Vue + sub-parser TS para <script>
   {
@@ -63,7 +62,7 @@ export default [
     },
   },
 
-  // 👉 Overrides y reglas propias al final (toman prioridad)
+  // Overrides y reglas propias al final (toman prioridad)
   {
     files: ['**/*.{js,mjs,cjs,ts,vue}'],
     rules: {

@@ -1,23 +1,28 @@
 {
   "name": "Mi Portfolio",
   "short_name": "Portfolio",
-  "start_url": "/mi-portfolio/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#8b5cf6",
   "icons": [
     {
-      "src": "/mi-portfolio/favicon.ico",
+      "src": "favicon.ico",
       "sizes": "48x48",
       "type": "image/x-icon"
     },
     {
-      "src": "/mi-portfolio/apple-touch-icon.png",
+      "src": "apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png"
     },
     {
-      "src": "/mi-portfolio/og-image.png",
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
