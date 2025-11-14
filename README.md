@@ -1,8 +1,29 @@
 # Scripts disponibles
-pnpm dev       # Levanta el servidor de desarrollo
-pnpm build     # Genera la build de producción en dist/
-pnpm preview   # Previsualiza la build en local
-pnpm lint      # Ejecuta ESLint sobre el código
-pnpm format    # Formatea el código con Prettier
-pnpm typecheck # Revisa los tipos con TypeScript
-pnpm ci:check  # Usado en CI: lint + typecheck + build
+
+# Levanta el servidor de desarrollo
+
+pnpm dev
+
+# Genera la build de producción en dist/
+
+pnpm build
+
+# Previsualiza la build en local
+
+pnpm preview
+
+# Ejecuta ESLint sobre el código
+
+pnpm lint
+
+# Formatea el código con Prettier
+
+pnpm format
+
+# Revisa los tipos con TypeScript
+
+pnpm typecheck
+
+# Usado en CI: lint + typecheck + build
+
+pnpm ci:check
