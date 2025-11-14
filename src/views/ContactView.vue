@@ -1,18 +1,19 @@
 <template>
   <section
-    class="py-20 border-b border-zinc-800/50 dark:border-zinc-200/40 bg-zinc-950 text-zinc-100 dark:bg-white dark:text-zinc-800 transition-colors"
+    class="min-h-dvh border-b border-zinc-800/50 dark:border-zinc-200/40 bg-zinc-950 text-zinc-100 dark:bg-white dark:text-zinc-800 transition-colors duration-300"
     aria-labelledby="contact-title"
   >
-    <SectionTitle
-      id="contact-title"
-      title="Contacto"
-      subtitle="Escríbeme por el canal que prefieras"
-    />
+    <div class="container mx-auto max-w-5xl px-4 sm:px-6 pt-24 sm:pt-28 pb-16 sm:pb-20">
+      <SectionTitle
+        id="contact-title"
+        title="Contacto"
+        subtitle="Escríbeme por el canal que prefieras"
+      />
 
-    <div class="container mx-auto max-w-6xl px-6 mt-10">
-      <div class="grid md:grid-cols-5 gap-8 items-start">
+      <div class="mt-10 grid gap-8 md:grid-cols-5 items-start">
+        <!-- Columna izquierda -->
         <aside class="md:col-span-2">
-          <div class="card p-6 md:sticky md:top-8">
+          <div class="card p-6 sm:p-7 md:sticky md:top-8">
             <h3 class="text-xl font-semibold">Datos directos</h3>
             <ul class="mt-4 space-y-4" role="list">
               <li class="flex items-center gap-3">
@@ -37,13 +38,14 @@
             </ul>
 
             <div class="mt-6">
-              <a :href="mailtoHref" class="btn w-full text-center">Enviar email</a>
+              <a :href="mailtoHref" class="btn w-full text-center"> Enviar email </a>
             </div>
           </div>
         </aside>
 
+        <!-- Columna derecha -->
         <main class="md:col-span-3">
-          <div class="grid sm:grid-cols-2 gap-6">
+          <div class="grid gap-4 sm:gap-6 sm:grid-cols-2">
             <a
               v-for="link in contact.links"
               :key="link.label"
