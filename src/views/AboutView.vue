@@ -22,7 +22,7 @@
           <img
             :src="about.profileImage"
             alt="Foto de Giovanni Barroso"
-            class="w-32 h-32 rounded-2xl object-cover mb-6 border-4 border-brand-500 shadow-lg"
+            class="w-50 h-50 rounded-2xl object-cover mb-6 border-4 border-brand-500 shadow-lg"
             loading="lazy"
             decoding="async"
             fetchpriority="low"

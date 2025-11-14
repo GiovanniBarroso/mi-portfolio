@@ -1,15 +1,15 @@
 export type ProjectItem = {
-  slug: string;
-  title: string;
-  description: string;
-  techs: string[];
-  image: string;
-  demoUrl?: string | null;
-  repoUrl?: string | null;
-};
+  slug: string
+  title: string
+  description: string
+  techs: string[]
+  image: string
+  demoUrl?: string | null
+  repoUrl?: string | null
+}
 
-const BASE = import.meta.env.BASE_URL;
-const pub = (file: string) => `${BASE}resources/${file}`;
+const BASE = import.meta.env.BASE_URL
+const pub = (file: string) => `${BASE}resources/${file}`
 
 export const projects: ProjectItem[] = [
   {
@@ -36,8 +36,8 @@ export const projects: ProjectItem[] = [
     slug: 'nanobank',
     title: 'NanoBank',
     description:
-      'Aplicación de banca simulada con Vue 3 en el frontend y Spring Boot en el backend. Permite gestionar usuarios y múltiples perfiles de inversión con distintos niveles de riesgo.',
-    techs: ['Vue 3', 'Spring Boot', 'PostgreSQL', 'REST API'],
+      'Aplicación de banca simulada con JUnit en el frontend y JAVA en el backend. Permite gestionar usuarios y múltiples perfiles de inversión con distintos niveles de riesgo.',
+    techs: ['JUnit', 'JAVA', 'MySQL'],
     image: pub('nanobank.png'),
     demoUrl: null,
     repoUrl: 'https://github.com/GiovanniBarroso/NanoBank',
@@ -102,4 +102,4 @@ export const projects: ProjectItem[] = [
     demoUrl: null,
     repoUrl: null,
   },
-];
+]
