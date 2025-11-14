@@ -3,14 +3,11 @@
     v-motion
     :initial="{ opacity: 0, y: 24 }"
     :enter="{ opacity: 1, y: 0, transition: { duration: 400, delay } }"
-    :class="[
-      'overflow-hidden flex flex-col group transition rounded-2xl border hover:shadow-2xl hover:-translate-y-0.5',
-      isDark
-        ? 'bg-white text-zinc-900 border-zinc-200'
-        : 'bg-zinc-950 text-zinc-100 border-zinc-800',
-    ]"
+    class="overflow-hidden flex flex-col group transition rounded-2xl border hover:shadow-2xl hover:-translate-y-0.5 cursor-pointer sm:cursor-default bg-zinc-950 text-zinc-100 border-zinc-800 dark:bg-white dark:text-zinc-900 dark:border-zinc-200"
     :aria-label="`Proyecto: ${title}`"
+    @click="toggleMobileOverlay"
   >
+    <!-- Imagen -->
     <div class="relative w-full aspect-[16/9] overflow-hidden">
       <img
         v-if="image"
@@ -21,39 +18,53 @@
         decoding="async"
         fetchpriority="low"
       />
+
+      <!-- Overlay DESKTOP / TABLET (hover) -->
       <div
-        class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4"
-        :class="isDark ? 'bg-white/70' : 'bg-black/60'"
+        class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:flex items-center justify-center gap-4 bg-black/60 dark:bg-white/70"
       >
-        <a
-          v-if="demoUrl"
-          :href="demoUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="px-4 py-2 rounded-lg bg-white text-sm font-medium text-zinc-900 shadow hover:bg-zinc-100 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
-        >
-          Demo
-        </a>
-        <a
-          v-if="repoUrl"
-          :href="repoUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="px-4 py-2 rounded-lg bg-brand-500 text-sm font-medium text-white shadow hover:bg-brand-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
-        >
-          Código
-        </a>
+        <!-- botones -->
+      </div>
+
+      <!-- Overlay MÓVIL (tap en la card) -->
+      <div
+        v-if="(demoUrl || repoUrl) && mobileOverlayOpen"
+        class="absolute inset-0 sm:hidden flex items-center justify-center bg-black/70 dark:bg-white/80"
+      >
+        <div class="flex gap-3">
+          <a
+            v-if="demoUrl"
+            :href="demoUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 rounded-lg bg-white text-xs font-semibold text-zinc-900 shadow text-center"
+            @click.stop
+          >
+            Demo
+          </a>
+          <a
+            v-if="repoUrl"
+            :href="repoUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 rounded-lg bg-brand-500 text-xs font-semibold text-white shadow text-center"
+            @click.stop
+          >
+            Código
+          </a>
+        </div>
       </div>
     </div>
 
+    <!-- Contenido -->
     <div class="p-5 flex-1 flex flex-col">
       <h3
-        class="text-lg font-bold mb-2 transition-colors duration-300"
-        :class="isDark ? 'group-hover:text-brand-600' : 'group-hover:text-brand-400'"
+        class="text-lg font-bold mb-2 transition-colors duration-300 group-hover:text-brand-400 dark:group-hover:text-brand-600"
       >
         {{ title }}
       </h3>
-      <p class="text-sm leading-relaxed flex-1" :class="isDark ? 'text-zinc-600' : 'text-zinc-300'">
+
+      <p class="text-sm leading-relaxed flex-1 text-zinc-300 dark:text-zinc-600">
         {{ description }}
       </p>
 
@@ -61,12 +72,7 @@
         <span
           v-for="t in techs"
           :key="t"
-          class="px-2 py-1 text-xs rounded-full transition hover:scale-105 border"
-          :class="
-            isDark
-              ? 'bg-zinc-100 text-zinc-800 border-zinc-300'
-              : 'bg-zinc-800 text-zinc-100 border-zinc-700'
-          "
+          class="px-2 py-1 text-xs rounded-full transition hover:scale-105 border bg-zinc-800 text-zinc-100 border-zinc-700 dark:bg-zinc-100 dark:text-zinc-800 dark:border-zinc-300"
         >
           {{ t }}
         </span>
@@ -76,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { useDark } from '@vueuse/core'
+import { ref } from 'vue'
 
 interface Props {
   slug?: string
@@ -88,6 +94,7 @@ interface Props {
   repoUrl?: string | null
   delay?: number
 }
+
 withDefaults(defineProps<Props>(), {
   image: '',
   techs: () => [],
@@ -96,5 +103,8 @@ withDefaults(defineProps<Props>(), {
   delay: 0,
 })
 
-const isDark = useDark()
+const mobileOverlayOpen = ref(false)
+const toggleMobileOverlay = () => {
+  mobileOverlayOpen.value = !mobileOverlayOpen.value
+}
 </script>
