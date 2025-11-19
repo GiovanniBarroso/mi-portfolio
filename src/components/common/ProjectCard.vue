@@ -3,9 +3,9 @@
     v-motion
     :initial="{ opacity: 0, y: 24 }"
     :enter="{ opacity: 1, y: 0, transition: { duration: 400, delay } }"
-    class="overflow-hidden flex flex-col group transition rounded-2xl border hover:shadow-2xl hover:-translate-y-0.5 cursor-pointer sm:cursor-default bg-zinc-950 text-zinc-100 border-zinc-800 dark:bg-white dark:text-zinc-900 dark:border-zinc-200"
+    class="overflow-hidden flex flex-col group transition rounded-2xl border hover:shadow-2xl hover:-translate-y-0.5 cursor-pointer bg-zinc-950 text-zinc-100 border-zinc-800 dark:bg-white dark:text-zinc-900 dark:border-zinc-200"
     :aria-label="`Proyecto: ${title}`"
-    @click="toggleMobileOverlay"
+    @click="toggleOverlay"
   >
     <!-- Imagen -->
     <div class="relative w-full aspect-[16/9] overflow-hidden">
@@ -19,19 +19,14 @@
         fetchpriority="low"
       />
 
-      <!-- Overlay DESKTOP / TABLET (hover) -->
+      <!-- Overlay -->
       <div
-        class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:flex items-center justify-center gap-4 bg-black/60 dark:bg-white/70"
+        v-if="demoUrl || repoUrl"
+        class="absolute inset-0 flex items-center justify-center bg-black/70 dark:bg-white/80 transition-opacity duration-300"
+        :class="mobileOverlayOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+        @click.self="closeOverlay"
       >
-        <!-- botones -->
-      </div>
-
-      <!-- Overlay MÓVIL (tap en la card) -->
-      <div
-        v-if="(demoUrl || repoUrl) && mobileOverlayOpen"
-        class="absolute inset-0 sm:hidden flex items-center justify-center bg-black/70 dark:bg-white/80"
-      >
-        <div class="flex gap-3">
+        <div class="flex flex-wrap gap-3">
           <a
             v-if="demoUrl"
             :href="demoUrl"
@@ -104,7 +99,12 @@ withDefaults(defineProps<Props>(), {
 })
 
 const mobileOverlayOpen = ref(false)
-const toggleMobileOverlay = () => {
+
+const toggleOverlay = () => {
   mobileOverlayOpen.value = !mobileOverlayOpen.value
+}
+
+const closeOverlay = () => {
+  mobileOverlayOpen.value = false
 }
 </script>
