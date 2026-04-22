@@ -28,13 +28,13 @@ const { current } = useIndexCarousel({
 <!-- Contenedor visual del carrusel -->
 <template>
   <span
-    class="inline-block relative w-64 h-8 overflow-hidden font-semibold text-brand-500 align-middle"
+    class="inline-flex items-center justify-center relative w-52 sm:w-64 h-8 overflow-hidden font-semibold text-brand-500 align-middle"
     aria-hidden="true"
   >
     <span
       v-for="(word, i) in items"
       :key="word"
-      class="absolute inset-0 transition-transform duration-700 will-change-transform"
+      class="absolute inset-0 flex items-center justify-center transition-transform duration-700 will-change-transform"
       :style="{ transform: `translateY(${(i - current) * 100}%)` }"
     >
       {{ word }}
