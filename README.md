@@ -1,29 +1,58 @@
-# Scripts disponibles
+# Portfolio — Giovanni Barroso
 
-## Levanta el servidor de desarrollo
+Portfolio personal desarrollado con **Vue 3 + TypeScript + Tailwind CSS 4**, desplegado en [giovannibarroso.com](https://giovannibarroso.com).
 
-pnpm dev
+[![CI](https://github.com/GiovanniBarroso/mi-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/GiovanniBarroso/mi-portfolio/actions/workflows/ci.yml)
 
-## Genera la build de producción en dist/
+![Captura del portfolio](public/resources/mi-portfolio.png)
 
-pnpm build
+## Stack
 
-## Previsualiza la build en local
+- **Vue 3.5** (Composition API + `<script setup>`) con **TypeScript**
+- **Vite 7** como bundler y dev server
+- **Tailwind CSS 4** con modo oscuro
+- **Vue Router** con rutas lazy-loaded
+- **@vueuse/motion** para animaciones
+- **Unhead** para SEO dinámico (title, meta, canonical, Open Graph)
+- **PWA** con manifest y service worker
 
-pnpm preview
+## Estructura
 
-## Ejecuta ESLint sobre el código
+```
+src/
+├── components/    # Componentes comunes y de layout (Navbar, LampHero, Footer…)
+├── composables/   # Lógica reutilizable (SEO, clipboard, carousel…)
+├── config/        # Configuración de SEO del sitio
+├── data/          # Contenido: proyectos, skills, about, contacto
+├── plugins/       # Tema claro/oscuro
+├── router/        # Rutas con lazy loading
+└── views/         # Home, Proyectos, Skills, Sobre mí, Contacto
+```
 
-pnpm lint
+Todo el contenido (proyectos, skills, textos) vive en `src/data/`, separado de los componentes: para actualizar el portfolio basta con editar esos ficheros.
 
-## Formatea el código con Prettier
+## Desarrollo
 
-pnpm format
+Requiere Node ≥ 18 y pnpm ≥ 9.
 
-## Revisa los tipos con TypeScript
+```bash
+pnpm install      # instala dependencias
+pnpm dev          # servidor de desarrollo
+pnpm build        # build de producción en dist/
+pnpm preview      # previsualiza la build
+```
 
-pnpm typecheck
+### Calidad de código
 
-## Usado en CI: lint + typecheck + build
+```bash
+pnpm lint         # ESLint (máx. 0 warnings)
+pnpm format       # Prettier
+pnpm typecheck    # vue-tsc
+pnpm ci:check     # lint + typecheck + build (lo que ejecuta CI)
+```
 
-pnpm ci:check
+Husky + lint-staged formatean y lintan automáticamente en cada commit.
+
+## Despliegue
+
+CI/CD con GitHub Actions: cada push a `main` pasa por `ci.yml` (lint + typecheck + build) y `deploy.yml` publica la build en GitHub Pages con el dominio personalizado `giovannibarroso.com`.

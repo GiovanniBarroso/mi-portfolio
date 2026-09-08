@@ -13,9 +13,22 @@ export default [
       'node_modules/**',
       'postcss.config.cjs',
       'tailwind.config.js',
-      '*.vue.js',
-      '*.vue.d.ts',
+      '**/*.vue.js',
+      '**/*.vue.d.ts',
+      'src/**/*.js', // residuos de vue-tsc si alguna vez emite
+
     ],
+  },
+
+  // Scripts de Node (tooling, fuera del bundle)
+  {
+    files: ['scripts/**/*.{js,mjs}'],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
   },
 
   // Presets base

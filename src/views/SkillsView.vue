@@ -83,7 +83,24 @@
               class="flex items-center justify-between pb-4 mb-4 border-b border-zinc-100 dark:border-zinc-800"
             >
               <div class="flex items-center gap-2.5">
-                <span class="text-xl" aria-hidden="true">{{ categoryIcon[cat.name] ?? '🔧' }}</span>
+                <span
+                  class="h-7 w-7 rounded-lg flex items-center justify-center bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300"
+                  aria-hidden="true"
+                >
+                  <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      :d="categoryIcon[cat.name] ?? defaultCategoryIcon"
+                    />
+                  </svg>
+                </span>
                 <h3 class="text-sm font-bold">{{ cat.name }}</h3>
               </div>
               <span
@@ -147,12 +164,19 @@ const categoryGradient: Record<string, string> = {
   'Testing & Calidad': 'linear-gradient(90deg, #f97316, #fb923c)',
 }
 
+// path SVG (Heroicons outline, viewBox 24x24)
 const categoryIcon: Record<string, string> = {
-  Frontend: '🖥️',
-  Backend: '⚙️',
-  'Herramientas & DevOps': '🛠️',
-  'Testing & Calidad': '🧪',
+  Frontend:
+    'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+  Backend:
+    'M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01',
+  'Herramientas & DevOps':
+    'M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75',
+  'Testing & Calidad':
+    'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z',
 }
+const defaultCategoryIcon =
+  'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'
 
 const filteredCategories = computed<SkillCategory[]>(() => {
   const q = query.value.toLowerCase()

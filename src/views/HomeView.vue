@@ -229,7 +229,7 @@
             <dt
               class="text-3xl sm:text-4xl font-extrabold text-brand-500 tabular-nums leading-none"
             >
-              {{ stat.value }}
+              <CountUp :value="stat.value" />
             </dt>
             <dd
               class="mt-2 text-[11px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400 font-medium leading-snug"
@@ -406,14 +406,15 @@
 import LampHero from '@/components/layout/LampHero.vue'
 import ProjectCard from '@/components/common/ProjectCard.vue'
 import HeroWords from '@/components/common/HeroWords.vue'
+import CountUp from '@/components/common/CountUp.vue'
 import { projects } from '@/data/projects'
 import { heroWords } from '@/data/hero'
 import { computed } from 'vue'
 
 const FEATURED = [
-  { slug: 'cosas-d-casa', badge: undefined },
-  { slug: 'date-un-respiro', badge: 'En desarrollo' },
-  { slug: 'manuela-rios', badge: undefined },
+  { slug: 'mybalance', badge: 'En desarrollo' },
+  { slug: 'cosas-d-casa', badge: 'En producción' },
+  { slug: 'fastfix', badge: undefined },
 ] as const
 
 const slicedProjects = computed(() =>
@@ -424,8 +425,8 @@ const slicedProjects = computed(() =>
 )
 
 const quickStats = [
-  { label: 'Proyectos reales', value: '5+' },
-  { label: 'Repos públicos', value: '15+' },
+  { label: 'Proyectos reales', value: '9' },
+  { label: 'Repos públicos', value: '12' },
   { label: 'Años de práctica', value: '2+' },
   { label: 'Tecnologías', value: '20+' },
 ]
