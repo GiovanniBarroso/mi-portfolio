@@ -168,9 +168,9 @@ seo({
 const activeFilter = ref('Todos')
 
 const FEATURED = [
-  { slug: 'mybalance', badge: 'En desarrollo' },
-  { slug: 'cosas-d-casa', badge: 'En producción' },
-  { slug: 'fastfix', badge: undefined },
+  { slug: 'mybalance', badge: 'Live' },
+  { slug: 'cosas-d-casa', badge: 'Live' },
+  { slug: 'fastfix', badge: 'No desplegado' },
 ] as const
 
 const featuredProjects = computed(() =>
