@@ -36,3 +36,5 @@ yarn.lock
 *.vue.js
 *.vue.d.ts
 *.vue.d.ts.map
+# Herramientas locales de Claude Code (no forman parte del proyecto)
+.claude/
