@@ -1,153 +1,122 @@
 <template>
-  <div class="section-base" aria-labelledby="projects-title">
-    <div class="container px-6 mx-auto max-w-6xl">
-      <!-- Header -->
-      <div
-        v-motion
-        :initial="{ opacity: 0, y: 16 }"
-        :enter="{ opacity: 1, y: 0, transition: { duration: 500 } }"
-        class="mb-12 text-center"
+  <div class="page shell" aria-labelledby="projects-title">
+    <PageHeader
+      eyebrow="Portafolio"
+      title="Proyectos"
+      subtitle="Productos en producción, proyectos académicos y experimentos de infraestructura. Cada tarjeta enlaza a la demo o al repositorio."
+      as="h1"
+      title-id="projects-title"
+      class="mx-auto"
+    >
+      <ul class="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+        <li v-for="s in summary" :key="s.label" class="flex items-center gap-2 text-sm">
+          <span class="h-2 w-2 rounded-full" :class="s.dot" aria-hidden="true" />
+          <span class="font-semibold tabular-nums text-fg">{{ s.value }}</span>
+          <span class="text-fg-muted">{{ s.label }}</span>
+        </li>
+      </ul>
+    </PageHeader>
+
+    <!-- ── Destacados ── -->
+    <section class="mt-16" aria-labelledby="featured-heading">
+      <h2
+        id="featured-heading"
+        class="text-[11px] font-bold uppercase tracking-[0.14em] text-fg-subtle"
       >
-        <p class="text-xs font-semibold text-brand-500 uppercase tracking-widest mb-2">
-          Portafolio
-        </p>
-        <h1 id="projects-title" class="text-3xl sm:text-5xl font-extrabold tracking-tight">
-          Proyectos
-        </h1>
-        <div
-          class="mt-3 mx-auto h-1 w-16 rounded-full bg-gradient-to-r from-brand-500 to-purple-500"
-        />
-        <p class="mt-4 text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto text-base leading-relaxed">
-          Trabajos reales, experimentos técnicos y side projects.
-        </p>
-
-        <!-- Stats strip -->
-        <div class="mt-8 flex flex-wrap justify-center gap-6">
-          <div class="flex items-center gap-2 text-sm">
-            <span class="h-2 w-2 rounded-full bg-brand-500"></span>
-            <span class="font-semibold text-zinc-800 dark:text-zinc-200">{{
-              projects.length
-            }}</span>
-            <span class="text-zinc-500 dark:text-zinc-400">proyectos</span>
-          </div>
-          <div class="flex items-center gap-2 text-sm">
-            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-            <span class="font-semibold text-zinc-800 dark:text-zinc-200">{{ liveCount }}</span>
-            <span class="text-zinc-500 dark:text-zinc-400">en producción</span>
-          </div>
-          <div class="flex items-center gap-2 text-sm">
-            <span class="h-2 w-2 rounded-full bg-purple-500"></span>
-            <span class="font-semibold text-zinc-800 dark:text-zinc-200">{{ openCount }}</span>
-            <span class="text-zinc-500 dark:text-zinc-400">open source</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Featured projects (2 cards side by side) -->
-      <div
-        v-motion
-        :initial="{ opacity: 0, y: 14 }"
-        :enter="{ opacity: 1, y: 0, transition: { duration: 450, delay: 80 } }"
-        class="mb-4"
-      >
-        <p
-          class="text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-4"
-        >
-          Destacados
-        </p>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          <ProjectCard
-            v-for="(p, i) in featuredProjects"
-            :key="p.slug"
-            v-bind="p"
-            :delay="i * 80"
-          />
-        </div>
-      </div>
-
-      <!-- Divider -->
-      <div class="flex items-center gap-4 mb-8">
-        <div class="flex-1 h-px bg-zinc-100 dark:bg-zinc-800" />
-        <p
-          class="text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest whitespace-nowrap"
-        >
-          Todos los proyectos
-        </p>
-        <div class="flex-1 h-px bg-zinc-100 dark:bg-zinc-800" />
-      </div>
-
-      <!-- Filter chips -->
-      <div
-        v-motion
-        :initial="{ opacity: 0, y: 10 }"
-        :enter="{ opacity: 1, y: 0, transition: { duration: 400, delay: 120 } }"
-        class="mb-8 flex flex-wrap gap-2"
-        role="group"
-        aria-label="Filtrar proyectos por tecnología"
-      >
-        <button
-          v-for="f in filters"
-          :key="f"
-          :class="activeFilter === f ? 'chip-filter-active' : 'chip-filter'"
-          @click="activeFilter = f"
-        >
-          {{ f }}
-        </button>
-      </div>
-
-      <!-- Grid -->
-      <TransitionGroup
-        name="project-grid"
-        tag="ul"
-        class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
+        Destacados
+      </h2>
+      <ul class="mt-5 grid gap-5 sm:grid-cols-3 lg:grid-cols-3">
         <li
-          v-for="(p, i) in filteredProjects"
+          v-for="(p, i) in featured"
           :key="p.slug"
           v-motion
-          :initial="{ opacity: 0, y: 28 }"
-          :visibleOnce="{ opacity: 1, y: 0, transition: { duration: 400, delay: (i % 3) * 70 } }"
-          class="flex"
+          :initial="reveal.initial"
+          :visible-once="staggered(i, 3)"
         >
-          <ProjectCard v-bind="p" class="h-full flex-1" />
+          <ProjectCard v-bind="p" />
+        </li>
+      </ul>
+    </section>
+
+    <!-- ── Todos + filtros ── -->
+    <section class="mt-20" aria-labelledby="all-heading">
+      <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <h2
+          id="all-heading"
+          class="text-[11px] font-bold uppercase tracking-[0.14em] text-fg-subtle"
+        >
+          Todos los proyectos
+        </h2>
+        <p class="text-sm text-fg-muted" role="status" aria-live="polite">
+          {{ filtered.length }}
+          {{ filtered.length === 1 ? 'proyecto' : 'proyectos' }}
+          <template v-if="activeFilter !== ALL">con {{ activeFilter }}</template>
+        </p>
+      </div>
+
+      <!-- Filtros. En móvil se desplazan en horizontal en vez de romper
+           en cinco filas de píldoras. -->
+      <div class="-mx-5 mt-5 overflow-x-auto px-5 pb-2 sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0">
+        <div
+          class="flex w-max gap-2 sm:w-auto sm:flex-wrap"
+          role="group"
+          aria-label="Filtrar proyectos por tecnología"
+        >
+          <button
+            v-for="f in filters"
+            :key="f.label"
+            type="button"
+            class="chip"
+            :aria-pressed="activeFilter === f.label"
+            @click="activeFilter = f.label"
+          >
+            {{ f.label }}
+            <span class="tabular-nums opacity-60">{{ f.count }}</span>
+          </button>
+        </div>
+      </div>
+
+      <TransitionGroup name="grid" tag="ul" class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <li v-for="p in filtered" :key="p.slug">
+          <ProjectCard v-bind="p" />
         </li>
       </TransitionGroup>
 
-      <!-- Empty state -->
-      <p v-if="!filteredProjects.length" class="py-20 text-center text-zinc-500 dark:text-zinc-400">
-        No hay proyectos con ese filtro.
-      </p>
-
-      <!-- CTA GitHub -->
-      <div
-        v-motion
-        :initial="{ opacity: 0, y: 16 }"
-        :visibleOnce="{ opacity: 1, y: 0, transition: { duration: 500, delay: 200 } }"
-        class="mt-16 text-center"
-      >
-        <p class="text-zinc-500 dark:text-zinc-400 mb-4 text-sm">
-          ¿Quieres ver más? Tengo repositorios con experimentos, pruebas técnicas y side projects.
-        </p>
-        <a
-          href="https://github.com/GiovanniBarroso"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn px-7 py-3 shadow-lg shadow-brand-500/20"
-          aria-label="Abrir perfil de GitHub de Giovanni Barroso"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 shrink-0"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path
-              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-            />
-          </svg>
-          Ver más en GitHub
-        </a>
+      <div v-if="!filtered.length" class="card-muted mt-8 px-6 py-16 text-center">
+        <AppIcon name="search" :size="8" class="mx-auto text-fg-subtle" :stroke-width="1.25" />
+        <p class="mt-4 font-semibold text-fg">Nada por aquí</p>
+        <p class="mt-1 text-sm text-fg-muted">No hay proyectos que usen {{ activeFilter }}.</p>
+        <button type="button" class="btn-outline btn-sm mt-6" @click="activeFilter = ALL">
+          Ver todos los proyectos
+        </button>
       </div>
+    </section>
+
+    <!-- ── CTA GitHub ── -->
+    <div
+      v-motion
+      :initial="reveal.initial"
+      :visible-once="reveal.visibleOnce"
+      class="card-muted mt-20 flex flex-col items-center gap-5 px-6 py-12 text-center sm:px-10"
+    >
+      <AppIcon name="github" :size="8" class="text-fg-muted" />
+      <div>
+        <h2 class="text-fluid-lg font-bold tracking-tight text-fg">¿Quieres ver más?</h2>
+        <p class="measure mx-auto mt-2 text-sm leading-relaxed text-fg-muted">
+          En GitHub están los repositorios públicos, con experimentos, pruebas técnicas y el código
+          de este mismo portfolio.
+        </p>
+      </div>
+      <a
+        href="https://github.com/GiovanniBarroso"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn"
+      >
+        <AppIcon name="github" :size="4" />
+        Ver perfil de GitHub
+        <span class="sr-only">(abre en una pestaña nueva)</span>
+      </a>
     </div>
   </div>
 </template>
@@ -155,64 +124,79 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import ProjectCard from '@/components/common/ProjectCard.vue'
-import { projects } from '@/data/projects'
+import PageHeader from '@/components/common/PageHeader.vue'
+import AppIcon from '@/components/common/AppIcon.vue'
+import { projects, FEATURED_SLUGS } from '@/data/projects'
 import { useSeo } from '@/composables/useSeo'
+import { reveal, staggered } from '@/composables/motionPresets'
 
 const seo = useSeo()
 seo({
   title: 'Proyectos',
   description:
-    'Giovanni Barroso — Proyectos destacados en desarrollo web: SPA, CI/CD, performance y accesibilidad.',
+    'Proyectos de Giovanni Barroso: e-commerce con Stripe, dashboards con Supabase, APIs en NestJS y despliegue continuo.',
 })
 
-const activeFilter = ref('Todos')
+const ALL = 'Todos'
+const activeFilter = ref(ALL)
 
-const FEATURED = [
-  { slug: 'mybalance', badge: 'Live' },
-  { slug: 'cosas-d-casa', badge: 'Live' },
-  { slug: 'fastfix', badge: 'No desplegado' },
-] as const
-
-const featuredProjects = computed(() =>
-  FEATURED.map(({ slug, badge }) => ({
-    ...projects.find((p) => p.slug === slug)!,
-    badge,
-  }))
+const featured = computed(() =>
+  FEATURED_SLUGS.map(({ slug, badge }) => {
+    const project = projects.find((p) => p.slug === slug)!
+    return badge ? { ...project, badge } : project
+  })
 )
 
-const liveCount = computed(() => projects.filter((p) => p.demoUrl).length)
-const openCount = computed(() => projects.filter((p) => p.repoUrl).length)
+const summary = computed(() => [
+  { label: 'proyectos', value: projects.length, dot: 'bg-accent' },
+  { label: 'en producción', value: projects.filter((p) => p.demoUrl).length, dot: 'bg-ok' },
+  { label: 'open source', value: projects.filter((p) => p.repoUrl).length, dot: 'bg-violet2' },
+])
 
-// Solo se ofrecen como filtro las tecnologías presentes en 2+ proyectos:
-// filtrar por una tech usada una sola vez equivale a mostrar ese proyecto suelto.
+/**
+ * Sólo se ofrecen como filtro las tecnologías presentes en 2+ proyectos:
+ * filtrar por una usada una sola vez equivale a mostrar ese proyecto suelto.
+ */
 const filters = computed(() => {
   const counts = new Map<string, number>()
   projects.forEach((p) => p.techs.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)))
   const shared = [...counts.entries()]
     .filter(([, n]) => n > 1)
     .sort(([a, na], [b, nb]) => nb - na || a.localeCompare(b))
-    .map(([t]) => t)
-  return ['Todos', ...shared]
+    .map(([label, count]) => ({ label, count }))
+  return [{ label: ALL, count: projects.length }, ...shared]
 })
 
-const filteredProjects = computed(() => {
-  if (activeFilter.value === 'Todos') return projects
-  return projects.filter((p) => p.techs.includes(activeFilter.value))
-})
+const filtered = computed(() =>
+  activeFilter.value === ALL
+    ? projects
+    : projects.filter((p) => p.techs.includes(activeFilter.value))
+)
 </script>
 
 <style scoped>
-.project-grid-move,
-.project-grid-enter-active,
-.project-grid-leave-active {
-  transition: all 0.3s ease;
+/* Las que salen se ocultan de inmediato y las que quedan se reacomodan
+   con `grid-move`. Sacarlas del flujo con position:absolute dentro de una
+   rejilla las mandaba a la esquina del contenedor a mitad de animación. */
+.grid-move,
+.grid-enter-active {
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
 }
-.project-grid-enter-from,
-.project-grid-leave-to {
+.grid-leave-active {
+  display: none;
+}
+.grid-enter-from {
   opacity: 0;
-  transform: scale(0.97) translateY(8px);
+  transform: scale(0.97);
 }
-.project-grid-leave-active {
-  position: absolute;
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-move,
+  .grid-enter-active,
+  .grid-leave-active {
+    transition: none;
+  }
 }
 </style>

@@ -2,37 +2,82 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#8b5cf6" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-    <!-- Favicons -->
+    <!--
+      Tema antes de la primera pintura. Sin esto el sitio aparece en claro
+      durante unos milisegundos y luego salta a oscuro: el clásico flash.
+      Va en línea y sin `defer` a propósito, se ejecuta antes del CSS.
+    -->
+    <script>
+      ;(function () {
+        try {
+          var stored = localStorage.getItem('theme')
+          var theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+          document.documentElement.classList.add(theme)
+          document.documentElement.style.colorScheme = theme
+        } catch (e) {
+          document.documentElement.classList.add('light')
+        }
+      })()
+    </script>
+
+    <!-- El color de la barra del navegador acompaña al tema activo -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b" />
+
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- SEO básico -->
+    <!-- La fuente variable es el recurso crítico del primer render -->
+    <link
+      rel="preload"
+      href="/fonts/inter/InterVariable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
     <meta
       name="description"
-      content="Desarrollador web — TS, React, Vue. Interfaces limpias, rápidas y accesibles."
+      content="Giovanni Barroso — desarrollador full-stack en Sevilla. Vue, React, TypeScript y Node. Interfaces limpias, rápidas y accesibles."
     />
+    <meta name="author" content="Giovanni Barroso" />
+    <link rel="canonical" href="https://giovannibarroso.com/" />
+
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content="Giovanni Barroso" />
     <meta property="og:title" content="Giovanni Barroso · Desarrollador Web" />
     <meta
       property="og:description"
-      content="Desarrollador web — TS, React, Vue. Interfaces limpias, rápidas y accesibles."
+      content="Desarrollador full-stack en Sevilla. Vue, React, TypeScript. Interfaces limpias, rápidas y accesibles."
     />
     <meta property="og:image" content="https://giovannibarroso.com/og-image.png" />
     <meta property="og:url" content="https://giovannibarroso.com/" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://giovannibarroso.com/og-image.png" />
+    <meta name="twitter:title" content="Giovanni Barroso · Desarrollador Web" />
     <meta
       name="twitter:description"
-      content="Desarrollador web — TS, React, Vue. Interfaces limpias, rápidas y accesibles."
+      content="Desarrollador full-stack en Sevilla. Vue, React, TypeScript. Interfaces limpias, rápidas y accesibles."
     />
+    <meta name="twitter:image" content="https://giovannibarroso.com/og-image.png" />
 
-    <title>Giovanni Barroso</title>
+    <title>Giovanni Barroso · Desarrollador Web</title>
   </head>
   <body>
     <div id="app"></div>
+    <noscript>
+      <p style="padding: 2rem; font-family: system-ui, sans-serif">
+        Este portfolio necesita JavaScript. Puedes escribirme a
+        <a href="mailto:giovanni.baralv@gmail.com">giovanni.baralv@gmail.com</a>.
+      </p>
+    </noscript>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

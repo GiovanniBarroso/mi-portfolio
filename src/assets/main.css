@@ -1,17 +1,111 @@
 @import 'tailwindcss';
 @config "../../tailwind.config.js";
 
-/* ── Dark-mode CSS variable (usado por el efecto lámpara) ── */
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+   Una sola fuente de verdad para color, tipografía y elevación.
+   Regla: los componentes usan SIEMPRE tokens semánticos
+   (surface, border, fg-muted…), nunca `bg-white dark:bg-zinc-950`.
+   Así es imposible volver a invertir el dark mode por descuido.
+   ═══════════════════════════════════════════════════════════════ */
+
 :root {
-  --page-bg: #ffffff;
-}
-.dark {
-  --page-bg: #09090b;
+  color-scheme: light;
+
+  /* ── Superficies ── */
+  --bg: #ffffff;
+  --bg-subtle: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f4f4f5;
+  --surface-hover: #fafafa;
+  --border: #e4e4e7;
+  --border-strong: #d4d4d8;
+
+  /* ── Texto (todos ≥ 4.5:1 sobre --bg) ── */
+  --fg: #18181b; /* 15.9:1 */
+  --fg-muted: #52525b; /* 7.0:1  */
+  --fg-subtle: #71717a; /* 4.8:1  */
+
+  /* ── Acento ──
+     `--accent` es decorativo (bordes, glows, fondos translúcidos).
+     `--accent-text` es el único válido para texto sobre --bg.
+     `--accent-solid` + `--accent-on` es el par de botón primario. */
+  --accent: #0ea5e9;
+  --accent-text: #0369a1; /* 5.9:1 sobre blanco */
+  --accent-solid: #0369a1;
+  --accent-on: #ffffff; /* 5.9:1 sobre --accent-solid */
+  --accent-soft: rgb(14 165 233 / 0.1);
+  --accent-ring: rgb(14 165 233 / 0.45);
+
+  /* ── Acento secundario (violeta) ── */
+  --accent-2: #8b5cf6;
+  --accent-2-text: #6d28d9; /* 6.2:1 sobre blanco */
+
+  /* ── Estado ── */
+  --ok: #10b981;
+  --ok-text: #047857; /* 4.8:1 sobre blanco */
+  --warn-text: #b45309;
+
+  /* ── Elevación ── */
+  --shadow-sm: 0 1px 2px rgb(9 9 11 / 0.05);
+  --shadow-md: 0 4px 16px -4px rgb(9 9 11 / 0.08);
+  --shadow-lg: 0 12px 32px -8px rgb(9 9 11 / 0.12);
+  --shadow-accent: 0 8px 24px -8px rgb(3 105 161 / 0.4);
+
+  /* ── Compatibilidad con LampHero ── */
+  --page-bg: var(--bg);
+
+  /* ── Layout ── */
+  --nav-h: 4.25rem;
+
+  /* ── Escala tipográfica fluida (320px → 1280px) ── */
+  --step--1: clamp(0.8125rem, 0.79rem + 0.11vw, 0.875rem);
+  --step-0: clamp(0.9375rem, 0.91rem + 0.14vw, 1rem);
+  --step-1: clamp(1.0625rem, 1rem + 0.31vw, 1.25rem);
+  --step-2: clamp(1.25rem, 1.14rem + 0.55vw, 1.625rem);
+  --step-3: clamp(1.5rem, 1.3rem + 1vw, 2.125rem);
+  --step-4: clamp(1.875rem, 1.5rem + 1.87vw, 3rem);
+  --step-5: clamp(2.375rem, 1.7rem + 3.37vw, 4.25rem);
 }
 
-body {
-  background: var(--page-bg);
+.dark {
+  color-scheme: dark;
+
+  --bg: #09090b;
+  --bg-subtle: #0c0c0f;
+  --surface: #111114;
+  --surface-2: #18181b;
+  --surface-hover: #1c1c20;
+  --border: #26262b;
+  --border-strong: #3f3f46;
+
+  --fg: #fafafa; /* 18.4:1 */
+  --fg-muted: #a1a1aa; /* 8.9:1  */
+  --fg-subtle: #8b8b94; /* 6.4:1 — más claro que zinc-500 para pasar AA */
+
+  --accent: #38bdf8;
+  --accent-text: #38bdf8; /* 9.0:1 sobre #09090b */
+  --accent-solid: #38bdf8;
+  --accent-on: #082f49; /* 6.5:1 sobre --accent-solid */
+  --accent-soft: rgb(56 189 248 / 0.12);
+  --accent-ring: rgb(56 189 248 / 0.5);
+
+  --accent-2: #a78bfa;
+  --accent-2-text: #c4b5fd;
+
+  --ok: #34d399;
+  --ok-text: #34d399;
+  --warn-text: #fbbf24;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 16px -4px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 12px 32px -8px rgb(0 0 0 / 0.6);
+  --shadow-accent: 0 8px 24px -8px rgb(56 189 248 / 0.35);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════════════════════════ */
 
 @font-face {
   font-family: 'Inter';
@@ -29,29 +123,348 @@ body {
   font-display: swap;
 }
 
-/* ── Keyframes ──────────────────────────────────────────────── */
-@keyframes blob {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
+* {
+  border-color: var(--border);
+}
+
+html {
+  /* El scroll suave se gestiona en el router; aquí solo el anclaje
+     para que los enlaces internos no queden bajo el navbar fijo. */
+  scroll-padding-top: calc(var(--nav-h) + 1rem);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.65;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Titulares: tracking negativo progresivo — el aire correcto a cada tamaño */
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Un único anillo de foco, visible en ambos temas y sobre cualquier fondo */
+:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENTES
+   ═══════════════════════════════════════════════════════════════ */
+
+@layer components {
+  /* ── Contenedor único. Todas las vistas comparten ancho y gutters ── */
+  .shell {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
   }
-  33% {
-    transform: translate(30px, -50px) scale(1.1);
+  @media (min-width: 640px) {
+    .shell {
+      padding-inline: 2rem;
+    }
   }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
+  @media (min-width: 1024px) {
+    .shell {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  .shell-narrow {
+    max-width: 60rem;
+  }
+
+  /* Ritmo vertical de sección, fluido */
+  .section {
+    padding-block: clamp(3.5rem, 7vw, 6rem);
+  }
+
+  /* Primera sección de una vista interna: menos aire arriba, porque el
+     navbar fijo ya aporta 68px de separación por sí solo. */
+  .page {
+    padding-top: clamp(2.5rem, 4vw, 3.5rem);
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+  }
+  .section-sm {
+    padding-block: clamp(2.75rem, 6vw, 4.5rem);
+  }
+
+  /* ── Superficies ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  /* Sólo para tarjetas realmente interactivas (link o botón) */
+  .card-interactive {
+    cursor: pointer;
+  }
+  .card-interactive:hover {
+    border-color: color-mix(in oklab, var(--accent) 45%, var(--border));
+    box-shadow: var(--shadow-lg);
+  }
+  .card-interactive:focus-within {
+    border-color: var(--accent);
+  }
+
+  .card-muted {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+  }
+
+  /* ── Botones. Alto mínimo 44px = objetivo táctil accesible ── */
+  .btn,
+  .btn-outline,
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .btn {
+    background: var(--accent-solid);
+    color: var(--accent-on);
+    border: 1px solid transparent;
+    box-shadow: var(--shadow-accent);
+  }
+  .btn:hover {
+    background: color-mix(in oklab, var(--accent-solid) 88%, var(--fg));
+  }
+
+  .btn-outline {
+    background: var(--surface);
+    color: var(--fg);
+    border: 1px solid var(--border-strong);
+  }
+  .btn-outline:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    color: var(--accent-text);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--fg-muted);
+    border: 1px solid transparent;
+    box-shadow: none;
+  }
+  .btn-ghost:hover {
+    background: var(--surface-2);
+    color: var(--fg);
+  }
+
+  .btn-sm {
+    min-height: 2.25rem;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.8125rem;
+  }
+
+  /* En pantalla táctil los controles compactos suben a 44px: en ratón
+     36px es cómodo, con el dedo no. Se hace por puntero y no por ancho,
+     porque un portátil táctil de 1440px también necesita el objetivo grande. */
+  @media (pointer: coarse) {
+    .btn-sm,
+    .chip {
+      min-height: 2.75rem;
+    }
+  }
+  .btn-lg {
+    min-height: 3rem;
+    padding: 0.75rem 1.75rem;
+    font-size: 0.9375rem;
+  }
+
+  /* ── Píldoras y etiquetas ── */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--fg-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+
+  /* Chip de filtro — objetivo táctil 44px y estado activo no sólo por color */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 2.25rem;
+    padding: 0.375rem 0.875rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--fg-muted);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+  .chip:hover {
+    border-color: var(--accent);
+    color: var(--accent-text);
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent-text);
+    font-weight: 600;
+  }
+
+  /* ── Formularios ── */
+  .input {
+    width: 100%;
+    min-height: 2.75rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--fg);
+    padding: 0.625rem 1rem;
+    font-size: 0.9375rem;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .input::placeholder {
+    color: var(--fg-subtle);
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  /* ── Enlace de salto: sólo visible con teclado ── */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 50%;
+    transform: translate(-50%, -150%);
+    z-index: 100;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    background: var(--accent-solid);
+    color: var(--accent-on);
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+  }
+  .skip-link:focus-visible {
+    transform: translate(-50%, 0);
   }
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
+/* ═══════════════════════════════════════════════════════════════
+   UTILIDADES
+   ═══════════════════════════════════════════════════════════════ */
+
+@layer utilities {
+  /* Longitud de línea legible: 60-70 caracteres */
+  .measure {
+    max-width: 62ch;
   }
-  50% {
-    transform: translateY(-8px);
+  .measure-tight {
+    max-width: 48ch;
+  }
+
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+
+  .pause-on-hover:hover,
+  .pause-on-hover:focus-within {
+    animation-play-state: paused;
+  }
+
+  /* Textura de puntos para bloques destacados */
+  .dot-grid {
+    background-image: radial-gradient(
+      circle,
+      color-mix(in oklab, var(--accent) 30%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  .animate-marquee-left {
+    animation: marquee-left 42s linear infinite;
+  }
+  .animate-marquee-right {
+    animation: marquee-right 42s linear infinite;
+  }
+  .animate-float {
+    animation: float 5s ease-in-out infinite;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   KEYFRAMES
+   ═══════════════════════════════════════════════════════════════ */
 
 @keyframes marquee-left {
   from {
@@ -71,157 +484,65 @@ body {
   }
 }
 
-@keyframes shimmer {
-  from {
-    background-position: -200% center;
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
   }
-  to {
-    background-position: 200% center;
-  }
-}
-
-/* ── Components ─────────────────────────────────────────────── */
-@layer components {
-  .card {
-    @apply rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 transition-shadow;
-  }
-
-  .card-glass {
-    @apply rounded-2xl border border-white/20 dark:border-zinc-700/60
-           bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md transition-shadow;
-  }
-
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold
-           bg-brand-500 text-white hover:bg-brand-600
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 focus-visible:ring-offset-2
-           transition cursor-pointer select-none;
-  }
-
-  .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold
-           border border-zinc-300 dark:border-zinc-700
-           text-zinc-800 dark:text-zinc-200
-           hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2
-           transition cursor-pointer select-none;
-  }
-
-  .tag {
-    @apply px-3 py-1 text-xs font-medium rounded-full
-           border border-zinc-200 dark:border-zinc-700
-           bg-zinc-100 dark:bg-zinc-800/80 text-zinc-700 dark:text-zinc-300;
-  }
-
-  .input {
-    @apply w-full rounded-xl border border-zinc-200 dark:border-zinc-700
-           bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm
-           text-zinc-800 dark:text-zinc-100
-           focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition
-           placeholder:text-zinc-400 dark:placeholder:text-zinc-500;
-  }
-
-  .section-base {
-    @apply py-24 sm:py-28;
-  }
-
-  .chip-filter {
-    @apply px-4 py-1.5 rounded-full text-sm font-medium
-           border border-zinc-200 dark:border-zinc-700
-           bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400
-           hover:border-brand-500 hover:text-brand-500
-           dark:hover:border-brand-400 dark:hover:text-brand-400
-           transition cursor-pointer;
-  }
-
-  .chip-filter-active {
-    @apply px-4 py-1.5 rounded-full text-sm font-medium
-           border border-brand-500 bg-brand-500/10
-           text-brand-600 dark:text-brand-400 transition cursor-pointer;
-  }
-
-  .process-step {
-    @apply flex flex-col gap-3 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800
-           bg-zinc-50/50 dark:bg-zinc-900/50 relative overflow-hidden
-           hover:border-brand-500/40 hover:shadow-lg transition-all;
+  50% {
+    transform: translateY(-6px);
   }
 }
 
-/* ── Utilities ──────────────────────────────────────────────── */
-@layer utilities {
-  .animate-blob {
-    animation: blob 9s ease-in-out infinite;
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
   }
-  .animate-float {
-    animation: float 4s ease-in-out infinite;
-  }
-  .animate-marquee-left {
-    animation: marquee-left 35s linear infinite;
-  }
-  .animate-marquee-right {
-    animation: marquee-right 35s linear infinite;
-  }
-
-  .delay-1000 {
-    animation-delay: 1s;
-  }
-  .delay-2000 {
-    animation-delay: 2s;
-  }
-  .delay-3000 {
-    animation-delay: 3s;
-  }
-  .delay-4000 {
-    animation-delay: 4s;
-  }
-
-  .pause-on-hover:hover {
-    animation-play-state: paused;
-  }
-
-  .text-shimmer {
-    background: linear-gradient(90deg, currentColor 25%, #0ea5e9 50%, currentColor 75%);
-    background-size: 200% auto;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shimmer 3s linear infinite;
-  }
-
-  .mask-fade-x {
-    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  70%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
   }
 }
 
-/* ── Scrollbar ──────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════════ */
+
 :root {
   scrollbar-width: thin;
-  scrollbar-color: theme('colors.brand.500') transparent;
+  scrollbar-color: var(--border-strong) transparent;
 }
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: theme('colors.brand.500');
-  border-radius: 3px;
+  background: var(--border-strong);
+  border-radius: 999px;
+  border: 3px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-subtle);
 }
 
-/* ── Selection ──────────────────────────────────────────────── */
-::selection {
-  background: theme('colors.brand.500');
-  color: white;
-}
+/* ═══════════════════════════════════════════════════════════════
+   MOVIMIENTO REDUCIDO
+   Corta toda animación decorativa de una vez, incluidas las
+   que inyecta @vueuse/motion vía transform/opacity inline.
+   ═══════════════════════════════════════════════════════════════ */
 
-/* ── Reduce motion ──────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .animate-blob,
-  .animate-float,
-  .animate-marquee-left,
-  .animate-marquee-right {
-    animation: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

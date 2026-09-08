@@ -1,19 +1,12 @@
 import type { ContactData } from '@/types/portfolio'
+import { EMAIL } from './social'
 
+/**
+ * Los perfiles públicos viven en `social.ts`, que es la fuente única
+ * compartida por Home, Contacto y el pie de página.
+ */
 export const contactData: ContactData = {
-  email: 'giovanni.baralv@gmail.com',
+  email: EMAIL,
   subject: 'Contacto desde el portfolio',
-  responseTime: '24–48h',
-  links: [
-    {
-      label: 'GitHub',
-      url: 'https://github.com/GiovanniBarroso',
-      aria: 'Abrir GitHub de Giovanni Barroso',
-    },
-    {
-      label: 'LinkedIn',
-      url: 'https://www.linkedin.com/in/giovanni-barroso',
-      aria: 'Abrir LinkedIn de Giovanni Barroso',
-    },
-  ],
+  responseTime: '24–48 h',
 }

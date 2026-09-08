@@ -1,44 +1,79 @@
+<template>
+  <!-- El carrusel es puramente visual: se marca aria-hidden y debajo va
+       la lista completa en texto para lectores de pantalla. Antes había
+       un aria-live que reanunciaba una palabra cada 2,2 s sin parar. -->
+  <span class="words" aria-hidden="true">
+    <span
+      v-for="(word, i) in items"
+      :key="word"
+      class="words__item"
+      :style="{
+        transform: `translateY(${(i - current) * 110}%)`,
+        opacity: i === current ? 1 : 0,
+      }"
+    >
+      {{ word }}
+    </span>
+    <!-- Copia invisible que fija el ancho al término más largo, para que
+         el texto de al lado no se mueva al cambiar de palabra. -->
+    <span class="words__sizer">{{ longest }}</span>
+  </span>
+  <span class="sr-only">{{ items.join(', ') }}</span>
+</template>
+
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useIndexCarousel } from '@/composables/useIndexCarousel'
 
 const props = withDefaults(
   defineProps<{
     items: readonly string[]
     intervalMs?: number
-    respectReducedMotion?: boolean
-    force?: boolean
-    srOnly?: boolean
   }>(),
-  {
-    intervalMs: 2200,
-    respectReducedMotion: true,
-    force: false,
-    srOnly: true,
-  }
+  { intervalMs: 2400 }
+)
+
+const longest = computed(() =>
+  props.items.reduce((a, b) => (b.length > a.length ? b : a), props.items[0] ?? '')
 )
 
 const { current } = useIndexCarousel({
   length: props.items.length,
   intervalMs: props.intervalMs,
-  respectReducedMotion: props.respectReducedMotion,
-  force: props.force,
 })
 </script>
 
-<!-- Contenedor visual del carrusel -->
-<template>
-  <span
-    class="inline-flex items-center justify-center relative w-52 sm:w-64 h-8 overflow-hidden font-semibold text-brand-500 align-middle"
-    aria-hidden="true"
-  >
-    <span
-      v-for="(word, i) in items"
-      :key="word"
-      class="absolute inset-0 flex items-center justify-center transition-transform duration-700 will-change-transform"
-      :style="{ transform: `translateY(${(i - current) * 100}%)` }"
-    >
-      {{ word }}
-    </span>
-  </span>
-  <span v-if="srOnly" class="sr-only" aria-live="polite">{{ items[current] }}</span>
-</template>
+<style scoped>
+.words {
+  position: relative;
+  display: inline-grid;
+  overflow: hidden;
+  vertical-align: bottom;
+  font-weight: 600;
+  color: var(--accent-text);
+  /* Alto de una línea con holgura para tildes y descendentes */
+  line-height: 1.5;
+}
+
+.words__item {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease;
+  will-change: transform;
+}
+
+.words__sizer {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .words__item {
+    transition: none;
+  }
+}
+</style>

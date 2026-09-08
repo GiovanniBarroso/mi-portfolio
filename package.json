@@ -24,7 +24,6 @@
     "@unhead/vue": "^1.11.20",
     "@vueuse/core": "^14.3.0",
     "@vueuse/motion": "^3.0.3",
-    "oh-vue-icons": "1.0.0-rc3",
     "unhead": "^1.11.20",
     "vue": "^3.5.39",
     "vue-router": "^4.6.4"

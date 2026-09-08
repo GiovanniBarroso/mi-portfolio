@@ -8,19 +8,25 @@ type SeoInput = {
   image?: string
 }
 
+/**
+ * Cabeceras por vista. El favicon y el manifest se declaran una sola vez
+ * en App.vue; aquí sólo va lo que cambia de una página a otra.
+ */
 export function useSeo() {
+  const route = useRoute()
+
   return ({ title, description, image }: SeoInput) => {
-    const route = useRoute()
-    const canonical = new URL(route.fullPath || '/', SITE_URL).toString()
+    const canonical = new URL(route.path || '/', SITE_URL).toString()
     const finalTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME
     const desc = description ?? DEFAULT_DESCRIPTION
-    const img = image ?? DEFAULT_OG_IMAGE
+    const img = new URL(image ?? DEFAULT_OG_IMAGE, SITE_URL).toString()
 
     useHead({
       title: finalTitle,
       meta: [
         { name: 'description', content: desc },
         { property: 'og:type', content: 'website' },
+        { property: 'og:locale', content: 'es_ES' },
         { property: 'og:title', content: finalTitle },
         { property: 'og:description', content: desc },
         { property: 'og:url', content: canonical },
@@ -30,11 +36,7 @@ export function useSeo() {
         { name: 'twitter:description', content: desc },
         { name: 'twitter:image', content: img },
       ],
-      link: [
-        { rel: 'canonical', href: canonical },
-        { rel: 'icon', href: '/favicon.ico' },
-        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
-      ],
+      link: [{ rel: 'canonical', href: canonical }],
     })
   }
 }

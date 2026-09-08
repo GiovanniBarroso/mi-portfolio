@@ -1,224 +1,119 @@
 <template>
   <article
-    ref="cardRef"
-    v-motion
-    :initial="{ opacity: 0, y: 24 }"
-    :enter="{ opacity: 1, y: 0, transition: { duration: 400, delay } }"
-    class="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 will-change-transform cursor-pointer"
-    :style="tiltStyle"
-    :aria-label="`Proyecto: ${title}`"
-    @mousemove="onMouseMove"
-    @mouseleave="onMouseLeave"
+    class="card group relative flex h-full flex-col overflow-hidden"
+    :class="primaryUrl ? 'card-interactive' : ''"
   >
-    <!-- Shimmer highlight on hover -->
-    <div
-      class="pointer-events-none absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-      :style="shimmerStyle"
-      aria-hidden="true"
-    />
-
-    <!-- Image — click navigates to demo or repo -->
-    <a
-      v-if="primaryUrl"
-      :href="primaryUrl"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="relative block w-full aspect-[16/9] overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0"
-      tabindex="-1"
-      @click.stop
-    >
+    <!-- Miniatura. Ratio fijo + width/height reales: la rejilla no salta
+         mientras cargan las imágenes. -->
+    <div class="relative aspect-[16/10] shrink-0 overflow-hidden bg-surface-2">
       <img
         v-if="image"
-        class="w-full h-full object-cover transition duration-500 ease-out group-hover:scale-105"
         :src="image"
-        :alt="title"
+        :alt="`Captura de ${title}`"
+        width="640"
+        height="400"
         loading="lazy"
         decoding="async"
-        fetchpriority="low"
+        class="h-full w-full object-cover object-top transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.04]"
       />
-      <div v-else class="w-full h-full flex items-center justify-center">
-        <svg
-          class="h-10 w-10 text-zinc-300 dark:text-zinc-600"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.5"
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
-        </svg>
+      <div v-else class="grid h-full w-full place-items-center text-fg-subtle">
+        <AppIcon name="image" :size="8" :stroke-width="1.25" />
       </div>
 
-      <!-- Private badge -->
-      <span
-        v-if="!demoUrl && !repoUrl && !badge"
-        class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-zinc-900/70 text-zinc-300 text-[10px] font-semibold backdrop-blur-sm"
-      >
-        Privado
-      </span>
-
-      <!-- Live badge if has demo -->
-      <span
-        v-if="demoUrl && !badge"
-        class="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-[10px] font-semibold backdrop-blur-sm"
-      >
-        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-        Live
-      </span>
-
-      <!-- Custom badge (overrides Live/Privado) -->
-      <span
-        v-if="badge"
-        class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-[10px] font-semibold backdrop-blur-sm"
-      >
-        {{ badge }}
-      </span>
-    </a>
-
-    <!-- Image fallback: no link -->
-    <div
-      v-if="!primaryUrl"
-      class="relative w-full aspect-[16/9] overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0"
-    >
-      <img
-        v-if="image"
-        class="w-full h-full object-cover"
-        :src="image"
-        :alt="title"
-        loading="lazy"
-        decoding="async"
-        fetchpriority="low"
+      <!-- Velo inferior: separa la imagen del cuerpo sin una línea dura -->
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-surface to-transparent"
       />
-      <div v-else class="w-full h-full flex items-center justify-center">
-        <svg
-          class="h-10 w-10 text-zinc-300 dark:text-zinc-600"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.5"
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
-        </svg>
-      </div>
-      <!-- Private badge -->
+
       <span
-        v-if="!demoUrl && !repoUrl && !badge"
-        class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-zinc-900/70 text-zinc-300 text-[10px] font-semibold backdrop-blur-sm"
+        class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm"
+        :class="status.class"
       >
-        Privado
+        <span v-if="status.dot" class="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
+        <AppIcon v-if="status.icon" :name="status.icon" :size="3" :stroke-width="2" />
+        {{ status.label }}
       </span>
     </div>
 
-    <!-- Content -->
-    <div class="flex flex-col flex-1 p-5">
-      <h3
-        class="text-sm font-bold mb-2 leading-snug group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors"
-      >
-        {{ title }}
+    <!-- Cuerpo -->
+    <div class="flex flex-1 flex-col p-5">
+      <h3 class="text-base font-semibold leading-snug text-fg">
+        <!-- Enlace extendido: toda la tarjeta es clicable mediante el
+             ::after del título, sin anidar anclas ni duplicar destinos. -->
+        <a
+          v-if="primaryUrl"
+          :href="primaryUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="after:absolute after:inset-0 after:content-[''] transition-colors duration-200 group-hover:text-accent-text"
+        >
+          {{ title }}
+          <span class="sr-only">— abre {{ primaryLabel }} en una pestaña nueva</span>
+        </a>
+        <template v-else>{{ title }}</template>
       </h3>
 
-      <p class="text-xs leading-relaxed flex-1 text-zinc-500 dark:text-zinc-400 line-clamp-3 mb-4">
+      <p class="mt-2 line-clamp-3 text-[13px] leading-relaxed text-fg-muted">
         {{ description }}
       </p>
 
-      <!-- Tech tags -->
-      <div class="flex flex-wrap gap-1.5 mb-4">
-        <span
-          v-for="t in techs.slice(0, 5)"
-          :key="t"
-          class="px-2 py-0.5 text-[10px] rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/80 text-zinc-600 dark:text-zinc-400 font-medium"
-        >
+      <ul class="mb-5 mt-4 flex flex-wrap gap-1.5" :aria-label="`Tecnologías de ${title}`">
+        <li v-for="t in visibleTechs" :key="t" class="tag !px-2 !py-0.5 !text-[11px]">
           {{ t }}
-        </span>
-        <span
-          v-if="techs.length > 5"
-          class="px-2 py-0.5 text-[10px] rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/80 text-zinc-500 dark:text-zinc-500 font-medium"
+        </li>
+        <li
+          v-if="hiddenCount"
+          class="tag !px-2 !py-0.5 !text-[11px] text-fg-subtle"
+          :title="techs.slice(MAX_TECHS).join(', ')"
         >
-          +{{ techs.length - 5 }}
-        </span>
-      </div>
+          +{{ hiddenCount }}
+        </li>
+      </ul>
 
-      <!-- Action row — always visible -->
-      <div
-        class="flex items-center gap-2 mt-auto pt-4 border-t border-zinc-100 dark:border-zinc-800"
-      >
+      <!-- Acciones. z-base las mantiene por encima del enlace extendido. -->
+      <div class="relative z-base mt-auto flex items-center gap-2 border-t border-hair pt-4">
         <a
           v-if="demoUrl"
           :href="demoUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-brand-500 text-white text-xs font-semibold hover:bg-brand-600 transition-colors"
-          @click.stop
+          class="btn btn-sm flex-1"
         >
-          <svg
-            class="h-3 w-3 shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2.5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-            />
-          </svg>
-          Demo
+          <AppIcon name="external" :size="3.5" :stroke-width="2" />
+          Ver demo
+          <span class="sr-only">de {{ title }}</span>
         </a>
+
         <a
           v-if="repoUrl"
           :href="repoUrl"
           target="_blank"
           rel="noopener noreferrer"
-          :class="demoUrl ? 'flex-none px-3' : 'flex-1 px-3'"
-          class="inline-flex items-center justify-center gap-1.5 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-semibold hover:border-brand-500/50 hover:text-brand-500 dark:hover:border-brand-400/50 dark:hover:text-brand-400 transition-colors"
-          @click.stop
+          class="btn-outline btn-sm"
+          :class="demoUrl ? '' : 'flex-1'"
         >
-          <svg
-            class="h-3.5 w-3.5 shrink-0"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path
-              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-            />
-          </svg>
+          <AppIcon name="github" :size="4" />
           {{ demoUrl ? 'Código' : 'Ver código' }}
+          <span class="sr-only">de {{ title }}</span>
         </a>
-        <span
+
+        <p
           v-if="!demoUrl && !repoUrl"
-          class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-zinc-100 dark:border-zinc-800 text-zinc-400 dark:text-zinc-600 text-xs font-medium cursor-default"
+          class="inline-flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-lg border border-dashed border-hair text-[13px] font-medium text-fg-subtle"
         >
-          <svg
-            class="h-3 w-3 shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-            />
-          </svg>
-          Privado
-        </span>
+          <AppIcon name="lock" :size="3.5" />
+          Repositorio privado
+        </p>
       </div>
     </div>
   </article>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
+import AppIcon from '@/components/common/AppIcon.vue'
+import type { IconName } from '@/components/common/icons'
 
 interface Props {
   slug?: string
@@ -228,8 +123,8 @@ interface Props {
   techs?: string[]
   demoUrl?: string | null
   repoUrl?: string | null
+  /** Etiqueta manual que sustituye al estado calculado (ej. "No desplegado") */
   badge?: string
-  delay?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -238,45 +133,48 @@ const props = withDefaults(defineProps<Props>(), {
   demoUrl: null,
   repoUrl: null,
   badge: undefined,
-  delay: 0,
 })
 
+const MAX_TECHS = 4
+
+const visibleTechs = computed(() => props.techs.slice(0, MAX_TECHS))
+const hiddenCount = computed(() => Math.max(0, props.techs.length - MAX_TECHS))
+
 const primaryUrl = computed(() => props.demoUrl || props.repoUrl || null)
+const primaryLabel = computed(() => (props.demoUrl ? 'la demo' : 'el repositorio'))
 
-const cardRef = ref<HTMLElement | null>(null)
-const tiltX = ref(0)
-const tiltY = ref(0)
-const mouseX = ref(0.5)
-const mouseY = ref(0.5)
-const isHovering = ref(false)
+type Status = { label: string; class: string; dot?: boolean; icon?: IconName }
 
-const tiltStyle = computed(() => ({
-  transform: `perspective(900px) rotateX(${tiltX.value}deg) rotateY(${tiltY.value}deg) translateZ(0)`,
-  transition: isHovering.value ? 'transform 0.08s ease-out' : 'transform 0.4s ease-out',
-  boxShadow: isHovering.value
-    ? `${-tiltY.value * 2}px ${tiltX.value * 2}px 30px rgba(0,0,0,0.14), 0 8px 32px rgba(0,0,0,0.07)`
-    : '0 1px 3px rgba(0,0,0,0.06)',
-}))
-
-const shimmerStyle = computed(() => ({
-  background: `radial-gradient(circle at ${mouseX.value * 100}% ${mouseY.value * 100}%, rgba(255,255,255,0.1) 0%, transparent 55%)`,
-}))
-
-const onMouseMove = (e: MouseEvent) => {
-  if (window.innerWidth < 768 || !cardRef.value) return
-  const rect = cardRef.value.getBoundingClientRect()
-  const x = (e.clientX - rect.left) / rect.width - 0.5
-  const y = (e.clientY - rect.top) / rect.height - 0.5
-  tiltX.value = -y * 6
-  tiltY.value = x * 6
-  mouseX.value = (e.clientX - rect.left) / rect.width
-  mouseY.value = (e.clientY - rect.top) / rect.height
-  isHovering.value = true
-}
-
-const onMouseLeave = () => {
-  tiltX.value = 0
-  tiltY.value = 0
-  isHovering.value = false
-}
+/**
+ * Un solo estado por tarjeta. Antes había tres `span` con `v-if`
+ * solapables que podían pintar dos insignias sobre la misma esquina.
+ */
+const status = computed<Status>(() => {
+  if (props.badge) {
+    return {
+      label: props.badge,
+      class: 'border-amber-500/40 bg-amber-500/15 text-warn-text',
+      icon: 'clock',
+    }
+  }
+  if (props.demoUrl) {
+    return {
+      label: 'En producción',
+      class: 'border-ok/40 bg-ok/15 text-ok-text',
+      dot: true,
+    }
+  }
+  if (!props.repoUrl) {
+    return {
+      label: 'Privado',
+      class: 'border-hair bg-surface/80 text-fg-muted',
+      icon: 'lock',
+    }
+  }
+  return {
+    label: 'Open source',
+    class: 'border-hair bg-surface/80 text-fg-muted',
+    icon: 'code',
+  }
+})
 </script>

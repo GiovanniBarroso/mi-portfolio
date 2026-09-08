@@ -1,51 +1,88 @@
 <template>
-  <Transition name="back-to-top">
+  <Transition name="btt">
     <button
       v-if="visible"
       type="button"
-      aria-label="Volver al inicio de la página"
-      class="fixed bottom-6 right-6 z-40 p-3 rounded-xl bg-brand-500 text-white shadow-lg shadow-brand-500/30 hover:bg-brand-600 hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 transition-all"
+      aria-label="Volver al principio de la página"
+      class="fixed bottom-5 right-5 z-float grid h-12 w-12 place-items-center rounded-full border border-hair bg-surface/90 text-fg-muted shadow-lg backdrop-blur-md transition-colors duration-200 hover:border-accent hover:text-accent-text sm:bottom-8 sm:right-8"
+      style="
+        bottom: calc(1.25rem + env(safe-area-inset-bottom));
+        right: calc(1.25rem + env(safe-area-inset-right));
+      "
       @click="scrollToTop"
     >
-      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+      <!-- Anillo de progreso: además de subir, indica cuánto queda de página -->
+      <svg class="absolute inset-0 h-12 w-12 -rotate-90" viewBox="0 0 48 48" aria-hidden="true">
+        <circle
+          cx="24"
+          cy="24"
+          r="22"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          class="text-accent"
+          :stroke-dasharray="CIRCUMFERENCE"
+          :stroke-dashoffset="CIRCUMFERENCE * (1 - progress)"
+        />
       </svg>
+      <AppIcon name="arrow-up" :size="4" :stroke-width="2.25" class="relative" />
     </button>
   </Transition>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import AppIcon from '@/components/common/AppIcon.vue'
+import { prefersReducedMotion } from '@/composables/motionPresets'
+
+const CIRCUMFERENCE = 2 * Math.PI * 22
 
 const visible = ref(false)
+const progress = ref(0)
+let ticking = false
 
+const update = () => {
+  const scrolled = window.scrollY
+  const max = document.documentElement.scrollHeight - window.innerHeight
+  visible.value = scrolled > 400
+  progress.value = max > 0 ? Math.min(scrolled / max, 1) : 0
+  ticking = false
+}
+
+// rAF: el scroll dispara muy seguido y el anillo se repinta en cada evento
 const onScroll = () => {
-  visible.value = window.scrollY > 400
+  if (ticking) return
+  ticking = true
+  requestAnimationFrame(update)
 }
 
 const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' })
 }
 
 onMounted(() => {
   window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', onScroll, { passive: true })
+  update()
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
+  window.removeEventListener('resize', onScroll)
 })
 </script>
 
 <style scoped>
-.back-to-top-enter-active,
-.back-to-top-leave-active {
+.btt-enter-active,
+.btt-leave-active {
   transition:
-    opacity 0.25s ease,
-    transform 0.25s ease;
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
-.back-to-top-enter-from,
-.back-to-top-leave-to {
+.btt-enter-from,
+.btt-leave-to {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(8px) scale(0.9);
 }
 </style>

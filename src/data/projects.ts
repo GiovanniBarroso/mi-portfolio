@@ -124,3 +124,14 @@ export const projects: ProjectItem[] = [
     repoUrl: null,
   },
 ]
+
+/**
+ * Proyectos que abren Home y la vista de Proyectos, en este orden.
+ * Antes esta lista estaba duplicada en las dos vistas y se podían
+ * desincronizar sin que nada avisara.
+ */
+export const FEATURED_SLUGS: { slug: string; badge?: string }[] = [
+  { slug: 'mybalance' },
+  { slug: 'cosas-d-casa' },
+  { slug: 'fastfix', badge: 'No desplegado' },
+]
