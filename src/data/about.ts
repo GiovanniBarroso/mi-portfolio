@@ -1,12 +1,16 @@
 import type { AboutData } from '@/types/portfolio'
 
+// Prefijo BASE_URL para que la ruta siga siendo válida si el sitio
+// se sirviera desde un subdirectorio en vez de la raíz del dominio.
+const BASE = import.meta.env.BASE_URL
+
 export const aboutData: AboutData = {
-  profileImage: 'profile.jpg',
+  profileImage: `${BASE}profile.jpg`,
   tags: ['Fullstack', 'Accesibilidad', 'Rendimiento'],
   stats: [
     { label: 'Proyectos reales', value: '9' },
     { label: 'Repos públicos', value: '12' },
-    { label: 'Stack principal', value: 'TS • React • Vue' },
+    { label: 'Stack principal', value: 'TypeScript' },
   ],
   achievements: [
     'E-commerce en producción con cobros y reembolsos vía Stripe.',

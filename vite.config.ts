@@ -18,8 +18,8 @@ export default defineConfig({
         lang: 'es',
         start_url: '/',
         display: 'standalone',
-        background_color: '#ffffff',
-        theme_color: '#8b5cf6',
+        background_color: '#09090b',
+        theme_color: '#0ea5e9',
         icons: [
           { src: 'android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
           {

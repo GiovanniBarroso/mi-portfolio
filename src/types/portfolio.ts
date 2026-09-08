@@ -1,14 +1,4 @@
-export type HighlightTag = 'backend' | 'frontend' | 'fullstack' | 'infra' | 'demo' | 'tfg'
 export type Stat = { label: string; value: string }
-
-export interface HighlightItem {
-  slug: string
-  title: string
-  description: string
-  tags?: HighlightTag[]
-  href?: string | null
-  featured?: boolean
-}
 
 export interface AboutData {
   profileImage: string
@@ -23,26 +13,8 @@ export type SkillCategory = {
   items: string[]
 }
 
-export type SocialLink = {
-  label: string
-  url: string
-  icon?: string
-  aria?: string
-}
-
 export interface ContactData {
   email: string
   subject: string
-  responseTime?: string
-  links: SocialLink[]
-}
-
-export interface Project {
-  slug: string
-  title: string
-  description: string
-  image?: string
-  tags?: string[]
-  demo?: string
-  repo?: string
+  responseTime: string
 }

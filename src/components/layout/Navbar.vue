@@ -1,148 +1,129 @@
 <template>
-  <!-- Outer wrapper — full width fixed, provides padding for the pill -->
-  <div class="fixed top-0 z-50 w-full px-4 sm:px-6 pt-3 pointer-events-none">
+  <div class="fixed inset-x-0 top-0 z-nav px-4 pt-3 sm:px-6 pointer-events-none">
+    <!-- Telón del menú móvil: cierra al tocar fuera y aísla el contenido -->
+    <Transition name="fade">
+      <div
+        v-if="open"
+        class="fixed inset-0 -z-10 bg-bg/60 backdrop-blur-sm md:hidden pointer-events-auto"
+        @click="close"
+      />
+    </Transition>
+
     <nav
-      ref="navRef"
-      class="pointer-events-auto max-w-6xl mx-auto rounded-2xl transition-all duration-300"
+      aria-label="Navegación principal"
+      class="pointer-events-auto mx-auto max-w-6xl rounded-2xl transition-[background-color,border-color,box-shadow] duration-300"
       :class="
-        scrolled || open
-          ? 'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-sm shadow-zinc-900/5'
-          : 'bg-transparent'
+        elevated || open
+          ? 'border border-hair bg-surface/85 shadow-md backdrop-blur-xl'
+          : 'border border-transparent bg-transparent'
       "
     >
-      <div class="flex h-12 items-center justify-between px-4 sm:px-5">
-        <!-- Logo -->
+      <div class="flex h-14 items-center justify-between gap-2 pl-3 pr-2 sm:pl-4 sm:pr-3">
+        <!-- Marca -->
         <RouterLink
           to="/"
-          class="flex items-center gap-2 font-extrabold text-sm tracking-tight hover:opacity-80 transition"
+          class="group flex items-center gap-2.5 rounded-xl py-1 pr-2 text-sm font-bold tracking-tight"
           @click="close"
         >
           <span
-            class="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-brand-500 text-white text-xs font-black shrink-0"
+            class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-accent-solid text-[13px] font-black text-accent-on transition-transform duration-200 group-hover:-rotate-6"
+            aria-hidden="true"
           >
             G
           </span>
-          <span class="hidden md:inline text-zinc-900 dark:text-zinc-100">Giovanni Barroso</span>
+          <span class="hidden text-fg sm:inline">Giovanni Barroso</span>
+          <span class="sr-only sm:hidden">Giovanni Barroso — inicio</span>
         </RouterLink>
 
-        <!-- Desktop links (visible from sm) -->
-        <ul class="hidden sm:flex items-center gap-0.5 text-xs sm:text-[13px] font-medium">
+        <!-- Enlaces de escritorio. A partir de md: por debajo no caben
+             cinco secciones + controles sin apretujarse. -->
+        <ul class="hidden items-center gap-1 md:flex">
           <li v-for="link in links" :key="link.to">
             <RouterLink
               :to="link.to"
-              class="relative px-3 py-1.5 rounded-lg transition-colors"
+              :aria-current="isActive(link.to) ? 'page' : undefined"
+              class="relative block rounded-lg px-3 py-2 text-[13px] font-medium transition-colors duration-200"
               :class="
                 isActive(link.to)
-                  ? 'text-brand-500 dark:text-brand-400'
-                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/70'
+                  ? 'text-accent-text'
+                  : 'text-fg-muted hover:bg-surface-2 hover:text-fg'
               "
             >
               {{ link.label }}
               <span
                 v-if="isActive(link.to)"
-                class="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-brand-500 dark:bg-brand-400"
+                aria-hidden="true"
+                class="absolute inset-x-3 bottom-1 h-0.5 rounded-full bg-accent"
               />
             </RouterLink>
           </li>
         </ul>
 
-        <!-- Right controls -->
         <div class="flex items-center gap-1">
-          <!-- Theme toggle -->
+          <!-- Enlace de contacto directo: la acción que de verdad importa -->
+          <RouterLink to="/contact" class="btn btn-sm hidden lg:inline-flex"> Hablemos </RouterLink>
+
           <button
-            aria-label="Cambiar tema"
-            class="p-2 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            type="button"
+            class="grid h-11 w-11 place-items-center rounded-xl text-fg-muted transition-colors duration-200 hover:bg-surface-2 hover:text-fg"
+            :aria-label="isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+            :aria-pressed="isDark"
             @click="onToggleTheme"
           >
-            <transition name="rotate-fade" mode="out-in">
-              <svg
-                v-if="isDark"
-                key="moon"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                class="h-[18px] w-[18px]"
-                fill="currentColor"
-              >
-                <path
-                  d="M21.64 13a1 1 0 0 0-1.05-.14A8 8 0 0 1 11.11 4.4a1 1 0 0 0-1.25-1.25A10 10 0 1 0 22 14.69a1 1 0 0 0-.36-1.69Z"
-                />
-              </svg>
-              <svg
-                v-else
-                key="sun"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                class="h-[18px] w-[18px] text-yellow-500"
-                fill="currentColor"
-              >
-                <path
-                  d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zm10.45 14.32l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM12 4V1h-1v3h1zm0 19v-3h-1v3h1zm8-8h3v-1h-3v1zM1 12H4v-1H1v1zm15.24-7.16l1.42-1.42 1.79 1.8-1.41 1.41-1.8-1.79zM4.22 19.78l1.41 1.41 1.8-1.79-1.42-1.42-1.79 1.8zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"
-                />
-              </svg>
-            </transition>
+            <Transition name="rotate-fade" mode="out-in">
+              <AppIcon v-if="isDark" key="moon" name="moon" :size="5" />
+              <AppIcon v-else key="sun" name="sun" :size="5" class="text-amber-500" />
+            </Transition>
           </button>
 
-          <!-- Mobile hamburger -->
           <button
-            class="sm:hidden p-2 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            ref="burgerRef"
+            type="button"
+            class="grid h-11 w-11 place-items-center rounded-xl text-fg-muted transition-colors duration-200 hover:bg-surface-2 hover:text-fg md:hidden"
             :aria-label="open ? 'Cerrar menú' : 'Abrir menú'"
             :aria-expanded="open"
+            aria-controls="mobile-menu"
             @click="toggle"
           >
-            <svg
-              v-if="!open"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              class="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <svg
-              v-else
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              class="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path stroke-linecap="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <AppIcon :name="open ? 'close' : 'menu'" :size="5" :stroke-width="2" />
           </button>
         </div>
       </div>
 
-      <!-- Mobile dropdown menu -->
-      <transition name="nav-drop">
-        <div v-if="open" class="sm:hidden border-t border-zinc-100 dark:border-zinc-800">
-          <ul class="px-3 py-2.5 flex flex-col gap-0.5">
+      <!-- Menú móvil -->
+      <Transition name="nav-drop">
+        <div v-if="open" id="mobile-menu" class="border-t border-hair md:hidden">
+          <ul class="flex flex-col gap-0.5 p-2">
             <li v-for="link in links" :key="link.to">
               <RouterLink
                 :to="link.to"
-                class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors"
+                :aria-current="isActive(link.to) ? 'page' : undefined"
+                class="flex min-h-11 items-center justify-between rounded-xl px-3 text-sm font-medium transition-colors duration-200"
                 :class="
                   isActive(link.to)
-                    ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400'
-                    : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                    ? 'bg-accent/10 text-accent-text'
+                    : 'text-fg-muted hover:bg-surface-2 hover:text-fg'
                 "
                 @click="close"
               >
                 {{ link.label }}
+                <AppIcon v-if="isActive(link.to)" name="arrow-right" :size="4" />
               </RouterLink>
             </li>
           </ul>
+          <div class="p-2 pt-0">
+            <RouterLink to="/contact" class="btn w-full" @click="close"> Hablemos </RouterLink>
+          </div>
         </div>
-      </transition>
+      </Transition>
     </nav>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
+import AppIcon from '@/components/common/AppIcon.vue'
 import { toggleTheme, isDarkTheme } from '@/plugins/theme'
 import { navLinks } from '@/data/navLinks'
 
@@ -150,15 +131,15 @@ defineOptions({ name: 'AppNavbar' })
 
 const links = navLinks
 const route = useRoute()
-const navRef = ref<HTMLElement | null>(null)
+const burgerRef = ref<HTMLButtonElement | null>(null)
 const open = ref(false)
 const isDark = ref(false)
-const scrolled = ref(false)
+const elevated = ref(false)
 
-const isActive = (path: string) => route.path === path
+const isActive = (path: string) => (path === '/' ? route.path === '/' : route.path.startsWith(path))
 
-const toggle = () => (open.value = !open.value)
 const close = () => (open.value = false)
+const toggle = () => (open.value = !open.value)
 
 const onToggleTheme = () => {
   toggleTheme()
@@ -166,33 +147,35 @@ const onToggleTheme = () => {
 }
 
 const onScroll = () => {
-  scrolled.value = window.scrollY > 16
+  elevated.value = window.scrollY > 12
 }
 
-/* Push body down when dropdown opens at top — prevents content overlap */
-watch([scrolled, open], ([s, o]) => {
-  if (!s && o) {
-    nextTick(() => {
-      if (navRef.value) {
-        const h = navRef.value.offsetHeight
-        document.body.style.transition = 'padding-top 0.2s ease'
-        document.body.style.paddingTop = `${h}px`
-      }
-    })
-  } else {
-    document.body.style.paddingTop = ''
+const onKeydown = (e: KeyboardEvent) => {
+  if (e.key === 'Escape' && open.value) {
+    close()
+    burgerRef.value?.focus()
   }
+}
+
+// Cerrar al navegar (por ejemplo, con el botón atrás del navegador)
+watch(() => route.fullPath, close)
+
+// Bloquear el scroll de fondo mientras el menú ocupa la pantalla
+watch(open, (isOpen) => {
+  document.body.style.overflow = isOpen ? 'hidden' : ''
 })
 
 onMounted(() => {
   isDark.value = isDarkTheme()
   window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('keydown', onKeydown)
   onScroll()
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
-  document.body.style.paddingTop = ''
+  window.removeEventListener('keydown', onKeydown)
+  document.body.style.overflow = ''
 })
 </script>
 
@@ -210,18 +193,24 @@ onUnmounted(() => {
   transform: rotate(90deg) scale(0.8);
 }
 
-.nav-drop-enter-active {
-  transition: all 0.2s ease-out;
-}
+.nav-drop-enter-active,
 .nav-drop-leave-active {
-  transition: all 0.15s ease-in;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
-.nav-drop-enter-from {
-  opacity: 0;
-  transform: translateY(-6px);
-}
+.nav-drop-enter-from,
 .nav-drop-leave-to {
   opacity: 0;
   transform: translateY(-6px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

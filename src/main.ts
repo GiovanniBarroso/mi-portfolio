@@ -4,17 +4,11 @@ import { createApp } from 'vue'
 import { createHead } from '@unhead/vue'
 import { MotionPlugin } from '@vueuse/motion'
 import { applyInitialTheme, setupSystemThemeListener } from './plugins/theme'
-import { OhVueIcon, addIcons } from 'oh-vue-icons'
-import { SiGithub, SiLinkedin, BiEnvelope } from 'oh-vue-icons/icons'
 import './assets/main.css'
 
-const app = createApp(App)
-const head = createHead()
-app.use(router)
-app.use(head)
-app.use(MotionPlugin)
-app.component('VIcon', OhVueIcon)
+// El tema ya se aplicó en el script en línea de index.html; esto sólo
+// vuelve a sincronizarlo por si el HTML se sirviera cacheado sin él.
 applyInitialTheme()
 setupSystemThemeListener()
-addIcons(SiGithub, SiLinkedin, BiEnvelope)
-app.mount('#app')
+
+createApp(App).use(router).use(createHead()).use(MotionPlugin).mount('#app')
