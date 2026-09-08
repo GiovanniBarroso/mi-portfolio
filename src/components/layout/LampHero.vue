@@ -1,5 +1,5 @@
 <template>
-  <section class="lamp-root" aria-label="Hero">
+  <section ref="rootRef" class="lamp-root" aria-label="Hero" @pointermove="onPointerMove">
     <!-- ── Single stage — same structure for both modes ── -->
     <div class="lamp-stage" aria-hidden="true">
       <div class="lamp-cone lamp-cone-l">
@@ -25,6 +25,9 @@
       </template>
     </div>
 
+    <!-- ── Spotlight que sigue al cursor (solo desktop) ── -->
+    <div ref="spotRef" class="lamp-spotlight" aria-hidden="true" />
+
     <!-- ── Slot ── -->
     <div class="lamp-body">
       <slot />
@@ -42,6 +45,25 @@ const syncTheme = () => {
   isDark.value = document.documentElement.classList.contains('dark')
 }
 
+/* ── Spotlight que sigue al cursor ── */
+const rootRef = ref<HTMLElement | null>(null)
+const spotRef = ref<HTMLElement | null>(null)
+let rafId = 0
+let spotlightEnabled = false
+
+const onPointerMove = (e: PointerEvent) => {
+  if (!spotlightEnabled || !spotRef.value || !rootRef.value) return
+  const rect = rootRef.value.getBoundingClientRect()
+  const x = e.clientX - rect.left
+  const y = e.clientY - rect.top
+  cancelAnimationFrame(rafId)
+  rafId = requestAnimationFrame(() => {
+    if (!spotRef.value) return
+    spotRef.value.style.opacity = '1'
+    spotRef.value.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`
+  })
+}
+
 onMounted(() => {
   syncTheme()
   observer = new MutationObserver(syncTheme)
@@ -49,9 +71,15 @@ onMounted(() => {
     attributes: true,
     attributeFilter: ['class'],
   })
+  spotlightEnabled =
+    window.matchMedia('(pointer: fine)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 })
 
-onUnmounted(() => observer?.disconnect())
+onUnmounted(() => {
+  observer?.disconnect()
+  cancelAnimationFrame(rafId)
+})
 
 /* ── Color tokens — dark uses vivid blue, light uses subtle rgba ── */
 const coneLBg = computed(() =>
@@ -274,6 +302,32 @@ const beamShadow = computed(() =>
   background-size: 28px 28px;
   -webkit-mask-image: radial-gradient(ellipse 80% 55% at 50% 18%, black 25%, transparent 75%);
   mask-image: radial-gradient(ellipse 80% 55% at 50% 18%, black 25%, transparent 75%);
+}
+
+/* ─────────────────────────────────────────────────────────
+   SPOTLIGHT — sigue al cursor, decorativo
+───────────────────────────────────────────────────────── */
+.lamp-spotlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 34rem;
+  height: 34rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.09) 0%, transparent 65%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  will-change: transform;
+}
+:global(.dark) .lamp-spotlight {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.07) 0%, transparent 65%);
+}
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .lamp-spotlight {
+    display: none;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────

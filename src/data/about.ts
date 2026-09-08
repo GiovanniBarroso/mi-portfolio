@@ -4,13 +4,14 @@ export const aboutData: AboutData = {
   profileImage: 'profile.jpg',
   tags: ['Fullstack', 'Accesibilidad', 'Rendimiento'],
   stats: [
-    { label: 'Proyectos reales', value: '5+' },
-    { label: 'Repos públicos', value: '15+' },
+    { label: 'Proyectos reales', value: '9' },
+    { label: 'Repos públicos', value: '12' },
     { label: 'Stack principal', value: 'TS • React • Vue' },
   ],
   achievements: [
-    'SPA con autenticación y panel administrativo.',
-    'Supabase + despliegues automatizados en Vercel.',
+    'E-commerce en producción con cobros y reembolsos vía Stripe.',
+    'APIs REST en NestJS + Prisma con JWT, multi-tenant y Docker.',
+    'Tests con Vitest/Jest y despliegue continuo en Vercel.',
     'SEO técnico, PWA y dark mode responsive.',
   ],
   tools: [
@@ -21,7 +22,6 @@ export const aboutData: AboutData = {
     'Tailwind CSS',
     'TypeScript',
     'Vite',
-    'Vitest',
     // Tooling y entorno
     'ESLint',
     'Prettier',

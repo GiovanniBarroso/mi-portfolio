@@ -168,9 +168,9 @@ seo({
 const activeFilter = ref('Todos')
 
 const FEATURED = [
-  { slug: 'cosas-d-casa', badge: undefined },
-  { slug: 'date-un-respiro', badge: 'En desarrollo' },
-  { slug: 'manuela-rios', badge: undefined },
+  { slug: 'mybalance', badge: 'En desarrollo' },
+  { slug: 'cosas-d-casa', badge: 'En producción' },
+  { slug: 'fastfix', badge: undefined },
 ] as const
 
 const featuredProjects = computed(() =>
@@ -183,11 +183,16 @@ const featuredProjects = computed(() =>
 const liveCount = computed(() => projects.filter((p) => p.demoUrl).length)
 const openCount = computed(() => projects.filter((p) => p.repoUrl).length)
 
+// Solo se ofrecen como filtro las tecnologías presentes en 2+ proyectos:
+// filtrar por una tech usada una sola vez equivale a mostrar ese proyecto suelto.
 const filters = computed(() => {
-  const techs = new Set<string>()
-  projects.forEach((p) => p.techs.forEach((t) => techs.add(t)))
-  const sorted = [...techs].sort()
-  return ['Todos', ...sorted]
+  const counts = new Map<string, number>()
+  projects.forEach((p) => p.techs.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)))
+  const shared = [...counts.entries()]
+    .filter(([, n]) => n > 1)
+    .sort(([a, na], [b, nb]) => nb - na || a.localeCompare(b))
+    .map(([t]) => t)
+  return ['Todos', ...shared]
 })
 
 const filteredProjects = computed(() => {

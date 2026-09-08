@@ -206,10 +206,19 @@
               >
                 <div class="flex items-center gap-3">
                   <span
-                    class="shrink-0 h-8 w-8 rounded-xl flex items-center justify-center text-sm font-black"
+                    class="shrink-0 h-8 w-8 rounded-xl flex items-center justify-center"
                     :class="step.color"
                   >
-                    {{ step.icon }}
+                    <svg
+                      class="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      aria-hidden="true"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" :d="step.icon" />
+                    </svg>
                   </span>
                   <h4 class="text-sm font-bold">{{ step.title }}</h4>
                 </div>
@@ -290,27 +299,28 @@ seo({
     'Giovanni Barroso — Desarrollador fullstack (Vue, React, TypeScript, Tailwind). Metodología, proyectos y herramientas.',
 })
 
+// icon = path SVG (Heroicons outline, viewBox 24x24)
 const process = [
   {
-    icon: '🔍',
+    icon: 'M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z',
     title: 'Análisis',
     desc: 'Entiendo el problema, el contexto y los requisitos antes de escribir una línea.',
     color: 'bg-brand-500/10 text-brand-500',
   },
   {
-    icon: '🏗️',
+    icon: 'M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z',
     title: 'Arquitectura',
     desc: 'Diseño la estructura de componentes, rutas y estado con tipado estricto.',
     color: 'bg-purple-500/10 text-purple-500',
   },
   {
-    icon: '⚡',
+    icon: 'M13 10V3L4 14h7v7l9-11h-7z',
     title: 'Implementación',
     desc: 'Código limpio, accesible y con CI/CD desde el primer commit.',
     color: 'bg-emerald-500/10 text-emerald-500',
   },
   {
-    icon: '🚀',
+    icon: 'M12 19l9 2-9-18-9 18 9-2zm0 0v-8',
     title: 'Despliegue',
     desc: 'Vercel, GitHub Actions y monitorización con Umami Analytics.',
     color: 'bg-orange-500/10 text-orange-500',
