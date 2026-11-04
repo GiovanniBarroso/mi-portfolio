@@ -10,7 +10,10 @@
         <!-- La fila se duplica para que el bucle no tenga costura -->
         <div
           class="marquee flex w-max gap-3"
-          :class="[r % 2 === 0 ? 'marquee--left' : 'marquee--right', paused && 'is-paused']"
+          :class="[
+            r % 2 === 0 ? 'marquee--left' : 'marquee--right',
+            animationsPaused && 'is-paused',
+          ]"
         >
           <span
             v-for="(tech, i) in [...row, ...row]"
@@ -29,24 +32,24 @@
       <button
         type="button"
         class="btn-ghost btn-sm"
-        :aria-pressed="paused"
-        @click="paused = !paused"
+        :aria-pressed="animationsPaused"
+        @click="togglePause"
       >
-        <AppIcon :name="paused ? 'play' : 'pause'" :size="3.5" :stroke-width="2" />
-        {{ paused ? 'Reanudar animación' : 'Pausar animación' }}
+        <AppIcon :name="animationsPaused ? 'play' : 'pause'" :size="3.5" :stroke-width="2" />
+        {{ animationsPaused ? 'Reanudar animaciones' : 'Pausar animaciones' }}
       </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import AppIcon from '@/components/common/AppIcon.vue'
-import { prefersReducedMotion } from '@/composables/motion'
+import { animationsPaused, prefersReducedMotion } from '@/composables/motion'
 
 const props = defineProps<{ rows: readonly (readonly string[])[] }>()
 
-const paused = ref(false)
+const togglePause = () => (animationsPaused.value = !animationsPaused.value)
 const uniqueTechs = computed(() => [...new Set(props.rows.flat())])
 </script>
 

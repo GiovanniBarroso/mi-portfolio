@@ -1,3 +1,5 @@
+import { ref } from 'vue'
+
 /**
  * Preferencia de movimiento del sistema, leída una sola vez.
  * Las animaciones con CSS se cortan además en main.css; esto es para lo
@@ -10,3 +12,10 @@ export const prefersReducedMotion =
 /** Retardo de entrada escalonado para rejillas: se reinicia en cada fila. */
 export const STAGGER_MS = 70
 export const stagger = (index: number, cols = 3, step = STAGGER_MS): number => (index % cols) * step
+
+/**
+ * Pausa de las animaciones que se repiten (la marquesina de tecnologías y
+ * las palabras que rotan en la portada). La activa el botón «Pausar
+ * animaciones» y vale para todas a la vez (WCAG 2.2.2).
+ */
+export const animationsPaused = ref(false)

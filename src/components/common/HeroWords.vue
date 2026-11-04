@@ -40,6 +40,8 @@ const longest = computed(() =>
 const { current } = useIndexCarousel({
   length: props.items.length,
   intervalMs: props.intervalMs,
+  // Dos vueltas y se queda en la primera
+  maxCycles: 2,
 })
 </script>
 
