@@ -250,6 +250,9 @@ onUnmounted(() => cancelAnimationFrame(rafId))
   opacity: var(--aurora-op);
   filter: blur(60px);
   transition: opacity 0.3s ease;
+  /* Se funde por arriba: si no, dejaba un borde recto bajo el navbar */
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 35%);
+  mask-image: linear-gradient(to bottom, transparent, #000 35%);
 }
 .lamp__aurora--l {
   left: -8%;

@@ -35,13 +35,12 @@
         {{ project.summary }}
       </p>
 
-      <ul class="mb-5 mt-4 flex flex-wrap gap-1.5" :aria-label="`Tecnologías de ${project.title}`">
-        <li v-for="t in visibleTechs" :key="t" class="tag tag-sm">{{ t }}</li>
-        <li v-if="hidden.length" class="tag tag-sm text-fg-subtle" :title="hidden.join(', ')">
-          <span aria-hidden="true">+{{ hidden.length }}</span>
-          <span class="sr-only">y {{ hidden.length }} más: {{ hidden.join(', ') }}</span>
-        </li>
-      </ul>
+      <TechTags
+        :techs="project.techs"
+        :max="3"
+        :label="`Tecnologías de ${project.title}`"
+        class="mb-5 mt-4"
+      />
 
       <!-- Acciones. z-base las deja por encima del enlace extendido. -->
       <div class="mt-auto flex items-center gap-2 border-t border-hair pt-4">
@@ -68,7 +67,7 @@
           <span class="sr-only">de {{ project.title }} (abre en una pestaña nueva)</span>
         </a>
         <span
-          class="ml-auto inline-flex items-center gap-1 text-[13px] font-medium text-fg-muted transition-colors duration-200 group-hover:text-accent-text"
+          class="ml-auto inline-flex min-h-9 items-center gap-1 text-[13px] pointer-coarse:min-h-11 font-medium text-fg-muted transition-colors duration-200 group-hover:text-accent-text"
           aria-hidden="true"
         >
           Detalles
@@ -84,13 +83,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import AppIcon from '@/components/common/AppIcon.vue'
 import StatusPill from '@/components/common/StatusPill.vue'
+import TechTags from '@/components/common/TechTags.vue'
 import type { Project } from '@/types/portfolio'
 import { projectImage, projectPath } from '@/utils/project'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     project: Project
     /** Nivel del titular según dónde se pinte la tarjeta */
@@ -98,8 +97,4 @@ const props = withDefaults(
   }>(),
   { headingTag: 'h3' }
 )
-
-const MAX_TECHS = 4
-const visibleTechs = computed(() => props.project.techs.slice(0, MAX_TECHS))
-const hidden = computed(() => props.project.techs.slice(MAX_TECHS))
 </script>

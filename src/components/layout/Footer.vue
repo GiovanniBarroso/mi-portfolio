@@ -51,7 +51,7 @@
               :rel="link.external ? 'noopener noreferrer' : undefined"
               class="group inline-flex min-h-11 items-center gap-2.5 text-sm text-fg-muted transition-colors duration-200 hover:text-accent-text"
             >
-              <AppIcon :name="link.icon" :size="4" />
+              <AppIcon :name="link.icon" :size="4" :stroke-width="2" />
               {{ link.label }}
               <AppIcon
                 v-if="link.external"

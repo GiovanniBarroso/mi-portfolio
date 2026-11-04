@@ -64,13 +64,7 @@
         </li>
       </ul>
 
-      <ul class="mt-6 flex flex-wrap gap-1.5" :aria-label="`Tecnologías de ${project.title}`">
-        <li v-for="t in project.techs.slice(0, 6)" :key="t" class="tag tag-sm">{{ t }}</li>
-        <li v-if="project.techs.length > 6" class="tag tag-sm text-fg-subtle">
-          <span aria-hidden="true">+{{ project.techs.length - 6 }}</span>
-          <span class="sr-only">y {{ project.techs.length - 6 }} más</span>
-        </li>
-      </ul>
+      <TechTags :techs="project.techs" :label="`Tecnologías de ${project.title}`" class="mt-6" />
 
       <div class="mt-auto flex flex-wrap items-center gap-2 pt-7">
         <a
@@ -114,6 +108,7 @@
 <script setup lang="ts">
 import AppIcon from '@/components/common/AppIcon.vue'
 import StatusPill from '@/components/common/StatusPill.vue'
+import TechTags from '@/components/common/TechTags.vue'
 import type { Project } from '@/types/portfolio'
 import { projectImage, projectPath } from '@/utils/project'
 

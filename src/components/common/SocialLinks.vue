@@ -11,11 +11,11 @@
         :aria-label="`${link.label}${link.external ? ' (abre en una pestaña nueva)' : ''}`"
         :class="
           variant === 'icons'
-            ? 'grid h-11 w-11 place-items-center rounded-xl border border-hair bg-surface-2 text-fg-muted transition-colors duration-200 hover:border-accent hover:bg-accent/10 hover:text-accent-text'
+            ? 'grid h-11 w-11 place-items-center rounded-xl border border-hair bg-surface text-fg-muted transition-colors duration-200 hover:border-accent hover:bg-accent/10 hover:text-accent-text'
             : 'inline-flex min-h-11 items-center gap-2 rounded-lg px-2.5 text-[13px] font-medium text-fg-muted transition-colors duration-200 hover:text-accent-text'
         "
       >
-        <AppIcon :name="link.icon" :size="variant === 'icons' ? 5 : 4" />
+        <AppIcon :name="link.icon" :size="variant === 'icons' ? 5 : 4" :stroke-width="2" />
         <span v-if="variant === 'inline'">{{ link.label }}</span>
       </a>
     </li>

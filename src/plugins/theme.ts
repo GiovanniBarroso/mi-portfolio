@@ -58,7 +58,7 @@ export function initTheme(): void {
 }
 
 type ViewTransitionDoc = Document & {
-  startViewTransition?: (cb: () => void) => { ready: Promise<void> }
+  startViewTransition?: (cb: () => void) => { ready: Promise<void>; finished: Promise<void> }
 }
 
 /**
@@ -79,7 +79,12 @@ export function toggleTheme(origin?: { x: number; y: number }): void {
   const doc = document as ViewTransitionDoc
   if (!doc.startViewTransition || prefersReducedMotion) return commit()
 
+  // Durante la captura del tema nuevo no debe haber transiciones de color a
+  // medio camino: dentro del círculo se veía un gris lavado y texto fantasma
+  const root = document.documentElement
+  root.classList.add('theme-switching')
   const transition = doc.startViewTransition(commit)
+  transition.finished.finally(() => root.classList.remove('theme-switching'))
   const x = origin?.x ?? window.innerWidth - 40
   const y = origin?.y ?? 40
   const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))

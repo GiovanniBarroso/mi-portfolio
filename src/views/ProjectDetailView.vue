@@ -94,7 +94,7 @@
             <li
               v-for="(h, i) in project.highlights"
               :key="h"
-              v-reveal="i * 50"
+              v-reveal="Math.min(i, 3) * 60"
               class="flex gap-5 py-4"
             >
               <span
@@ -117,7 +117,7 @@
             <RouterLink
               v-if="filterable.has(techFamily(t))"
               :to="{ path: '/projects', query: { tech: techFamily(t) } }"
-              class="tag transition-colors duration-200 hover:border-accent hover:text-accent-text"
+              class="tag transition-colors duration-200 hover:border-accent hover:bg-[var(--accent-soft)] hover:text-accent-text"
               :title="`Ver proyectos con ${techFamily(t)}`"
             >
               {{ t }}
@@ -137,7 +137,14 @@
           </div>
           <div v-if="project.platforms" class="flex justify-between gap-4">
             <dt class="text-fg-subtle">Plataformas</dt>
-            <dd class="text-right font-medium text-fg">{{ project.platforms.join(' · ') }}</dd>
+            <dd class="text-right font-medium text-fg">
+              <!-- Cada nombre entero con su separador: «Wear OS» no se parte -->
+              <template v-for="(pl, i) in project.platforms" :key="pl">
+                <span class="whitespace-nowrap"
+                  >{{ pl }}{{ i < project.platforms.length - 1 ? ' ·' : '' }}</span
+                >{{ ' ' }}
+              </template>
+            </dd>
           </div>
           <div class="flex justify-between gap-4">
             <dt class="text-fg-subtle">Equipo</dt>

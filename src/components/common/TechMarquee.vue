@@ -9,7 +9,7 @@
       <div v-for="(row, r) in rows" :key="r" class="marquee-track mask-fade-x overflow-hidden">
         <!-- La fila se duplica para que el bucle no tenga costura -->
         <div
-          class="marquee flex w-max gap-3"
+          class="marquee flex w-max gap-3 pr-3"
           :class="[
             r % 2 === 0 ? 'marquee--left' : 'marquee--right',
             animationsPaused && 'is-paused',

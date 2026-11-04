@@ -33,6 +33,7 @@ function reveal(el: HTMLElement) {
   el.addEventListener('transitionend', onEnd)
   // Red de seguridad por si transitionend no llega (pestaña en segundo plano)
   timer = window.setTimeout(done, 1000 + delay)
+  el.style.removeProperty('transition')
   el.classList.add('is-revealed')
 }
 
@@ -55,6 +56,10 @@ export const vReveal: Directive<HTMLElement, number | false | undefined> = {
     if (value === false || prefersReducedMotion || typeof IntersectionObserver === 'undefined') {
       return
     }
+    // El estado oculto se aplica al instante: si no, en la carga directa el
+    // elemento empezaba un fundido 1 → 0 que el observer cancelaba, y la
+    // entrada escalonada de la portada no se veía nunca
+    el.style.transition = 'none'
     el.classList.add('reveal')
     if (modifiers.fade) el.classList.add('reveal-fade')
     if (value) el.style.setProperty('--reveal-delay', `${value}ms`)

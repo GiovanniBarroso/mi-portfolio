@@ -5,15 +5,15 @@
       type="button"
       aria-label="Volver al principio de la página"
       data-print="hide"
-      class="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-[calc(1.25rem+env(safe-area-inset-right))] z-float grid h-12 w-12 place-items-center rounded-full border border-hair bg-surface/90 text-fg-muted shadow-lg backdrop-blur-md transition-colors duration-200 hover:border-accent hover:text-accent-text sm:bottom-[calc(2rem+env(safe-area-inset-bottom))] sm:right-[calc(2rem+env(safe-area-inset-right))]"
+      class="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-[calc(1.25rem+env(safe-area-inset-right))] z-float grid h-12 w-12 place-items-center rounded-full border border-hair bg-surface/90 text-fg-muted shadow-lg backdrop-blur-md transition-colors duration-200 hover:border-hair-strong hover:text-accent-text sm:bottom-[calc(2rem+env(safe-area-inset-bottom))] sm:right-[calc(2rem+env(safe-area-inset-right))]"
       @click="scrollToTop"
     >
       <!-- Anillo de progreso: además de subir, indica cuánto queda de página -->
-      <svg class="absolute inset-0 h-12 w-12 -rotate-90" viewBox="0 0 48 48" aria-hidden="true">
+      <svg class="absolute -inset-px h-12 w-12 -rotate-90" viewBox="0 0 48 48" aria-hidden="true">
         <circle
           cx="24"
           cy="24"
-          r="22"
+          r="23"
           fill="none"
           stroke="currentColor"
           stroke-width="2"
@@ -33,7 +33,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import AppIcon from '@/components/common/AppIcon.vue'
 import { prefersReducedMotion } from '@/composables/motion'
 
-const CIRCUMFERENCE = 2 * Math.PI * 22
+const CIRCUMFERENCE = 2 * Math.PI * 23
 
 const visible = ref(false)
 const progress = ref(0)

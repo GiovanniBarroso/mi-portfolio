@@ -3,7 +3,7 @@
        ("esto es una web") y unifica capturas de proporciones distintas. -->
   <figure class="overflow-hidden rounded-2xl border border-hair bg-surface-2 shadow-lg">
     <div
-      class="flex h-9 items-center gap-3 border-b border-hair bg-surface px-3.5"
+      class="relative flex h-9 items-center gap-3 border-b border-hair bg-surface px-3.5"
       aria-hidden="true"
     >
       <span class="flex gap-1.5">
@@ -13,7 +13,7 @@
       </span>
       <span
         v-if="host"
-        class="mx-auto flex h-5 max-w-[60%] items-center gap-1.5 truncate rounded-md bg-surface-2 px-2.5 text-[11px] text-fg-subtle"
+        class="absolute left-1/2 flex h-5 max-w-[60%] -translate-x-1/2 items-center gap-1.5 truncate rounded-md bg-surface-2 px-2.5 text-[11px] text-fg-subtle"
       >
         <AppIcon name="lock" :size="3" />
         {{ host }}

@@ -24,7 +24,7 @@
           <!-- Subrayado dibujado a mano: da carácter sin recurrir a un
                degradado de texto, que pierde contraste en modo claro. -->
           <svg
-            class="absolute -bottom-1 left-0 h-[0.35em] w-full text-accent"
+            class="absolute -bottom-1 left-0 h-[0.35em] w-full overflow-visible text-accent"
             viewBox="0 0 100 12"
             preserveAspectRatio="none"
             aria-hidden="true"
@@ -63,9 +63,14 @@
         v-reveal="300"
         class="hero-cta mt-9 flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center"
       >
-        <RouterLink to="/projects" class="btn btn-lg">
+        <RouterLink to="/projects" class="group btn btn-lg">
           Ver proyectos
-          <AppIcon name="arrow-right" :size="4" :stroke-width="2.25" />
+          <AppIcon
+            name="arrow-right"
+            :size="4"
+            :stroke-width="2.25"
+            class="transition-transform duration-200 motion-safe:group-hover:translate-x-0.5"
+          />
         </RouterLink>
         <RouterLink to="/contact" class="btn-outline btn-lg">
           <AppIcon name="mail" :size="4" />
@@ -93,7 +98,7 @@
               class="order-1 grid h-9 w-9 place-items-center rounded-xl bg-accent/10 text-accent-text"
               aria-hidden="true"
             >
-              <AppIcon :name="stat.icon" :size="4" />
+              <AppIcon :name="stat.icon" :size="4" :stroke-width="2" />
             </span>
             <!-- dt antes que dd en el DOM (lo exige la lista de definición);
                  el orden visual se invierte con `order` para que la cifra
@@ -103,7 +108,9 @@
             >
               {{ stat.label }}
             </dt>
-            <dd class="order-2 text-fluid-lg font-bold leading-none text-fg">
+            <dd
+              class="order-2 text-fluid-xl font-bold leading-none tracking-tight tabular-nums text-fg"
+            >
               <CountUp :value="stat.value" />
             </dd>
           </div>
@@ -200,9 +207,13 @@
       <TechMarquee :rows="techRows" class="mt-12" />
 
       <div class="shell mt-8 text-center">
-        <RouterLink to="/skills" class="btn-outline">
+        <RouterLink to="/skills" class="group btn-outline">
           Ver todas las skills
-          <AppIcon name="arrow-right" :size="4" />
+          <AppIcon
+            name="arrow-right"
+            :size="4"
+            class="transition-transform duration-200 motion-safe:group-hover:translate-x-0.5"
+          />
         </RouterLink>
       </div>
     </section>
@@ -301,13 +312,15 @@ const techRows = [
 <style scoped>
 /* El subrayado del nombre se dibuja al cargar */
 .hero-underline {
-  stroke-dasharray: 1;
+  /* 1 2 y no 1: con un patrón 1 1, al principio quedaba un trazo de
+     longitud cero que la punta redonda pintaba como un punto */
+  stroke-dasharray: 1 2;
   stroke-dashoffset: 0;
   animation: draw 0.9s 0.5s var(--ease-out) both;
 }
 @keyframes draw {
   from {
-    stroke-dashoffset: 1;
+    stroke-dashoffset: 1.01;
   }
 }
 

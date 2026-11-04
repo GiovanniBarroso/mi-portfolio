@@ -24,7 +24,7 @@
 
     <p
       v-if="subtitle"
-      class="measure mt-4 text-fluid-base leading-relaxed text-fg-muted"
+      class="measure mt-4 text-balance text-fluid-base leading-relaxed text-fg-muted"
       :class="align === 'center' ? 'mx-auto' : ''"
     >
       {{ subtitle }}

@@ -8,7 +8,7 @@
       :key="word"
       class="words__item"
       :style="{
-        transform: `translateY(${(i - current) * 110}%)`,
+        transform: `translateY(${offset(i)}%)`,
         opacity: i === current ? 1 : 0,
       }"
     >
@@ -36,6 +36,17 @@ const props = withDefaults(
 const longest = computed(() =>
   props.items.reduce((a, b) => (b.length > a.length ? b : a), props.items[0] ?? '')
 )
+
+/**
+ * Posición de cada término: el actual en 0, el anterior sale por arriba y
+ * los que esperan, debajo. Así el paso del último al primero también sube,
+ * en vez de dar la vuelta en sentido contrario.
+ */
+const offset = (i: number) => {
+  const n = props.items.length
+  const d = (i - current.value + n) % n
+  return d === 0 ? 0 : d === n - 1 ? -110 : 110
+}
 
 const { current } = useIndexCarousel({
   length: props.items.length,
@@ -76,6 +87,12 @@ const { current } = useIndexCarousel({
 @media (prefers-reduced-motion: reduce) {
   .words__item {
     transition: none;
+  }
+  /* Sin movimiento sólo se ve el primero: la caja se ajusta a él y la línea
+     queda centrada bajo el titular */
+  .words__item:not(:first-child),
+  .words__sizer {
+    display: none;
   }
 }
 </style>

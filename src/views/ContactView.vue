@@ -172,7 +172,9 @@
                 Preparar email
               </button>
               <p class="text-[13px] text-fg-subtle">
-                ¿Prefieres otro programa? Copia la dirección de la izquierda.
+                ¿Prefieres otro programa? Copia la dirección
+                <span class="md:hidden">de arriba</span
+                ><span class="hidden md:inline">de la izquierda</span>.
               </p>
             </div>
           </form>
