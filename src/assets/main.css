@@ -1,12 +1,15 @@
 @import 'tailwindcss';
-@config "../../tailwind.config.js";
+
+/* El modo oscuro se activa con la clase `.dark` en <html> (script en línea de
+   index.html + src/plugins/theme.ts), no con la media query del sistema. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ═══════════════════════════════════════════════════════════════
    DESIGN TOKENS
    Una sola fuente de verdad para color, tipografía y elevación.
    Regla: los componentes usan SIEMPRE tokens semánticos
-   (surface, border, fg-muted…), nunca `bg-white dark:bg-zinc-950`.
-   Así es imposible volver a invertir el dark mode por descuido.
+   (surface, hair, fg-muted…), nunca `bg-white dark:bg-zinc-950`.
+   Así es imposible volver a invertir el modo oscuro por descuido.
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
@@ -21,15 +24,15 @@
   --border: #e4e4e7;
   --border-strong: #d4d4d8;
 
-  /* ── Texto (todos ≥ 4.5:1 sobre --bg) ── */
-  --fg: #18181b; /* 15.9:1 */
-  --fg-muted: #52525b; /* 7.0:1  */
-  --fg-subtle: #71717a; /* 4.8:1  */
+  /* ── Texto (todos ≥ 4.5:1 sobre --bg y --surface-2) ── */
+  --fg: #18181b; /* 17.7:1 */
+  --fg-muted: #52525b; /* 7.7:1 */
+  --fg-subtle: #6b6b74; /* 5.3:1 sobre blanco · 4.8:1 sobre --surface-2 (antes 4.4) */
 
   /* ── Acento ──
      `--accent` es decorativo (bordes, glows, fondos translúcidos).
-     `--accent-text` es el único válido para texto sobre --bg.
-     `--accent-solid` + `--accent-on` es el par de botón primario. */
+     `--accent-text` es el único válido para texto.
+     `--accent-solid` + `--accent-on` es el par del botón primario. */
   --accent: #0ea5e9;
   --accent-text: #0369a1; /* 5.9:1 sobre blanco */
   --accent-solid: #0369a1;
@@ -39,18 +42,22 @@
 
   /* ── Acento secundario (violeta) ── */
   --accent-2: #8b5cf6;
-  --accent-2-text: #6d28d9; /* 6.2:1 sobre blanco */
+  --accent-2-text: #6d28d9; /* 7.1:1 sobre blanco */
 
   /* ── Estado ── */
   --ok: #10b981;
-  --ok-text: #047857; /* 4.8:1 sobre blanco */
-  --warn-text: #b45309;
+  --ok-text: #047857; /* 5.5:1 sobre blanco */
+  --warn: #f59e0b;
+  --warn-text: #b45309; /* 5.0:1 sobre blanco */
 
   /* ── Elevación ── */
-  --shadow-sm: 0 1px 2px rgb(9 9 11 / 0.05);
-  --shadow-md: 0 4px 16px -4px rgb(9 9 11 / 0.08);
-  --shadow-lg: 0 12px 32px -8px rgb(9 9 11 / 0.12);
-  --shadow-accent: 0 8px 24px -8px rgb(3 105 161 / 0.4);
+  --elev-sm: 0 1px 2px rgb(9 9 11 / 0.05);
+  --elev-md: 0 4px 16px -4px rgb(9 9 11 / 0.08);
+  --elev-lg: 0 16px 40px -12px rgb(9 9 11 / 0.16);
+  --elev-accent: 0 8px 24px -8px rgb(3 105 161 / 0.4);
+
+  /* ── Movimiento ── */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* ── Compatibilidad con LampHero ── */
   --page-bg: var(--bg);
@@ -79,12 +86,12 @@
   --border: #26262b;
   --border-strong: #3f3f46;
 
-  --fg: #fafafa; /* 18.4:1 */
-  --fg-muted: #a1a1aa; /* 8.9:1  */
-  --fg-subtle: #8b8b94; /* 6.4:1 — más claro que zinc-500 para pasar AA */
+  --fg: #fafafa; /* 19.1:1 */
+  --fg-muted: #a1a1aa; /* 7.8:1 · 6.9:1 sobre --surface-2 */
+  --fg-subtle: #8b8b94; /* 5.9:1 · 5.3:1 sobre --surface-2 */
 
   --accent: #38bdf8;
-  --accent-text: #38bdf8; /* 9.0:1 sobre #09090b */
+  --accent-text: #38bdf8; /* 9.3:1 sobre #09090b */
   --accent-solid: #38bdf8;
   --accent-on: #082f49; /* 6.5:1 sobre --accent-solid */
   --accent-soft: rgb(56 189 248 / 0.12);
@@ -95,12 +102,64 @@
 
   --ok: #34d399;
   --ok-text: #34d399;
+  --warn: #fbbf24;
   --warn-text: #fbbf24;
 
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
-  --shadow-md: 0 4px 16px -4px rgb(0 0 0 / 0.5);
-  --shadow-lg: 0 12px 32px -8px rgb(0 0 0 / 0.6);
-  --shadow-accent: 0 8px 24px -8px rgb(56 189 248 / 0.35);
+  --elev-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --elev-md: 0 4px 16px -4px rgb(0 0 0 / 0.5);
+  --elev-lg: 0 16px 40px -12px rgb(0 0 0 / 0.65);
+  --elev-accent: 0 8px 24px -8px rgb(56 189 248 / 0.35);
+}
+
+/* Las utilidades de Tailwind apuntan a los tokens: `bg-surface`,
+   `text-fg-muted`, `border-hair`… cambian solas con el tema. */
+@theme inline {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-hover: var(--surface-hover);
+  --color-hair: var(--border);
+  --color-hair-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-accent-solid: var(--accent-solid);
+  --color-accent-on: var(--accent-on);
+  --color-violet2: var(--accent-2);
+  --color-violet2-text: var(--accent-2-text);
+  --color-ok: var(--ok);
+  --color-ok-text: var(--ok-text);
+  --color-warn: var(--warn);
+  --color-warn-text: var(--warn-text);
+
+  --text-fluid-xs: var(--step--1);
+  --text-fluid-sm: var(--step-0);
+  --text-fluid-base: var(--step-1);
+  --text-fluid-lg: var(--step-2);
+  --text-fluid-xl: var(--step-3);
+  --text-fluid-2xl: var(--step-4);
+  --text-fluid-3xl: var(--step-5);
+
+  --shadow-sm: var(--elev-sm);
+  --shadow-md: var(--elev-md);
+  --shadow-lg: var(--elev-lg);
+  --shadow-accent: var(--elev-accent);
+}
+
+/* Escala de z-index explícita: 10 contenido, 20 sticky,
+   30 flotantes, 40 overlay, 50 navbar, 100 skip-link. */
+@theme {
+  --z-index-base: 10;
+  --z-index-sticky: 20;
+  --z-index-float: 30;
+  --z-index-overlay: 40;
+  --z-index-nav: 50;
+  --z-index-top: 100;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -123,52 +182,70 @@
   font-display: swap;
 }
 
-* {
-  border-color: var(--border);
-}
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
 
-html {
-  /* El scroll suave se gestiona en el router; aquí solo el anclaje
-     para que los enlaces internos no queden bajo el navbar fijo. */
-  scroll-padding-top: calc(var(--nav-h) + 1rem);
-  -webkit-text-size-adjust: 100%;
-}
+  html {
+    /* El scroll suave se gestiona en el router; aquí sólo el anclaje
+       para que los enlaces internos no queden bajo el navbar fijo. */
+    scroll-padding-top: calc(var(--nav-h) + 1rem);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  font-size: var(--step-0);
-  line-height: 1.65;
-  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    line-height: 1.65;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
 
-/* Titulares: tracking negativo progresivo — el aire correcto a cada tamaño */
-h1,
-h2,
-h3,
-h4 {
-  line-height: 1.12;
-  letter-spacing: -0.022em;
-  text-wrap: balance;
-}
+  /* Titulares: tracking negativo — el aire correcto a cada tamaño */
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.12;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
 
-p {
-  text-wrap: pretty;
-}
+  p,
+  li,
+  dd {
+    text-wrap: pretty;
+  }
 
-/* Un único anillo de foco, visible en ambos temas y sobre cualquier fondo */
-:focus-visible {
-  outline: 2px solid var(--accent-text);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
+  /* Un único anillo de foco, visible en ambos temas y sobre cualquier fondo */
+  :focus-visible {
+    outline: 2px solid var(--accent-text);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 
-::selection {
-  background: var(--accent);
-  color: var(--bg);
+  /* El foco programático (tras navegar) no debe pintar un anillo */
+  [tabindex='-1']:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  img {
+    /* Evita el icono de imagen rota con texto alternativo desbordado */
+    font-size: 0.75rem;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -204,13 +281,10 @@ p {
   }
 
   /* Primera sección de una vista interna: menos aire arriba, porque el
-     navbar fijo ya aporta 68px de separación por sí solo. */
+     navbar fijo ya aporta su propia separación. */
   .page {
     padding-top: clamp(2.5rem, 4vw, 3.5rem);
     padding-bottom: clamp(4rem, 8vw, 7rem);
-  }
-  .section-sm {
-    padding-block: clamp(2.75rem, 6vw, 4.5rem);
   }
 
   /* ── Superficies ── */
@@ -218,20 +292,26 @@ p {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 1rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--elev-sm);
     transition:
       border-color 0.2s ease,
-      box-shadow 0.2s ease,
-      background-color 0.2s ease;
+      box-shadow 0.25s ease,
+      background-color 0.2s ease,
+      translate 0.25s var(--ease-out);
   }
 
-  /* Sólo para tarjetas realmente interactivas (link o botón) */
+  /* Sólo para tarjetas realmente interactivas (enlace o botón) */
   .card-interactive {
     cursor: pointer;
   }
   .card-interactive:hover {
     border-color: color-mix(in oklab, var(--accent) 45%, var(--border));
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--elev-lg);
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .card-interactive:hover {
+      translate: 0 -2px;
+    }
   }
   .card-interactive:focus-within {
     border-color: var(--accent);
@@ -264,14 +344,20 @@ p {
       background-color 0.2s ease,
       border-color 0.2s ease,
       color 0.2s ease,
-      box-shadow 0.2s ease;
+      box-shadow 0.2s ease,
+      translate 0.15s ease;
+  }
+  .btn:active,
+  .btn-outline:active,
+  .btn-ghost:active {
+    translate: 0 1px;
   }
 
   .btn {
     background: var(--accent-solid);
     color: var(--accent-on);
     border: 1px solid transparent;
-    box-shadow: var(--shadow-accent);
+    box-shadow: var(--elev-accent);
   }
   .btn:hover {
     background: color-mix(in oklab, var(--accent-solid) 88%, var(--fg));
@@ -304,20 +390,20 @@ p {
     padding: 0.375rem 0.875rem;
     font-size: 0.8125rem;
   }
+  .btn-lg {
+    min-height: 3rem;
+    padding: 0.75rem 1.75rem;
+    font-size: 0.9375rem;
+  }
 
-  /* En pantalla táctil los controles compactos suben a 44px: en ratón
-     36px es cómodo, con el dedo no. Se hace por puntero y no por ancho,
+  /* En pantalla táctil los controles compactos suben a 44px: con ratón
+     36px es cómodo, con el dedo no. Se decide por puntero y no por ancho,
      porque un portátil táctil de 1440px también necesita el objetivo grande. */
   @media (pointer: coarse) {
     .btn-sm,
     .chip {
       min-height: 2.75rem;
     }
-  }
-  .btn-lg {
-    min-height: 3rem;
-    padding: 0.75rem 1.75rem;
-    font-size: 0.9375rem;
   }
 
   /* ── Píldoras y etiquetas ── */
@@ -333,6 +419,10 @@ p {
     font-weight: 500;
     line-height: 1.4;
   }
+  .tag-sm {
+    padding: 0.125rem 0.5rem;
+    font-size: 0.6875rem;
+  }
 
   .eyebrow {
     display: inline-flex;
@@ -345,8 +435,38 @@ p {
     color: var(--accent-text);
   }
 
-  /* Chip de filtro — objetivo táctil 44px y estado activo no sólo por color */
+  /* Etiqueta de sección pequeña (gris), para subtítulos de bloque */
+  .label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+  }
+
+  /* Insignia de estado. Fondo sólido para que se lea sobre cualquier
+     captura, clara u oscura; el color sólo vive en el punto. */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: color-mix(in oklab, var(--surface) 94%, transparent);
+    color: var(--fg);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.4;
+    box-shadow: var(--elev-md);
+    backdrop-filter: blur(8px);
+  }
+
+  /* Chip de filtro — objetivo táctil y estado activo no sólo por color */
   .chip {
+    /* relative: contiene los textos sr-only (absolutos) dentro de la fila
+       con scroll horizontal; sin esto desbordaban la página en móvil */
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
@@ -358,6 +478,7 @@ p {
     color: var(--fg-muted);
     font-size: 0.8125rem;
     font-weight: 500;
+    white-space: nowrap;
     cursor: pointer;
     transition:
       background-color 0.2s ease,
@@ -384,7 +505,7 @@ p {
     background: var(--surface);
     color: var(--fg);
     padding: 0.625rem 1rem;
-    font-size: 0.9375rem;
+    font-size: 1rem; /* 16px: iOS no hace zoom al enfocar */
     transition:
       border-color 0.2s ease,
       box-shadow 0.2s ease;
@@ -395,7 +516,23 @@ p {
   .input:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-soft);
+    box-shadow: 0 0 0 3px var(--accent-ring);
+  }
+  .input[aria-invalid='true'] {
+    border-color: #dc2626;
+  }
+  textarea.input {
+    min-height: 8rem;
+    resize: vertical;
+    line-height: 1.55;
+  }
+  select.input {
+    appearance: none;
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.875rem center;
+    background-size: 1rem;
   }
 
   /* ── Enlace de salto: sólo visible con teclado ── */
@@ -415,6 +552,17 @@ p {
   }
   .skip-link:focus-visible {
     transform: translate(-50%, 0);
+  }
+
+  /* ── Texto largo (descripción de proyecto) ── */
+  .prose-body {
+    color: var(--fg-muted);
+    font-size: var(--step-0);
+    line-height: 1.75;
+  }
+  .prose-body strong {
+    color: var(--fg);
+    font-weight: 600;
   }
 }
 
@@ -436,11 +584,6 @@ p {
     mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
   }
 
-  .pause-on-hover:hover,
-  .pause-on-hover:focus-within {
-    animation-play-state: paused;
-  }
-
   /* Textura de puntos para bloques destacados */
   .dot-grid {
     background-image: radial-gradient(
@@ -450,60 +593,40 @@ p {
     );
     background-size: 22px 22px;
   }
-
-  .animate-marquee-left {
-    animation: marquee-left 42s linear infinite;
-  }
-  .animate-marquee-right {
-    animation: marquee-right 42s linear infinite;
-  }
-  .animate-float {
-    animation: float 5s ease-in-out infinite;
-  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   KEYFRAMES
+   APARICIÓN AL HACER SCROLL (directiva v-reveal)
+   El estado oculto sólo existe mientras la directiva lo pone; cuando
+   termina la transición se retiran las clases y el elemento recupera
+   sus propias transiciones (hover de tarjetas, etc.).
    ═══════════════════════════════════════════════════════════════ */
 
-@keyframes marquee-left {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+.reveal {
+  opacity: 0;
+  translate: 0 18px;
+  transition:
+    opacity 0.55s var(--ease-out) var(--reveal-delay, 0ms),
+    translate 0.6s var(--ease-out) var(--reveal-delay, 0ms);
+}
+.reveal-fade {
+  translate: none;
+}
+.reveal.is-revealed {
+  opacity: 1;
+  translate: none;
 }
 
-@keyframes marquee-right {
-  from {
-    transform: translateX(-50%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
+/* ═══════════════════════════════════════════════════════════════
+   CAMBIO DE TEMA (View Transitions API)
+   La animación circular la dirige theme.ts; aquí sólo se desactiva
+   el fundido por defecto para que no se superponga.
+   ═══════════════════════════════════════════════════════════════ */
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.9);
-    opacity: 0.8;
-  }
-  70%,
-  100% {
-    transform: scale(2);
-    opacity: 0;
-  }
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -531,11 +654,10 @@ p {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MOVIMIENTO REDUCIDO
-   Corta toda animación decorativa de una vez, incluidas las
-   que inyecta @vueuse/motion vía transform/opacity inline.
+   ACCESIBILIDAD DEL SISTEMA
    ═══════════════════════════════════════════════════════════════ */
 
+/* Movimiento reducido: corta toda animación decorativa de una vez */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -544,5 +666,36 @@ p {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    translate: none;
+  }
+}
+
+/* Más contraste: el texto secundario pasa a principal y los bordes se marcan */
+@media (prefers-contrast: more) {
+  :root,
+  .dark {
+    --fg-muted: var(--fg);
+    --fg-subtle: var(--fg);
+    --border: var(--border-strong);
+  }
+}
+
+/* Modo de alto contraste de Windows: los fondos desaparecen, así que las
+   tarjetas y botones necesitan un borde real para seguir delimitados. */
+@media (forced-colors: active) {
+  .card,
+  .card-muted,
+  .btn,
+  .btn-outline,
+  .chip,
+  .tag,
+  .status-pill {
+    border: 1px solid CanvasText;
+  }
+  .chip[aria-pressed='true'] {
+    outline: 2px solid Highlight;
   }
 }

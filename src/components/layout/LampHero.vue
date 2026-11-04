@@ -33,7 +33,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 
 /**
- * El color de cada capa se resuelve en CSS con `:global(.dark)`, no en JS.
+ * El color de cada capa se resuelve en CSS con `.dark .lamp`, no en JS.
  * Antes un MutationObserver observaba la clase del <html> para recalcular
  * seis `computed` de color; con variables CSS el tema cambia solo.
  */
@@ -91,7 +91,10 @@ onUnmounted(() => cancelAnimationFrame(rafId))
   background: var(--page-bg);
 }
 
-:global(.dark) .lamp {
+/* Ojo: `:global(.dark) .lamp` compila a `.dark` a secas (Vue descarta el
+   resto del selector) y estas variables nunca llegaban a la lámpara. Con
+   scoped CSS basta `.dark .lamp`: el atributo de scope sólo va en `.lamp`. */
+.dark .lamp {
   --cone: #0ea5e9;
   --glow-lg: #0ea5e9;
   --glow-lg-op: 0.5;
@@ -125,10 +128,13 @@ onUnmounted(() => cancelAnimationFrame(rafId))
   height: 14rem;
   width: clamp(5rem, 52vw, 30rem);
   overflow: visible;
+  /* Se anima `scale`, no `width`: cambiar el ancho recalcula el layout en
+     cada fotograma y Lighthouse lo contaba como desplazamiento (CLS). */
   animation: lamp-expand 0.9s 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 .lamp__cone--l {
   right: 50%;
+  transform-origin: right;
   background-image: conic-gradient(
     from 70deg at center top,
     var(--cone) 0%,
@@ -138,6 +144,7 @@ onUnmounted(() => cancelAnimationFrame(rafId))
 }
 .lamp__cone--r {
   left: 50%;
+  transform-origin: left;
   background-image: conic-gradient(
     from 290deg at center top,
     transparent 0%,
@@ -190,9 +197,14 @@ onUnmounted(() => cancelAnimationFrame(rafId))
   position: absolute;
   z-index: 40;
   height: 11rem;
-  width: 100%;
+  /* Sólo tapa la zona del haz, con los bordes difuminados. A todo el ancho
+     cortaba también las auroras laterales y dejaba una línea horizontal
+     dura a la altura del haz en modo claro. */
+  width: min(100%, 64rem);
   transform: translateY(-12.5rem);
   background: var(--page-bg);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 22%, #000 78%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 22%, #000 78%, transparent);
 }
 
 /* ── Brillo y haz ────────────────────────────────────────────── */
@@ -203,6 +215,7 @@ onUnmounted(() => cancelAnimationFrame(rafId))
 }
 .lamp__glow--lg {
   z-index: 50;
+  width: clamp(5rem, 38vw, 28rem);
   background: var(--glow-lg);
   opacity: var(--glow-lg-op);
   filter: blur(3rem);
@@ -211,6 +224,7 @@ onUnmounted(() => cancelAnimationFrame(rafId))
 }
 .lamp__glow--sm {
   z-index: 30;
+  width: clamp(4rem, 20vw, 16rem);
   background: var(--glow-sm);
   filter: blur(2rem);
   transform: translateY(-6rem);
@@ -219,6 +233,7 @@ onUnmounted(() => cancelAnimationFrame(rafId))
 .lamp__beam {
   position: absolute;
   z-index: 50;
+  width: clamp(5rem, 52vw, 30rem);
   height: 2px;
   background: var(--beam);
   box-shadow: var(--beam-shadow);
@@ -333,38 +348,24 @@ onUnmounted(() => cancelAnimationFrame(rafId))
 /* ── Animaciones ─────────────────────────────────────────────── */
 @keyframes lamp-expand {
   from {
-    width: clamp(3rem, 20vw, 15rem);
+    scale: 0.5 1;
     opacity: 0.3;
-  }
-  to {
-    width: clamp(5rem, 52vw, 30rem);
-    opacity: 1;
   }
 }
 @keyframes lamp-glow-lg {
   from {
-    width: clamp(3rem, 8vw, 8rem);
-  }
-  to {
-    width: clamp(5rem, 38vw, 28rem);
+    scale: 0.3 1;
   }
 }
 @keyframes lamp-glow-sm {
   from {
-    width: clamp(2rem, 5vw, 6rem);
-  }
-  to {
-    width: clamp(4rem, 20vw, 16rem);
+    scale: 0.4 1;
   }
 }
 @keyframes lamp-beam {
   from {
-    width: clamp(3rem, 20vw, 15rem);
+    scale: 0.5 1;
     opacity: 0.5;
-  }
-  to {
-    width: clamp(5rem, 52vw, 30rem);
-    opacity: 1;
   }
 }
 @keyframes aurora {
@@ -377,18 +378,6 @@ onUnmounted(() => cancelAnimationFrame(rafId))
   }
 }
 
-/* Sin movimiento: las capas se quedan en su tamaño final, no a medias */
-@media (prefers-reduced-motion: reduce) {
-  .lamp__cone,
-  .lamp__beam {
-    width: clamp(5rem, 52vw, 30rem) !important;
-    opacity: 1 !important;
-  }
-  .lamp__glow--lg {
-    width: clamp(5rem, 38vw, 28rem) !important;
-  }
-  .lamp__glow--sm {
-    width: clamp(4rem, 20vw, 16rem) !important;
-  }
-}
+/* Sin movimiento: el corte global de main.css deja cada capa en su
+   estado final (las animaciones usan fill-mode both). */
 </style>

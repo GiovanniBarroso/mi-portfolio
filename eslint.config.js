@@ -1,99 +1,49 @@
 import js from '@eslint/js'
 import vue from 'eslint-plugin-vue'
-import vueParser from 'vue-eslint-parser'
-import tsParser from '@typescript-eslint/parser'
 import ts from '@vue/eslint-config-typescript'
 import prettier from 'eslint-config-prettier'
+import globals from 'globals'
 
 export default [
-  // Ignorar lo que no queremos lint
   {
-    ignores: [
-      'dist/**',
-      'node_modules/**',
-      'postcss.config.cjs',
-      'tailwind.config.js',
-      '**/*.vue.js',
-      '**/*.vue.d.ts',
-      'src/**/*.js', // residuos de vue-tsc si alguna vez emite
-
-    ],
+    ignores: ['dist/**', 'node_modules/**', 'coverage/**', 'public/**', 'docs/**'],
   },
 
-  // Scripts de Node (tooling, fuera del bundle)
-  {
-    files: ['scripts/**/*.{js,mjs}'],
-    languageOptions: {
-      globals: {
-        console: 'readonly',
-        process: 'readonly',
-      },
-    },
-  },
-
-  // Presets base
   js.configs.recommended,
   ...vue.configs['flat/recommended'],
   ...ts(),
+  // Prettier se encarga del formato: fuera las reglas de estilo que chocan
   prettier,
 
-  // Archivos .vue → parser de Vue + sub-parser TS para <script>
+  // Código de la app: navegador
   {
-    files: ['**/*.vue'],
-    languageOptions: {
-      parser: vueParser,
-      parserOptions: {
-        parser: tsParser,
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        extraFileExtensions: ['.vue'],
-      },
-      globals: {
-        window: 'readonly',
-        document: 'readonly',
-        localStorage: 'readonly',
-        URL: 'readonly',
-      },
-    },
+    files: ['src/**/*.{ts,vue}'],
+    languageOptions: { globals: globals.browser },
   },
 
-  // Archivos TS/JS (no .vue) → parser TS directo
+  // Tooling, build y tests: Node
   {
-    files: ['**/*.{ts,tsx,js,mjs,cjs}'],
-    languageOptions: {
-      parser: tsParser,
-      parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-      },
-      globals: {
-        window: 'readonly',
-        document: 'readonly',
-        localStorage: 'readonly',
-        URL: 'readonly',
-      },
-    },
+    files: ['*.{js,mjs,ts}', 'scripts/**/*.{js,mjs}', 'build/**/*.ts', 'src/**/__tests__/**/*.ts'],
+    languageOptions: { globals: globals.node },
   },
 
-  // Overrides y reglas propias al final (toman prioridad)
+  // Reglas propias (al final, toman prioridad)
   {
-    files: ['**/*.{js,mjs,cjs,ts,vue}'],
+    files: ['**/*.{js,mjs,ts,vue}'],
     rules: {
       'vue/multi-word-component-names': 'off',
       'vue/require-default-prop': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-empty-object-type': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+      '@typescript-eslint/no-non-null-assertion': 'off',
     },
   },
 
-  // Para .d.ts desactivamos reglas molestas
+  // En la plantilla del script de OG se construye HTML como texto
   {
-    files: ['**/*.d.ts'],
-    rules: {
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-empty-object-type': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-    },
+    files: ['scripts/generate-og.mjs'],
+    languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
 ]

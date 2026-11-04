@@ -1,85 +1,90 @@
 <template>
-  <div class="page shell" aria-labelledby="about-title">
+  <div class="page shell">
     <PageHeader
       eyebrow="Mi historia"
       title="Sobre mí"
       subtitle="Desarrollador full-stack con debilidad por las interfaces limpias y el código que se puede mantener seis meses después."
       as="h1"
       title-id="about-title"
-      class="mx-auto"
     />
 
     <div class="mt-16 grid items-start gap-8 lg:grid-cols-[20rem_1fr]">
       <!-- ══════════════ Ficha de perfil ══════════════ -->
       <aside
-        v-motion
-        :initial="slideInLeft.initial"
-        :enter="slideInLeft.enter"
+        v-reveal
         class="card overflow-hidden lg:sticky lg:top-[calc(var(--nav-h)+1.5rem)]"
-        aria-label="Perfil"
+        aria-labelledby="profile-name"
       >
         <div class="relative">
-          <div aria-hidden="true" class="dot-grid h-20 w-full bg-surface-2 opacity-60" />
+          <div aria-hidden="true" class="dot-grid h-24 w-full bg-surface-2" />
           <img
-            :src="about.profileImage"
-            alt="Retrato de Giovanni Barroso"
-            width="112"
-            height="112"
-            loading="lazy"
+            :src="asset('profile.jpg')"
+            alt="Retrato de Giovanni Barroso sonriendo, al aire libre"
+            width="512"
+            height="512"
             decoding="async"
-            class="absolute -bottom-10 left-6 h-24 w-24 rounded-2xl border-4 border-surface object-cover shadow-lg"
+            fetchpriority="high"
+            class="absolute -bottom-12 left-6 h-28 w-28 rounded-2xl border-4 border-surface object-cover shadow-lg"
           />
         </div>
 
-        <div class="p-6 pt-14">
-          <h2 class="text-lg font-bold tracking-tight text-fg">Giovanni Barroso</h2>
-          <p class="mt-1 text-[13px] font-medium text-fg-muted">Desarrollador Full-Stack</p>
+        <div class="p-6 pt-16">
+          <h2 id="profile-name" class="text-lg font-bold tracking-tight text-fg">
+            {{ site.name }}
+          </h2>
+          <p class="mt-1 text-[13px] font-medium text-fg-muted">{{ site.role }}</p>
 
-          <p
-            class="mt-4 inline-flex items-center gap-2 rounded-full border border-ok/40 bg-ok/10 px-2.5 py-1 text-[11px] font-semibold text-ok-text"
-          >
-            <span class="h-1.5 w-1.5 rounded-full bg-ok" aria-hidden="true" />
-            Disponible para trabajar
-          </p>
+          <AvailabilityBadge size="sm" class="mt-4" />
 
           <p class="mt-5 text-sm leading-relaxed text-fg-muted">
             Especializado en
             <strong class="font-semibold text-fg">Vue, React y TypeScript</strong>. Construyo
-            interfaces modernas, accesibles y con buen rendimiento.
+            interfaces modernas, accesibles y con buen rendimiento, y el backend que las sostiene.
           </p>
 
-          <ul class="mt-5 flex flex-wrap gap-1.5">
+          <ul class="mt-5 flex flex-wrap gap-1.5" aria-label="Enfoque">
             <li v-for="t in about.tags" :key="t" class="tag">{{ t }}</li>
           </ul>
 
           <address class="mt-6 space-y-1 not-italic">
             <a
-              :href="`mailto:${EMAIL}`"
+              :href="`mailto:${site.email}`"
               class="flex min-h-11 items-center gap-2.5 text-[13px] text-fg-muted transition-colors duration-200 hover:text-accent-text"
             >
               <AppIcon name="mail" :size="4" />
-              <span class="truncate">{{ EMAIL }}</span>
+              <span class="truncate">{{ site.email }}</span>
             </a>
             <p class="flex min-h-11 items-center gap-2.5 text-[13px] text-fg-muted">
               <AppIcon name="location" :size="4" />
-              Sevilla, España
+              {{ site.city }}, {{ site.country }}
             </p>
             <p class="flex min-h-11 items-center gap-2.5 text-[13px] text-fg-muted">
-              <AppIcon name="clock" :size="4" />
-              Remoto o híbrido
+              <AppIcon name="briefcase" :size="4" />
+              {{ site.workMode }}
             </p>
           </address>
 
           <div class="mt-6 flex flex-col gap-2">
             <RouterLink to="/contact" class="btn w-full">Contactar</RouterLink>
             <a
-              href="https://github.com/GiovanniBarroso"
+              :href="LINKEDIN_URL"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-outline w-full"
+            >
+              <AppIcon name="linkedin" :size="4" />
+              LinkedIn
+              <span class="sr-only">(abre en una pestaña nueva)</span>
+            </a>
+            <a
+              :href="GITHUB_URL"
               target="_blank"
               rel="noopener noreferrer"
               class="btn-outline w-full"
             >
               <AppIcon name="github" :size="4" />
-              Ver GitHub
+              GitHub
+              <span class="sr-only">(abre en una pestaña nueva)</span>
             </a>
           </div>
         </div>
@@ -88,13 +93,7 @@
       <!-- ══════════════ Contenido ══════════════ -->
       <div class="space-y-6">
         <!-- Quién soy -->
-        <section
-          v-motion
-          :initial="reveal.initial"
-          :enter="reveal.enter"
-          class="card p-7"
-          aria-labelledby="who-title"
-        >
+        <section v-reveal="80" class="card p-7" aria-labelledby="who-title">
           <h2 id="who-title" class="flex items-center gap-3 text-lg font-bold text-fg">
             <span class="h-5 w-1 rounded-full bg-accent" aria-hidden="true" />
             Quién soy
@@ -106,7 +105,9 @@
               <strong class="font-semibold text-fg">TypeScript</strong>, con
               <strong class="font-semibold text-fg">Vue 3</strong> y
               <strong class="font-semibold text-fg">React</strong> en el frontend y
-              <strong class="font-semibold text-fg">NestJS o Supabase</strong> en el backend.
+              <strong class="font-semibold text-fg">NestJS o Supabase</strong> en el backend y,
+              cuando el producto lo pide, apps nativas con
+              <strong class="font-semibold text-fg">Kotlin y SwiftUI</strong>.
             </p>
             <p>
               Priorizo tres cosas por ese orden: que funcione, que sea accesible y que la siguiente
@@ -117,13 +118,11 @@
         </section>
 
         <!-- Cifras -->
-        <dl class="grid gap-4 sm:grid-cols-3" aria-label="Cifras">
+        <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4" aria-label="Cifras">
           <div
-            v-for="(s, i) in about.stats"
+            v-for="(s, i) in stats"
             :key="s.label"
-            v-motion
-            :initial="fadeUp.initial"
-            :visible-once="staggered(i, 3)"
+            v-reveal="stagger(i, 4)"
             class="card flex flex-col gap-1 p-5"
           >
             <dt class="order-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">
@@ -136,13 +135,7 @@
         </dl>
 
         <!-- Proceso, como línea de tiempo numerada -->
-        <section
-          v-motion
-          :initial="reveal.initial"
-          :visible-once="reveal.visibleOnce"
-          class="card p-7"
-          aria-labelledby="process-title"
-        >
+        <section v-reveal class="card p-7" aria-labelledby="process-title">
           <h2 id="process-title" class="flex items-center gap-3 text-lg font-bold text-fg">
             <span class="h-5 w-1 rounded-full bg-accent" aria-hidden="true" />
             Cómo trabajo
@@ -177,16 +170,10 @@
         </section>
 
         <!-- Logros -->
-        <section
-          v-motion
-          :initial="reveal.initial"
-          :visible-once="reveal.visibleOnce"
-          class="card p-7"
-          aria-labelledby="key-title"
-        >
+        <section v-reveal class="card p-7" aria-labelledby="key-title">
           <h2 id="key-title" class="flex items-center gap-3 text-lg font-bold text-fg">
             <span class="h-5 w-1 rounded-full bg-accent" aria-hidden="true" />
-            Proyectos clave
+            Lo que he construido
           </h2>
           <ul class="mt-5 space-y-3">
             <li v-for="a in about.achievements" :key="a" class="flex items-start gap-3">
@@ -194,7 +181,7 @@
                 name="check"
                 :size="4"
                 :stroke-width="2.5"
-                class="mt-1 shrink-0 text-accent"
+                class="mt-1 shrink-0 text-accent-text"
               />
               <span class="text-sm leading-relaxed text-fg-muted">{{ a }}</span>
             </li>
@@ -202,13 +189,7 @@
         </section>
 
         <!-- Herramientas -->
-        <section
-          v-motion
-          :initial="reveal.initial"
-          :visible-once="reveal.visibleOnce"
-          class="card p-7"
-          aria-labelledby="tools-title"
-        >
+        <section v-reveal class="card p-7" aria-labelledby="tools-title">
           <h2 id="tools-title" class="flex items-center gap-3 text-lg font-bold text-fg">
             <span class="h-5 w-1 rounded-full bg-accent" aria-hidden="true" />
             Caja de herramientas
@@ -216,6 +197,17 @@
           <ul class="mt-5 flex flex-wrap gap-2">
             <li v-for="tool in about.tools" :key="tool" class="tag">{{ tool }}</li>
           </ul>
+          <RouterLink
+            to="/skills"
+            class="group mt-6 inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-accent-text"
+          >
+            Ver todas las skills y dónde las he usado
+            <AppIcon
+              name="arrow-right"
+              :size="4"
+              class="transition-transform duration-200 motion-safe:group-hover:translate-x-0.5"
+            />
+          </RouterLink>
         </section>
       </div>
     </div>
@@ -225,18 +217,19 @@
 <script setup lang="ts">
 import PageHeader from '@/components/common/PageHeader.vue'
 import AppIcon from '@/components/common/AppIcon.vue'
+import AvailabilityBadge from '@/components/common/AvailabilityBadge.vue'
 import { useSeo } from '@/composables/useSeo'
-import { fadeUp, reveal, slideInLeft, staggered } from '@/composables/motionPresets'
+import { stagger } from '@/composables/motion'
+import { vReveal } from '@/directives/reveal'
 import { aboutData as about } from '@/data/about'
-import { EMAIL } from '@/data/social'
+import { site } from '@/data/site'
+import { GITHUB_URL, LINKEDIN_URL } from '@/data/social'
+import { stats } from '@/data/stats'
+import { asset } from '@/utils/asset'
+import { PAGES } from '@/config/seo'
 import type { IconName } from '@/components/common/icons'
 
-const seo = useSeo()
-seo({
-  title: 'Sobre mí',
-  description:
-    'Giovanni Barroso — desarrollador full-stack (Vue, React, TypeScript, NestJS). Metodología de trabajo, proyectos y herramientas.',
-})
+useSeo(PAGES.about)
 
 const process: { icon: IconName; title: string; desc: string }[] = [
   {

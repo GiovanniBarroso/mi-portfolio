@@ -1,11 +1,12 @@
 <template>
-  <footer class="mt-auto border-t border-hair bg-bg-subtle">
-    <div class="shell grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr] md:gap-8">
+  <footer id="pie" class="mt-auto border-t border-hair bg-bg-subtle">
+    <div class="shell grid gap-10 py-14 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr] md:gap-8">
       <!-- Marca -->
-      <div>
+      <div class="sm:col-span-2 md:col-span-1">
         <RouterLink
           to="/"
           class="inline-flex items-center gap-2.5 text-sm font-bold tracking-tight"
+          :aria-label="`${site.name}, inicio`"
         >
           <span
             class="grid h-8 w-8 place-items-center rounded-lg bg-accent-solid text-[13px] font-black text-accent-on"
@@ -13,25 +14,20 @@
           >
             G
           </span>
-          <span class="text-fg">Giovanni Barroso</span>
+          <span class="text-fg" aria-hidden="true">{{ site.name }}</span>
         </RouterLink>
 
         <p class="mt-4 max-w-xs text-sm leading-relaxed text-fg-muted">
-          Desarrollador full-stack en Sevilla. Construyo interfaces limpias, rápidas y accesibles.
+          {{ site.role }} en {{ site.city }}. Productos web completos, de la base de datos a la
+          interfaz.
         </p>
 
-        <p class="mt-5 inline-flex items-center gap-2 text-[13px] font-medium text-ok-text">
-          <span class="relative flex h-2 w-2" aria-hidden="true">
-            <span class="absolute inline-flex h-full w-full rounded-full bg-ok opacity-60" />
-            <span class="relative inline-flex h-2 w-2 rounded-full bg-ok" />
-          </span>
-          Disponible para trabajar
-        </p>
+        <AvailabilityBadge size="sm" class="mt-5" />
       </div>
 
       <!-- Navegación -->
-      <nav aria-label="Pie de página">
-        <h2 class="text-[11px] font-bold uppercase tracking-[0.14em] text-fg-subtle">Navegación</h2>
+      <nav aria-labelledby="footer-nav-title">
+        <h2 id="footer-nav-title" class="label">Navegación</h2>
         <ul class="mt-4 space-y-1">
           <li v-for="link in navLinks" :key="link.to">
             <RouterLink
@@ -46,7 +42,7 @@
 
       <!-- Contacto -->
       <div>
-        <h2 class="text-[11px] font-bold uppercase tracking-[0.14em] text-fg-subtle">Conectemos</h2>
+        <h2 class="label">Conectemos</h2>
         <ul class="mt-4 space-y-1">
           <li v-for="link in socialLinks" :key="link.label">
             <a
@@ -75,16 +71,17 @@
         class="shell flex flex-col items-center justify-between gap-3 py-6 text-center sm:flex-row sm:text-left"
       >
         <p class="text-xs text-fg-subtle">
-          © {{ year }} Giovanni Barroso — Vue 3, TypeScript y Tailwind CSS.
+          © {{ year }} {{ site.name }}. Hecho con Vue 3, TypeScript y Tailwind CSS.
         </p>
         <a
-          :href="REPO_URL"
+          :href="site.repoUrl"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex min-h-11 items-center gap-1.5 text-xs font-medium text-fg-subtle transition-colors duration-200 hover:text-accent-text"
         >
           <AppIcon name="code" :size="3.5" />
           Código de este sitio
+          <span class="sr-only">(abre en una pestaña nueva)</span>
         </a>
       </div>
     </div>
@@ -93,11 +90,12 @@
 
 <script setup lang="ts">
 import AppIcon from '@/components/common/AppIcon.vue'
+import AvailabilityBadge from '@/components/common/AvailabilityBadge.vue'
 import { navLinks } from '@/data/navLinks'
+import { site } from '@/data/site'
 import { socialLinks } from '@/data/social'
 
 defineOptions({ name: 'AppFooter' })
 
-const REPO_URL = 'https://github.com/GiovanniBarroso/mi-portfolio'
 const year = new Date().getFullYear()
 </script>

@@ -1,4 +1,5 @@
-import type { IconName } from '@/components/common/icons'
+import type { IconName } from '../components/common/icons'
+import { EMAIL } from './site'
 
 export type SocialItem = {
   label: string
@@ -9,23 +10,21 @@ export type SocialItem = {
   external: boolean
 }
 
-/**
- * Fuente única de los enlaces personales. Antes el mismo SVG de GitHub
- * estaba pegado en Home, Proyectos, Contacto y Footer con clases distintas.
- */
-export const EMAIL = 'giovanni.baralv@gmail.com'
+/** Fuente única de los perfiles públicos: Home, Contacto, pie y JSON-LD. */
+export const GITHUB_URL = 'https://github.com/GiovanniBarroso'
+export const LINKEDIN_URL = 'https://www.linkedin.com/in/giovanni-barroso'
 
 export const socialLinks: SocialItem[] = [
   {
     label: 'GitHub',
-    href: 'https://github.com/GiovanniBarroso',
+    href: GITHUB_URL,
     icon: 'github',
     handle: '@GiovanniBarroso',
     external: true,
   },
   {
     label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/giovanni-barroso',
+    href: LINKEDIN_URL,
     icon: 'linkedin',
     handle: 'in/giovanni-barroso',
     external: true,

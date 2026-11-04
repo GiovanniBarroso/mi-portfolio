@@ -1,8 +1,8 @@
 <template>
+  <!-- La cabecera de página (h1) no se anima: es lo primero que se ve y
+       retrasarla empeora el LCP. Las de sección sí entran con fundido. -->
   <header
-    v-motion
-    :initial="reveal.initial"
-    :enter="reveal.enter"
+    v-reveal="as === 'h1' ? false : 0"
     :class="[
       'flex flex-col',
       align === 'center' ? 'items-center text-center' : 'items-start text-left',
@@ -24,7 +24,7 @@
 
     <p
       v-if="subtitle"
-      class="mt-4 measure text-fluid-base leading-relaxed text-fg-muted"
+      class="measure mt-4 text-fluid-base leading-relaxed text-fg-muted"
       :class="align === 'center' ? 'mx-auto' : ''"
     >
       {{ subtitle }}
@@ -37,12 +37,11 @@
 </template>
 
 <script setup lang="ts">
-import { reveal } from '@/composables/motionPresets'
+import { vReveal } from '@/directives/reveal'
 
 /**
- * Cabecera única para vistas y secciones.
- * Sustituye a los bloques eyebrow + h1 + barra degradada que estaban
- * copiados en las cinco vistas con medidas ligeramente distintas.
+ * Cabecera única para vistas y secciones: eyebrow + titular + subtítulo
+ * con las mismas medidas en todas partes.
  */
 withDefaults(
   defineProps<{

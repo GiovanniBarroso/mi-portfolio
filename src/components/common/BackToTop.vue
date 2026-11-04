@@ -4,11 +4,7 @@
       v-if="visible"
       type="button"
       aria-label="Volver al principio de la página"
-      class="fixed bottom-5 right-5 z-float grid h-12 w-12 place-items-center rounded-full border border-hair bg-surface/90 text-fg-muted shadow-lg backdrop-blur-md transition-colors duration-200 hover:border-accent hover:text-accent-text sm:bottom-8 sm:right-8"
-      style="
-        bottom: calc(1.25rem + env(safe-area-inset-bottom));
-        right: calc(1.25rem + env(safe-area-inset-right));
-      "
+      class="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-[calc(1.25rem+env(safe-area-inset-right))] z-float grid h-12 w-12 place-items-center rounded-full border border-hair bg-surface/90 text-fg-muted shadow-lg backdrop-blur-md transition-colors duration-200 hover:border-accent hover:text-accent-text sm:bottom-[calc(2rem+env(safe-area-inset-bottom))] sm:right-[calc(2rem+env(safe-area-inset-right))]"
       @click="scrollToTop"
     >
       <!-- Anillo de progreso: además de subir, indica cuánto queda de página -->
@@ -34,7 +30,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import AppIcon from '@/components/common/AppIcon.vue'
-import { prefersReducedMotion } from '@/composables/motionPresets'
+import { prefersReducedMotion } from '@/composables/motion'
 
 const CIRCUMFERENCE = 2 * Math.PI * 22
 
@@ -59,6 +55,8 @@ const onScroll = () => {
 
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' })
+  // El botón desaparece arriba: el foco pasa al contenido en vez de perderse
+  document.getElementById('contenido')?.focus({ preventScroll: true })
 }
 
 onMounted(() => {

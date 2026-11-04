@@ -1,21 +1,23 @@
 <template>
-  <div class="fixed inset-x-0 top-0 z-nav px-4 pt-3 sm:px-6 pointer-events-none">
+  <div class="pointer-events-none fixed inset-x-0 top-0 z-nav px-3 pt-3 sm:px-6">
     <!-- Telón del menú móvil: cierra al tocar fuera y aísla el contenido -->
     <Transition name="fade">
       <div
         v-if="open"
-        class="fixed inset-0 -z-10 bg-bg/60 backdrop-blur-sm md:hidden pointer-events-auto"
+        class="pointer-events-auto fixed inset-0 -z-10 bg-bg/60 backdrop-blur-sm md:hidden"
+        aria-hidden="true"
         @click="close"
       />
     </Transition>
 
     <nav
+      ref="navRef"
       aria-label="Navegación principal"
-      class="pointer-events-auto mx-auto max-w-6xl rounded-2xl transition-[background-color,border-color,box-shadow] duration-300"
+      class="pointer-events-auto mx-auto max-w-6xl rounded-2xl border transition-[background-color,border-color,box-shadow] duration-300"
       :class="
         elevated || open
-          ? 'border border-hair bg-surface/85 shadow-md backdrop-blur-xl'
-          : 'border border-transparent bg-transparent'
+          ? 'border-hair bg-surface/85 shadow-md backdrop-blur-xl'
+          : 'border-transparent bg-transparent'
       "
     >
       <div class="flex h-14 items-center justify-between gap-2 pl-3 pr-2 sm:pl-4 sm:pr-3">
@@ -23,22 +25,22 @@
         <RouterLink
           to="/"
           class="group flex items-center gap-2.5 rounded-xl py-1 pr-2 text-sm font-bold tracking-tight"
+          :aria-label="`${site.name}, inicio`"
           @click="close"
         >
           <span
-            class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-accent-solid text-[13px] font-black text-accent-on transition-transform duration-200 group-hover:-rotate-6"
+            class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-accent-solid text-[13px] font-black text-accent-on transition-transform duration-200 motion-safe:group-hover:-rotate-6"
             aria-hidden="true"
           >
             G
           </span>
-          <span class="hidden text-fg sm:inline">Giovanni Barroso</span>
-          <span class="sr-only sm:hidden">Giovanni Barroso — inicio</span>
+          <span class="hidden text-fg sm:inline" aria-hidden="true">{{ site.name }}</span>
         </RouterLink>
 
         <!-- Enlaces de escritorio. A partir de md: por debajo no caben
              cinco secciones + controles sin apretujarse. -->
         <ul class="hidden items-center gap-1 md:flex">
-          <li v-for="link in links" :key="link.to">
+          <li v-for="link in navLinks" :key="link.to">
             <RouterLink
               :to="link.to"
               :aria-current="isActive(link.to) ? 'page' : undefined"
@@ -61,13 +63,14 @@
 
         <div class="flex items-center gap-1">
           <!-- Enlace de contacto directo: la acción que de verdad importa -->
-          <RouterLink to="/contact" class="btn btn-sm hidden lg:inline-flex"> Hablemos </RouterLink>
+          <RouterLink to="/contact" class="btn btn-sm hidden lg:inline-flex">Hablemos</RouterLink>
 
           <button
             type="button"
             class="grid h-11 w-11 place-items-center rounded-xl text-fg-muted transition-colors duration-200 hover:bg-surface-2 hover:text-fg"
-            :aria-label="isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+            aria-label="Modo oscuro"
             :aria-pressed="isDark"
+            :title="isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
             @click="onToggleTheme"
           >
             <Transition name="rotate-fade" mode="out-in">
@@ -94,7 +97,7 @@
       <Transition name="nav-drop">
         <div v-if="open" id="mobile-menu" class="border-t border-hair md:hidden">
           <ul class="flex flex-col gap-0.5 p-2">
-            <li v-for="link in links" :key="link.to">
+            <li v-for="link in navLinks" :key="link.to">
               <RouterLink
                 :to="link.to"
                 :aria-current="isActive(link.to) ? 'page' : undefined"
@@ -112,7 +115,7 @@
             </li>
           </ul>
           <div class="p-2 pt-0">
-            <RouterLink to="/contact" class="btn w-full" @click="close"> Hablemos </RouterLink>
+            <RouterLink to="/contact" class="btn w-full" @click="close">Hablemos</RouterLink>
           </div>
         </div>
       </Transition>
@@ -121,29 +124,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { computed, nextTick, ref, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import AppIcon from '@/components/common/AppIcon.vue'
-import { toggleTheme, isDarkTheme } from '@/plugins/theme'
+import { useTheme } from '@/plugins/theme'
 import { navLinks } from '@/data/navLinks'
+import { site } from '@/data/site'
 
 defineOptions({ name: 'AppNavbar' })
 
-const links = navLinks
 const route = useRoute()
+const { theme, toggleTheme } = useTheme()
+const navRef = ref<HTMLElement | null>(null)
 const burgerRef = ref<HTMLButtonElement | null>(null)
 const open = ref(false)
-const isDark = ref(false)
 const elevated = ref(false)
+const isDark = computed(() => theme.value === 'dark')
 
-const isActive = (path: string) => (path === '/' ? route.path === '/' : route.path.startsWith(path))
+const isActive = (path: string) =>
+  path === '/' ? route.path === '/' : route.path === path || route.path.startsWith(`${path}/`)
 
 const close = () => (open.value = false)
 const toggle = () => (open.value = !open.value)
 
-const onToggleTheme = () => {
-  toggleTheme()
-  isDark.value = isDarkTheme()
+const onToggleTheme = (e: MouseEvent) => {
+  // Con teclado no hay coordenadas: la transición sale del propio botón
+  const btn = e.currentTarget as HTMLElement
+  const r = btn.getBoundingClientRect()
+  const fromPointer = e.detail > 0
+  toggleTheme({
+    x: fromPointer ? e.clientX : r.left + r.width / 2,
+    y: fromPointer ? e.clientY : r.top + r.height / 2,
+  })
 }
 
 const onScroll = () => {
@@ -151,38 +163,74 @@ const onScroll = () => {
 }
 
 const onKeydown = (e: KeyboardEvent) => {
-  if (e.key === 'Escape' && open.value) {
+  if (!open.value) return
+  if (e.key === 'Escape') {
     close()
     burgerRef.value?.focus()
+    return
+  }
+  // Foco atrapado en el navbar mientras el menú cubre la pantalla
+  if (e.key === 'Tab' && navRef.value) {
+    const focusables = navRef.value.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+    const visible = [...focusables].filter((el) => el.offsetParent !== null)
+    const first = visible[0]
+    const last = visible[visible.length - 1]
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault()
+      last?.focus()
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault()
+      first?.focus()
+    }
+  }
+}
+
+/** El resto de la página queda inerte mientras el menú móvil está abierto. */
+function setBackgroundInert(value: boolean) {
+  for (const id of ['contenido', 'pie']) {
+    const el = document.getElementById(id)
+    if (el) el.inert = value
   }
 }
 
 // Cerrar al navegar (por ejemplo, con el botón atrás del navegador)
 watch(() => route.fullPath, close)
 
-// Bloquear el scroll de fondo mientras el menú ocupa la pantalla
-watch(open, (isOpen) => {
+watch(open, async (isOpen) => {
   document.body.style.overflow = isOpen ? 'hidden' : ''
+  setBackgroundInert(isOpen)
+  if (isOpen) {
+    await nextTick()
+    navRef.value?.querySelector<HTMLElement>('#mobile-menu a')?.focus()
+  }
 })
 
+// Al pasar a escritorio con el menú abierto, se cierra solo
+const desktop = window.matchMedia('(min-width: 768px)')
+const onBreakpoint = (e: MediaQueryListEvent) => e.matches && close()
+
 onMounted(() => {
-  isDark.value = isDarkTheme()
   window.addEventListener('scroll', onScroll, { passive: true })
   window.addEventListener('keydown', onKeydown)
+  desktop.addEventListener('change', onBreakpoint)
   onScroll()
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
   window.removeEventListener('keydown', onKeydown)
+  desktop.removeEventListener('change', onBreakpoint)
   document.body.style.overflow = ''
+  setBackgroundInert(false)
 })
 </script>
 
 <style scoped>
 .rotate-fade-enter-active,
 .rotate-fade-leave-active {
-  transition: all 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 .rotate-fade-enter-from {
   opacity: 0;
