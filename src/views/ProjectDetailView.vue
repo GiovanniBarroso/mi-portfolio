@@ -88,7 +88,7 @@
         <section aria-labelledby="highlights">
           <h2 id="highlights" class="flex items-center gap-3 text-lg font-bold text-fg">
             <span class="h-5 w-1 rounded-full bg-accent" aria-hidden="true" />
-            Qué construí
+            {{ project.team ? 'Qué construimos' : 'Qué construí' }}
           </h2>
           <ol class="mt-6 divide-y divide-hair border-y border-hair">
             <li

@@ -13,9 +13,9 @@ export const projects: Project[] = [
     title: 'MyBalance',
     type: 'Producto multiplataforma',
     summary:
-      'App de entreno con un objetivo y una fecha: web instalable, Android en Google Play con Wear OS e iOS en camino.',
+      'App de entreno con un objetivo y una fecha: web instalable, Android y Wear OS en pruebas en Play, e iOS en camino.',
     description:
-      'App de entreno con un objetivo y una fecha. Montas tus rutinas o eliges un plan hecho para tus días, entrenas con la sesión en vivo —también sin cobertura— y la app te dice qué peso poner la próxima vez, qué se ha estancado y cómo vas hacia tu meta. Incluye seguimiento físico, deportes con GPS, análisis de técnica por vídeo y un modo amigos con ranking y feed. La web, en Next.js y Supabase e instalable como PWA, es la fuente de verdad: las apps nativas de Android (Kotlin y Jetpack Compose, publicada en Google Play y con app para Wear OS) e iOS (SwiftUI, pendiente de publicar) hacen lo mismo hablando con una API versionada a partir de un contrato compartido.',
+      'App de entreno con un objetivo y una fecha. Montas tus rutinas o eliges un plan hecho para tus días, entrenas con la sesión en vivo —también sin cobertura— y la app te dice qué peso poner la próxima vez, qué se ha estancado y cómo vas hacia tu meta. Incluye seguimiento físico, deportes con GPS, análisis de técnica por vídeo y un modo amigos con ranking y feed. La web, en Next.js y Supabase e instalable como PWA, es la fuente de verdad: las apps nativas de Android (Kotlin y Jetpack Compose, con app para Wear OS, en pruebas internas en Google Play) e iOS (SwiftUI, pendiente de publicar) hacen lo mismo hablando con una API versionada a partir de un contrato compartido.',
     highlights: [
       'Sesión en vivo con descansos, superseries y dropsets, y modo sin conexión completo: se empieza, se sigue y se termina sin red.',
       'Consejo de carga por ejercicio, detección de estancamientos, récords y mapa muscular semanal.',
@@ -164,9 +164,9 @@ export const projects: Project[] = [
     slug: 'analytics-umami',
     title: 'Analytics Umami',
     type: 'Self-hosting',
-    summary: 'Analítica web auto-hospedada y sin cookies para mis proyectos, desplegada en Vercel.',
+    summary: 'Analítica web autoalojada y sin cookies para mis proyectos, desplegada en Vercel.',
     description:
-      'Instancia auto-hospedada de Umami Analytics desplegada en Vercel para medir el tráfico de proyectos propios como Cosas D Casa y Date un Respiro. Analítica sin cookies y respetuosa con el RGPD, con eventos personalizados y consulta de métricas vía API.',
+      'Instancia autoalojada de Umami Analytics desplegada en Vercel para medir el tráfico de proyectos propios como Cosas D Casa y Date un Respiro. Analítica sin cookies y respetuosa con el RGPD, con eventos personalizados y consulta de métricas vía API.',
     highlights: [
       'Instancia propia de Umami desplegada en Vercel sobre PostgreSQL.',
       'Mide el tráfico de proyectos propios como Cosas D Casa y Date un Respiro.',

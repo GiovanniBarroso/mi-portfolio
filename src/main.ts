@@ -14,4 +14,9 @@ const app = createApp(App).use(router).use(createHead())
 // Se monta cuando la vista inicial (cargada bajo demanda) ya está lista. Si
 // no, el pie se pinta arriba un instante y luego salta hacia abajo: eso era
 // un CLS de 0,9 en Lighthouse.
-router.isReady().then(() => app.mount('#app'))
+// Si falla (sin red al pedir la vista), se monta igual: mejor el navbar y el
+// pie que una página en blanco.
+router
+  .isReady()
+  .catch(() => {})
+  .finally(() => app.mount('#app'))

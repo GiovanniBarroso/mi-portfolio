@@ -1,8 +1,8 @@
 <template>
   <!-- El valor final va siempre en el árbol accesible; la cuenta es visual -->
   <span ref="el" class="tabular-nums">
-    <span aria-hidden="true">{{ display }}</span>
-    <span class="sr-only">{{ value }}</span>
+    <span class="count-anim" aria-hidden="true">{{ display }}</span>
+    <span class="count-final sr-only">{{ value }}</span>
   </span>
 </template>
 

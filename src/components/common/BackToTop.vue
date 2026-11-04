@@ -4,6 +4,7 @@
       v-if="visible"
       type="button"
       aria-label="Volver al principio de la página"
+      data-print="hide"
       class="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-[calc(1.25rem+env(safe-area-inset-right))] z-float grid h-12 w-12 place-items-center rounded-full border border-hair bg-surface/90 text-fg-muted shadow-lg backdrop-blur-md transition-colors duration-200 hover:border-accent hover:text-accent-text sm:bottom-[calc(2rem+env(safe-area-inset-bottom))] sm:right-[calc(2rem+env(safe-area-inset-right))]"
       @click="scrollToTop"
     >

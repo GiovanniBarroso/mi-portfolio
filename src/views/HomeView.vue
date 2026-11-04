@@ -55,7 +55,8 @@
         class="hero-desc measure-tight mt-4 text-center text-fluid-sm leading-relaxed text-fg-muted"
       >
         Diseño y construyo productos completos, de la base de datos a una interfaz rápida y
-        accesible, en la web y en el móvil. {{ counts.inProduction }} ya están en producción.
+        accesible, en la web y en el móvil. Ya&nbsp;hay&nbsp;{{ counts.inProduction }}&nbsp;en
+        producción.
       </p>
 
       <div
@@ -191,7 +192,7 @@
         <PageHeader
           eyebrow="Stack"
           title="Tecnologías que uso a diario"
-          subtitle="Las que aparecen en mis proyectos. La lista completa, con dónde he usado cada una, está en Skills."
+          subtitle="Las que más uso. En Skills está cada una, con los proyectos donde aparece."
           title-id="stack-title"
         />
       </div>

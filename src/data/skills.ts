@@ -32,6 +32,7 @@ export const skillCategories: SkillCategory[] = [
     items: [
       'Node.js (Express)',
       'NestJS',
+      'Prisma',
       'REST API',
       'Supabase',
       'PostgreSQL',
@@ -61,6 +62,8 @@ export const skillCategories: SkillCategory[] = [
       'Docker',
       'Docker Compose',
       'Vercel',
+      'Sentry',
+      'Umami',
       'Nginx',
       'Linux',
       'Husky',

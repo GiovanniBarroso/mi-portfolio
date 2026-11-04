@@ -1,5 +1,5 @@
 <template>
-  <div class="pointer-events-none fixed inset-x-0 top-0 z-nav px-3 pt-3 sm:px-6">
+  <div class="pointer-events-none fixed inset-x-0 top-0 z-nav px-3 pt-3 sm:px-6" data-print="hide">
     <!-- Telón del menú móvil: cierra al tocar fuera y aísla el contenido -->
     <Transition name="fade">
       <div

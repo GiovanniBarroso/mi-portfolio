@@ -22,7 +22,9 @@ const router = createRouter({
           ? true
           : {
               name: 'not-found',
-              params: { pathMatch: to.path.slice(1).split('/') },
+              // Los params ya vienen decodificados: con to.path (codificado)
+              // se volvían a codificar y la URL crecía en cada recarga
+              params: { pathMatch: ['projects', String(to.params.slug)] },
               query: to.query,
               hash: to.hash,
               replace: true,
@@ -48,10 +50,57 @@ const router = createRouter({
     // Página nueva: se espera a que entre y se coloca sin animación.
     // Un scroll suave desde el pie hasta arriba de otra página marea.
     if (from.matched.length) await waitForPageEnter()
+    // Si mientras tanto hubo otra navegación (volver atrás enseguida), esta ya
+    // no manda: su espera acabaría por tiempo y subiría la página al principio
+    if (router.currentRoute.value.fullPath !== to.fullPath) return false
     if (savedPosition) return savedPosition
     if (to.hash) return { el: to.hash, top: NAV_OFFSET }
     return { top: 0 }
   },
+})
+
+/**
+ * GitHub Pages sirve también los ficheros reales (`/about.html`,
+ * `/index.html`…). La SPA no tiene esas rutas: se llevan a la limpia.
+ */
+router.beforeEach((to) => {
+  if (!to.path.endsWith('.html')) return true
+  const clean = to.path.replace(/(\/index)?\.html$/, '') || '/'
+  return { path: clean, query: to.query, hash: to.hash, replace: true }
+})
+
+/**
+ * Tras un despliegue, una pestaña abierta antes puede pedir trozos de JS o
+ * CSS que ya no existen. En vez de dejar enlaces muertos, se recarga una vez
+ * la página de destino (con una marca para no entrar en bucle). Lo hace el
+ * router y no `vite:preloadError`, porque el router sabe adónde se iba.
+ */
+const RELOAD_FLAG = 'chunk-reload'
+const isChunkError = (err: unknown) =>
+  /dynamically imported module|Importing a module script failed|error loading dynamically|Unable to preload CSS/i.test(
+    String((err as Error)?.message ?? err)
+  )
+
+function reloadOnce(path: string) {
+  try {
+    if (sessionStorage.getItem(RELOAD_FLAG)) return
+    sessionStorage.setItem(RELOAD_FLAG, '1')
+  } catch {
+    return
+  }
+  window.location.assign(path)
+}
+
+router.onError((err, to) => {
+  if (isChunkError(err)) reloadOnce(to.fullPath)
+})
+
+router.afterEach(() => {
+  try {
+    sessionStorage.removeItem(RELOAD_FLAG)
+  } catch {
+    // Sin almacenamiento no hay marca que limpiar
+  }
 })
 
 export default router

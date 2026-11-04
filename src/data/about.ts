@@ -4,7 +4,7 @@ export const aboutData: AboutData = {
   tags: ['Full-stack', 'Accesibilidad', 'Rendimiento'],
   achievements: [
     'E-commerce en producción con cobros y reembolsos vía Stripe.',
-    'App de entreno multiplataforma: web instalable, Android en Google Play con Wear OS e iOS, sobre una misma API.',
+    'App de entreno multiplataforma sobre una misma API: web instalable, Android y Wear OS en pruebas en Google Play, e iOS en camino.',
     'APIs REST en NestJS + Prisma con JWT, multi-tenant y Docker.',
     'Tests con Vitest/Jest y despliegue continuo en Vercel y GitHub Pages.',
     'SEO técnico, PWA y modo oscuro accesible.',

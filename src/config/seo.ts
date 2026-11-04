@@ -63,14 +63,14 @@ export const PAGES = {
   projects: {
     path: '/projects',
     title: 'Proyectos',
-    description: `${projects.length} proyectos con demo o código: una app de entreno en web, Android e iOS, un e-commerce con Stripe en producción, apps de escritorio e infraestructura.`,
+    description: `${projects.length} proyectos: una app de entreno en web y Android (iOS en camino), un e-commerce con Stripe en producción, una app de escritorio e infraestructura.`,
     priority: 0.9,
   },
   skills: {
     path: '/skills',
     title: 'Skills',
     description:
-      'Tecnologías con las que trabajo, agrupadas por área y enlazadas a los proyectos donde las he usado: Vue, React, Next.js, NestJS, Supabase, Docker y más.',
+      'Tecnologías con las que trabajo, agrupadas por área y enlazadas a los proyectos donde las he usado: Vue, React, Next.js, Supabase, Stripe, Kotlin y más.',
     priority: 0.7,
   },
   contact: {
@@ -93,7 +93,7 @@ export function projectSeo(p: Project): PageSeo {
     title: p.title,
     description: p.summary,
     image: projectOgImage(p),
-    imageAlt: `${p.title}: ${p.summary}`,
+    imageAlt: `${p.title} — ${p.summary}`,
     kind: 'article',
     priority: 0.6,
   }

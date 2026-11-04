@@ -618,6 +618,39 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   IMPRESIÓN Y PDF
+   Al imprimir no hay scroll: lo que aún no había aparecido saldría en
+   blanco. Todo visible, sin navbar ni botones flotantes.
+   ═══════════════════════════════════════════════════════════════ */
+
+@media print {
+  .reveal {
+    opacity: 1 !important;
+    translate: none !important;
+    transition: none !important;
+  }
+  [data-print='hide'] {
+    display: none !important;
+  }
+  main {
+    padding-top: 0 !important;
+  }
+  .count-anim {
+    display: none !important;
+  }
+  .count-final {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+    white-space: normal !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
    CAMBIO DE TEMA (View Transitions API)
    La animación circular la dirige theme.ts; aquí sólo se desactiva
    el fundido por defecto para que no se superponga.
