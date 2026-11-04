@@ -1,9 +1,14 @@
 <template>
-  <span ref="el" class="tabular-nums">{{ display }}</span>
+  <!-- El valor final va siempre en el árbol accesible; la cuenta es visual -->
+  <span ref="el" class="tabular-nums">
+    <span aria-hidden="true">{{ display }}</span>
+    <span class="sr-only">{{ value }}</span>
+  </span>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { prefersReducedMotion } from '@/composables/motion'
 
 /**
  * Anima un valor tipo "15+" o "20+" desde 0 cuando entra en viewport.
@@ -45,7 +50,7 @@ const animate = () => {
 }
 
 onMounted(() => {
-  if (!parsed.value || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (!parsed.value || prefersReducedMotion) {
     done.value = true
     return
   }

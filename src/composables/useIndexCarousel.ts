@@ -1,56 +1,46 @@
-//Comportamiento del carousel
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { prefersReducedMotion } from '@/composables/motion'
 
-type UseIndexCarouselOptions = {
-  length: number
-  intervalMs?: number
-  respectReducedMotion?: boolean
-  force?: boolean
-}
-
+/**
+ * Índice que avanza solo cada `intervalMs`. Con movimiento reducido se
+ * queda quieto en el primero, y se pausa mientras la pestaña está oculta
+ * para no gastar CPU en algo que nadie ve.
+ */
 export function useIndexCarousel({
   length,
   intervalMs = 2200,
-  respectReducedMotion = true,
-  force = false,
-}: UseIndexCarouselOptions) {
+}: {
+  length: number
+  intervalMs?: number
+}) {
   const current = ref(0)
   let timer: number | undefined
-  let mql: MediaQueryList | null = null
 
   const next = () => {
-    current.value = length === 0 ? 0 : (current.value + 1) % length
+    current.value = (current.value + 1) % Math.max(length, 1)
+  }
+
+  const stop = () => {
+    window.clearInterval(timer)
+    timer = undefined
   }
 
   const start = () => {
     stop()
-    if (length <= 1) return
-    if (respectReducedMotion && !force && mql?.matches) return
-    timer = window.setInterval(next, intervalMs)
+    if (length > 1 && !prefersReducedMotion) timer = window.setInterval(next, intervalMs)
   }
 
-  const stop = () => {
-    if (timer) {
-      window.clearInterval(timer)
-      timer = undefined
-    }
-  }
+  const onVisibility = () => (document.hidden ? stop() : start())
 
   onMounted(() => {
-    if (typeof window === 'undefined') return
-
-    if (respectReducedMotion) {
-      mql = window.matchMedia?.('(prefers-reduced-motion: reduce)') ?? null
-      const handle = (e: MediaQueryListEvent) => (e.matches && !force ? stop() : start())
-      mql?.addEventListener?.('change', handle)
-      if (!mql?.matches || force) start()
-      onBeforeUnmount(() => mql?.removeEventListener?.('change', handle))
-    } else {
-      start()
-    }
+    start()
+    document.addEventListener('visibilitychange', onVisibility)
   })
 
-  onBeforeUnmount(() => stop())
+  onBeforeUnmount(() => {
+    stop()
+    document.removeEventListener('visibilitychange', onVisibility)
+  })
 
-  return { current, start, stop, next }
+  return { current }
 }

@@ -1,12 +1,10 @@
+/** Palabras que rotan en el hero, después de "Especializado en". */
 export const heroWords = [
-  'Next.js + React 19',
-  'Vue 3.5 + Vite 7',
-  'TailwindCSS + Bootstrap',
-  'JS + TS',
-  'Supabase',
-  'NestJS + Prisma',
-  'Docker Compose',
+  'Vue 3 y TypeScript',
+  'React 19 y Next.js',
+  'Supabase y PostgreSQL',
+  'NestJS y Prisma',
+  'Stripe y pagos',
+  'PWA y rendimiento',
+  'Docker y CI/CD',
 ] as const
-
-export type HeroWord = (typeof heroWords)[number]
-export const HERO_CAROUSEL_MS = 2200 //Cooldown entre palabras

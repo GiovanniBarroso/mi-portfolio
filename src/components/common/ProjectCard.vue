@@ -1,110 +1,83 @@
 <template>
-  <article
-    class="card group relative flex h-full flex-col overflow-hidden"
-    :class="primaryUrl ? 'card-interactive' : ''"
-  >
+  <article class="card card-interactive group relative flex h-full flex-col overflow-hidden">
     <!-- Miniatura. Ratio fijo + width/height reales: la rejilla no salta
          mientras cargan las imágenes. -->
-    <div class="relative aspect-[16/10] shrink-0 overflow-hidden bg-surface-2">
+    <div class="relative aspect-[16/10] shrink-0 overflow-hidden border-b border-hair bg-surface-2">
       <img
-        v-if="image"
-        :src="image"
-        :alt="`Captura de ${title}`"
-        width="640"
-        height="400"
+        :src="projectImage(project)"
+        alt=""
+        width="1280"
+        height="853"
         loading="lazy"
         decoding="async"
-        class="h-full w-full object-cover object-top transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.04]"
+        class="h-full w-full object-cover object-top transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.03]"
       />
-      <div v-else class="grid h-full w-full place-items-center text-fg-subtle">
-        <AppIcon name="image" :size="8" :stroke-width="1.25" />
-      </div>
-
-      <!-- Velo inferior: separa la imagen del cuerpo sin una línea dura -->
-      <div
-        aria-hidden="true"
-        class="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-surface to-transparent"
-      />
-
-      <span
-        class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm"
-        :class="status.class"
-      >
-        <span v-if="status.dot" class="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
-        <AppIcon v-if="status.icon" :name="status.icon" :size="3" :stroke-width="2" />
-        {{ status.label }}
-      </span>
+      <StatusPill :project="project" class="absolute left-3 top-3" />
     </div>
 
-    <!-- Cuerpo -->
     <div class="flex flex-1 flex-col p-5">
-      <h3 class="text-base font-semibold leading-snug text-fg">
-        <!-- Enlace extendido: toda la tarjeta es clicable mediante el
-             ::after del título, sin anidar anclas ni duplicar destinos. -->
-        <a
-          v-if="primaryUrl"
-          :href="primaryUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="after:absolute after:inset-0 after:content-[''] transition-colors duration-200 group-hover:text-accent-text"
-        >
-          {{ title }}
-          <span class="sr-only">— abre {{ primaryLabel }} en una pestaña nueva</span>
-        </a>
-        <template v-else>{{ title }}</template>
-      </h3>
-
-      <p class="mt-2 line-clamp-3 text-[13px] leading-relaxed text-fg-muted">
-        {{ description }}
+      <p class="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
+        {{ project.type }}<template v-if="project.team"> · {{ project.team }}</template>
       </p>
 
-      <ul class="mb-5 mt-4 flex flex-wrap gap-1.5" :aria-label="`Tecnologías de ${title}`">
-        <li v-for="t in visibleTechs" :key="t" class="tag !px-2 !py-0.5 !text-[11px]">
-          {{ t }}
-        </li>
-        <li
-          v-if="hiddenCount"
-          class="tag !px-2 !py-0.5 !text-[11px] text-fg-subtle"
-          :title="techs.slice(MAX_TECHS).join(', ')"
+      <component :is="headingTag" class="mt-1.5 text-base font-semibold leading-snug text-fg">
+        <!-- Enlace extendido: toda la tarjeta lleva al detalle mediante el
+             ::after del título, sin anidar enlaces dentro de enlaces. -->
+        <RouterLink
+          :to="projectPath(project)"
+          class="transition-colors duration-200 after:absolute after:inset-0 after:content-[''] group-hover:text-accent-text"
         >
-          +{{ hiddenCount }}
+          {{ project.title }}
+        </RouterLink>
+      </component>
+
+      <p class="mt-2 line-clamp-3 text-[13px] leading-relaxed text-fg-muted">
+        {{ project.summary }}
+      </p>
+
+      <ul class="mb-5 mt-4 flex flex-wrap gap-1.5" :aria-label="`Tecnologías de ${project.title}`">
+        <li v-for="t in visibleTechs" :key="t" class="tag tag-sm">{{ t }}</li>
+        <li v-if="hidden.length" class="tag tag-sm text-fg-subtle" :title="hidden.join(', ')">
+          <span aria-hidden="true">+{{ hidden.length }}</span>
+          <span class="sr-only">y {{ hidden.length }} más: {{ hidden.join(', ') }}</span>
         </li>
       </ul>
 
-      <!-- Acciones. z-base las mantiene por encima del enlace extendido. -->
-      <div class="relative z-base mt-auto flex items-center gap-2 border-t border-hair pt-4">
+      <!-- Acciones. z-base las deja por encima del enlace extendido. -->
+      <div class="mt-auto flex items-center gap-2 border-t border-hair pt-4">
         <a
-          v-if="demoUrl"
-          :href="demoUrl"
+          v-if="project.demoUrl"
+          :href="project.demoUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="btn btn-sm flex-1"
+          class="btn-outline btn-sm relative z-base"
         >
           <AppIcon name="external" :size="3.5" :stroke-width="2" />
-          Ver demo
-          <span class="sr-only">de {{ title }}</span>
+          Demo
+          <span class="sr-only">de {{ project.title }} (abre en una pestaña nueva)</span>
         </a>
-
         <a
-          v-if="repoUrl"
-          :href="repoUrl"
+          v-if="project.repoUrl"
+          :href="project.repoUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="btn-outline btn-sm"
-          :class="demoUrl ? '' : 'flex-1'"
+          class="btn-outline btn-sm relative z-base"
         >
-          <AppIcon name="github" :size="4" />
-          {{ demoUrl ? 'Código' : 'Ver código' }}
-          <span class="sr-only">de {{ title }}</span>
+          <AppIcon name="github" :size="3.5" />
+          Código
+          <span class="sr-only">de {{ project.title }} (abre en una pestaña nueva)</span>
         </a>
-
-        <p
-          v-if="!demoUrl && !repoUrl"
-          class="inline-flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-lg border border-dashed border-hair text-[13px] font-medium text-fg-subtle"
+        <span
+          class="ml-auto inline-flex items-center gap-1 text-[13px] font-medium text-fg-muted transition-colors duration-200 group-hover:text-accent-text"
+          aria-hidden="true"
         >
-          <AppIcon name="lock" :size="3.5" />
-          Repositorio privado
-        </p>
+          Detalles
+          <AppIcon
+            name="arrow-right"
+            :size="3.5"
+            class="transition-transform duration-200 motion-safe:group-hover:translate-x-0.5"
+          />
+        </span>
       </div>
     </div>
   </article>
@@ -113,68 +86,20 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import AppIcon from '@/components/common/AppIcon.vue'
-import type { IconName } from '@/components/common/icons'
+import StatusPill from '@/components/common/StatusPill.vue'
+import type { Project } from '@/types/portfolio'
+import { projectImage, projectPath } from '@/utils/project'
 
-interface Props {
-  slug?: string
-  title: string
-  description: string
-  image?: string
-  techs?: string[]
-  demoUrl?: string | null
-  repoUrl?: string | null
-  /** Etiqueta manual que sustituye al estado calculado (ej. "No desplegado") */
-  badge?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  image: '',
-  techs: () => [],
-  demoUrl: null,
-  repoUrl: null,
-  badge: undefined,
-})
+const props = withDefaults(
+  defineProps<{
+    project: Project
+    /** Nivel del titular según dónde se pinte la tarjeta */
+    headingTag?: 'h2' | 'h3'
+  }>(),
+  { headingTag: 'h3' }
+)
 
 const MAX_TECHS = 4
-
-const visibleTechs = computed(() => props.techs.slice(0, MAX_TECHS))
-const hiddenCount = computed(() => Math.max(0, props.techs.length - MAX_TECHS))
-
-const primaryUrl = computed(() => props.demoUrl || props.repoUrl || null)
-const primaryLabel = computed(() => (props.demoUrl ? 'la demo' : 'el repositorio'))
-
-type Status = { label: string; class: string; dot?: boolean; icon?: IconName }
-
-/**
- * Un solo estado por tarjeta. Antes había tres `span` con `v-if`
- * solapables que podían pintar dos insignias sobre la misma esquina.
- */
-const status = computed<Status>(() => {
-  if (props.badge) {
-    return {
-      label: props.badge,
-      class: 'border-amber-500/40 bg-amber-500/15 text-warn-text',
-      icon: 'clock',
-    }
-  }
-  if (props.demoUrl) {
-    return {
-      label: 'En producción',
-      class: 'border-ok/40 bg-ok/15 text-ok-text',
-      dot: true,
-    }
-  }
-  if (!props.repoUrl) {
-    return {
-      label: 'Privado',
-      class: 'border-hair bg-surface/80 text-fg-muted',
-      icon: 'lock',
-    }
-  }
-  return {
-    label: 'Open source',
-    class: 'border-hair bg-surface/80 text-fg-muted',
-    icon: 'code',
-  }
-})
+const visibleTechs = computed(() => props.project.techs.slice(0, MAX_TECHS))
+const hidden = computed(() => props.project.techs.slice(MAX_TECHS))
 </script>

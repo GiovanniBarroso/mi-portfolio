@@ -4,20 +4,21 @@
   <div
     class="flex min-h-[calc(100dvh-var(--nav-h))] flex-col items-center justify-center px-6 py-20 text-center"
   >
-    <!-- La opacidad va en el hijo: @vueuse/motion anima `opacity` con
-         estilos en línea y se comía cualquier opacity-* del mismo nodo,
-         dejando el 404 en blanco sólido en vez de marca de agua. -->
-    <div v-motion :initial="pop.initial" :enter="pop.enter" aria-hidden="true">
+    <!-- La opacidad de marca de agua va en el hijo: la animación de entrada
+         controla la opacidad del contenedor y se la comería. -->
+    <div v-reveal.fade aria-hidden="true">
+      <!-- El número va en un pseudo-elemento: es pura decoración y así no
+           cuenta como texto (ni para lectores de pantalla ni para el
+           contraste mínimo, que no tendría sentido en una marca de agua). -->
       <p
-        class="select-none text-[clamp(6rem,26vw,12rem)] font-black leading-none tracking-tighter text-fg opacity-[0.07]"
-      >
-        404
-      </p>
+        data-watermark="404"
+        class="select-none text-[clamp(6rem,26vw,12rem)] font-black leading-none tracking-tighter text-fg opacity-[0.07] before:content-[attr(data-watermark)]"
+      />
     </div>
 
-    <div v-motion :initial="reveal.initial" :enter="reveal.enter" class="-mt-8 sm:-mt-12">
+    <div v-reveal="80" class="-mt-8 sm:-mt-12">
       <span
-        class="grid h-14 w-14 place-items-center rounded-2xl border border-hair bg-surface text-accent-text shadow-md mx-auto"
+        class="grid h-14 w-14 place-items-center mx-auto rounded-2xl border border-hair bg-surface text-accent-text shadow-md"
       >
         <AppIcon name="compass" :size="6" />
       </span>
@@ -26,11 +27,14 @@
       <p class="measure-tight mx-auto mt-3 text-fluid-sm leading-relaxed text-fg-muted">
         La página que buscas no existe o cambió de sitio. Desde aquí puedes volver al principio o ir
         directamente a los proyectos.
+        <span v-if="path" class="mt-2 block break-all font-mono text-[13px] text-fg-subtle">{{
+          path
+        }}</span>
       </p>
 
       <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
         <RouterLink to="/" class="btn btn-lg">
-          <AppIcon name="arrow-right" :size="4" />
+          <AppIcon name="arrow-left" :size="4" />
           Ir al inicio
         </RouterLink>
         <RouterLink to="/projects" class="btn-outline btn-lg">Ver proyectos</RouterLink>
@@ -53,14 +57,16 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import AppIcon from '@/components/common/AppIcon.vue'
 import { useSeo } from '@/composables/useSeo'
 import { navLinks } from '@/data/navLinks'
-import { pop, reveal } from '@/composables/motionPresets'
+import { vReveal } from '@/directives/reveal'
+import { PAGES } from '@/config/seo'
 
-const seo = useSeo()
-seo({
-  title: '404 — Página no encontrada',
-  description: 'Esta página no existe en el portfolio de Giovanni Barroso.',
-})
+useSeo(PAGES.notFound)
+
+const route = useRoute()
+const path = computed(() => (route.path === '/404' ? '' : route.path))
 </script>

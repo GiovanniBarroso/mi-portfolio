@@ -1,12 +1,13 @@
 <template>
   <div class="flex min-h-dvh flex-col bg-bg font-sans text-fg">
-    <a href="#contenido" class="skip-link">Saltar al contenido</a>
+    <a href="#contenido" class="skip-link" @click.prevent="skipToContent">Saltar al contenido</a>
 
     <Navbar />
 
-    <main id="contenido" class="flex-1 pt-[var(--nav-h)]" tabindex="-1">
+    <!-- min-h: durante el cambio de página el pie no sube a ocupar el hueco -->
+    <main id="contenido" ref="mainRef" class="min-h-dvh flex-1 pt-[var(--nav-h)]" tabindex="-1">
       <RouterView v-slot="{ Component, route }">
-        <Transition name="route" mode="out-in">
+        <Transition name="route" mode="out-in" @enter="onPageEnter">
           <component :is="Component" :key="route.path" />
         </Transition>
       </RouterView>
@@ -18,38 +19,40 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import Navbar from '@/components/layout/Navbar.vue'
 import Footer from '@/components/layout/Footer.vue'
 import BackToTop from '@/components/common/BackToTop.vue'
-import { useHead } from '@unhead/vue'
-import { SITE_NAME, SITE_URL } from '@/config/seo'
-import { socialLinks } from '@/data/social'
+import { notifyPageEnter } from '@/router/pageTransition'
 
-const BASE = import.meta.env.BASE_URL
+const mainRef = ref<HTMLElement | null>(null)
 
-// Datos estructurados: es lo que permite a Google mostrar el panel de
-// persona con los perfiles asociados en vez de un resultado de texto suelto.
-const personSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Giovanni Barroso',
-  url: SITE_URL,
-  jobTitle: 'Desarrollador Full-Stack',
-  address: { '@type': 'PostalAddress', addressLocality: 'Sevilla', addressCountry: 'ES' },
-  sameAs: socialLinks.filter((l) => l.external).map((l) => l.href),
-  knowsAbout: ['Vue.js', 'React', 'TypeScript', 'Node.js', 'NestJS', 'PostgreSQL', 'Accesibilidad'],
+// La primera navegación (carga de la página) no debe mover el foco
+let initialNavigation = true
+useRouter().afterEach((_to, from) => {
+  initialNavigation = from.matched.length === 0
+})
+
+/**
+ * Tras navegar, el foco pasa al titular de la página nueva: un lector de
+ * pantalla anuncia dónde está y quien navega con teclado no tiene que
+ * volver a recorrer el navbar. En la carga inicial no se mueve nada.
+ */
+function onPageEnter(el: Element) {
+  notifyPageEnter()
+  if (initialNavigation) return
+  const heading = el.querySelector<HTMLElement>('h1') ?? mainRef.value
+  if (!heading) return
+  if (heading !== mainRef.value) heading.setAttribute('tabindex', '-1')
+  heading.focus({ preventScroll: true })
 }
 
-useHead({
-  titleTemplate: (sub?: string) => (sub ? `${sub} | ${SITE_NAME}` : SITE_NAME),
-  htmlAttrs: { lang: 'es' },
-  link: [
-    { rel: 'icon', href: `${BASE}favicon.ico` },
-    { rel: 'apple-touch-icon', href: `${BASE}apple-touch-icon.png` },
-    { rel: 'manifest', href: `${BASE}manifest.webmanifest` },
-  ],
-  script: [{ type: 'application/ld+json', innerHTML: JSON.stringify(personSchema) }],
-})
+/** El enlace de salto no debe pasar por el router (cambiaría el hash de la URL). */
+function skipToContent() {
+  mainRef.value?.focus()
+  mainRef.value?.scrollIntoView()
+}
 </script>
 
 <style>

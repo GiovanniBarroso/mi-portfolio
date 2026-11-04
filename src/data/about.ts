@@ -1,22 +1,13 @@
-import type { AboutData } from '@/types/portfolio'
-
-// Prefijo BASE_URL para que la ruta siga siendo válida si el sitio
-// se sirviera desde un subdirectorio en vez de la raíz del dominio.
-const BASE = import.meta.env.BASE_URL
+import type { AboutData } from '../types/portfolio'
 
 export const aboutData: AboutData = {
-  profileImage: `${BASE}profile.jpg`,
-  tags: ['Fullstack', 'Accesibilidad', 'Rendimiento'],
-  stats: [
-    { label: 'Proyectos reales', value: '9' },
-    { label: 'Repos públicos', value: '12' },
-    { label: 'Stack principal', value: 'TypeScript' },
-  ],
+  tags: ['Full-stack', 'Accesibilidad', 'Rendimiento'],
   achievements: [
     'E-commerce en producción con cobros y reembolsos vía Stripe.',
+    'App de entreno multiplataforma: web instalable, Android en Google Play con Wear OS e iOS, sobre una misma API.',
     'APIs REST en NestJS + Prisma con JWT, multi-tenant y Docker.',
-    'Tests con Vitest/Jest y despliegue continuo en Vercel.',
-    'SEO técnico, PWA y dark mode responsive.',
+    'Tests con Vitest/Jest y despliegue continuo en Vercel y GitHub Pages.',
+    'SEO técnico, PWA y modo oscuro accesible.',
   ],
   tools: [
     // Frameworks y librerías
@@ -26,23 +17,25 @@ export const aboutData: AboutData = {
     'Tailwind CSS',
     'TypeScript',
     'Vite',
-    // Tooling y entorno
-    'ESLint',
-    'Prettier',
-    'Husky',
-    'lint-staged',
-    'pnpm',
-    'Docker',
-    'GitHub Actions',
-    'Supabase CLI',
     // Backend / APIs
     'NestJS',
     'Prisma',
     'PostgreSQL',
     'Supabase',
-    // Otros
+    // Tooling y entorno
+    'pnpm',
+    'Docker',
+    'GitHub Actions',
+    'ESLint',
+    'Prettier',
+    'Husky',
+    'Supabase CLI',
+    // Producto
     'PWA',
     'Vercel',
+    'Sentry',
     'Umami Analytics',
+    'Kotlin',
+    'SwiftUI',
   ],
 }
